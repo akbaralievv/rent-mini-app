@@ -82,7 +82,6 @@ function NewsPage() {
         };
     }, [modalOpen]);
 
-
   return (
     <div className="news-page">
       <div className="news-header">
