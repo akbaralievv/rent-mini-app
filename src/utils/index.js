@@ -1,11 +1,12 @@
+const API_URL = import.meta.env.VITE_API_URL;
 export const getImageUrl = (path) => {
     if (!path) return "";
 
     if (path.startsWith("http")) return path;
 
     if (!path.startsWith("/storage")) {
-        return `https://rentarenda.com/storage/${path}`;
+        return `${API_URL}/storage/${path}`;
     }
 
-    return `https://rentarenda.com${path}`;
+    return `${API_URL}${path}`;
 };

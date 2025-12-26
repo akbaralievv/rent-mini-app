@@ -6,7 +6,7 @@ import "./NewsPage.css";
 import { getImageUrl } from "../utils";
 import RichEditor from "../components/RichEditor";
 
-const API_URL = "http://127.0.0.1:8000/api/news";
+const API_URL = import.meta.env.VITE_API_URL + "/api/news";
 
 function NewsPage() {
   const [news, setNews] = useState([]);
