@@ -1,7 +1,13 @@
+:root {
+  --tg-font:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Roboto, Inter, Helvetica, Arial, sans-serif;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: var(--tg-font);
 }
 body {
   background: #0f1720;
