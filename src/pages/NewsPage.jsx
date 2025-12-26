@@ -12,22 +12,38 @@ function NewsPage() {
   const [news, setNews] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
+  const [saving, setSaving] = useState(false);
+
   const navigate = useNavigate();
 
   const fetchNews = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(API_URL);
       setNews(res.data);
     } catch (e) {
       alert(`Ошибка загрузки статей: ${e.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Удалить статью?")) return;
-    await axios.delete(`${API_URL}/${id}`);
-    fetchNews();
+
+    try {
+      setDeletingId(id);
+      await axios.delete(`${API_URL}/${id}`);
+      fetchNews();
+    } catch (e) {
+      alert(`Ошибка при удалении: ${e.message}`);
+    } finally {
+      setDeletingId(null);
+    }
   };
+
 
   const handleEdit = (item) => {
     setEditItem(item);
@@ -41,26 +57,29 @@ function NewsPage() {
   };
 
   const handleSave = async (data, file) => {
-    const formData = new FormData();
-    formData.append("title_ru", data.title_ru);
-    formData.append("title_en", data.title_en);
-    formData.append("content_ru", data.content_ru);
-    formData.append("content_en", data.content_en);
-    formData.append("status", data.status || "published");
-    if (file) formData.append("image", file);
+    try {
+      setSaving(true);
 
-    if (editItem) {
+      const formData = new FormData();
+      formData.append("title_ru", data.title_ru);
+      formData.append("title_en", data.title_en);
+      formData.append("content_ru", data.content_ru);
+      formData.append("content_en", data.content_en);
+      formData.append("status", data.status || "published");
+      if (file) formData.append("image", file);
+
+      if (editItem) {
         formData.append("_method", "PUT");
-      await axios.post(`${API_URL}/${editItem.id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    } else {
-      await axios.post(API_URL, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+        await axios.post(`${API_URL}/${editItem.id}`, formData);
+      } else {
+        await axios.post(API_URL, formData);
+      }
+
+      setModalOpen(false);
+      fetchNews();
+    } finally {
+      setSaving(false);
     }
-    setModalOpen(false);
-    fetchNews();
   };
 
     useEffect(() => {
@@ -88,45 +107,67 @@ function NewsPage() {
         <h1>Статьи</h1>
         <button className="create-btn" onClick={handleCreate}>Создать статью</button>
       </div>
-      <div className="news-list">
-        {news.map((item) => (
-          <div
-            className="news-card"
-            key={item.id}
-            onClick={e => {
-              if (e.target.closest(".news-actions")) return;
-              navigate(`/news/${item.id}`);
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <img src={getImageUrl(item.image)} alt={item.title_ru} className="news-image" />
-            <div className="news-content">
-              <h2>{item.title_ru}</h2>
-              <p className="news-date">{new Date(item.created_at).toLocaleDateString()}</p>
-              <div
-                className="news-desc"
-                dangerouslySetInnerHTML={{ __html: item.content_ru.replace(/<[^>]+>/g, "").slice(0, 200) + "..." }}
-              />
-              <div className="news-actions">
-                <button className="edit-btn" onClick={() => handleEdit(item)}>Редактировать</button>
-                <button className="delete-btn" onClick={() => handleDelete(item.id)}>Удалить</button>
+      {loading ? (
+        <div className="loader-wrap">
+          <div className="loader" />
+        </div>
+      ) : (
+        <div className="news-list">
+          {news.map((item) => (
+            <div
+              className="news-card"
+              key={item.id}
+              onClick={e => {
+                if (e.target.closest(".news-actions")) return;
+                navigate(`/news/${item.id}`);
+              }}
+            >
+              <img src={getImageUrl(item.image)} alt={item.title_ru} className="news-image" />
+              <div className="news-content">
+                <h2>{item.title_ru}</h2>
+                <p className="news-date">
+                  {new Date(item.created_at).toLocaleDateString()}
+                </p>
+                <div
+                  className="news-desc"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      item.content_ru
+                        .replace(/<[^>]+>/g, "")
+                        .slice(0, 200) + "…",
+                  }}
+                />
+                <div className="news-actions">
+                  <button className="edit-btn" onClick={() => handleEdit(item)}>
+                    Редактировать
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(item.id)}
+                    disabled={deletingId === item.id}
+                  >
+                    {deletingId === item.id ? "Удаление…" : "Удалить"}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
+
       {modalOpen && (
         <NewsModal
           item={editItem}
           onClose={() => setModalOpen(false)}
           onSave={handleSave}
+          saving={saving}
         />
       )}
     </div>
   );
 }
 
-function NewsModal({ item, onClose, onSave }) {
+function NewsModal({ item, onClose, onSave, saving }) {
   const [form, setForm] = useState(
     item
       ? {
@@ -169,47 +210,49 @@ function NewsModal({ item, onClose, onSave }) {
 
   return (
       <div className="modal-backdrop" onClick={onClose}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>✕</button>
-        <h2>{item ? "Редактировать статью" : "Создать статью"}</h2>
-        <form onSubmit={handleSubmit}>
-            <label>Заголовок (RU)</label>
-            <input name="title_ru" value={form.title_ru} onChange={handleChange} required />
-            <label>Title (EN)</label>
-            <input name="title_en" value={form.title_en} onChange={handleChange} required />
-            <label>Контент (RU)</label>
-            <RichEditor
-                value={form.content_ru}
-                onChange={(html) => setForm({ ...form, content_ru: html })}
-            />
+        <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <button className="modal-close" onClick={onClose}>✕</button>
+          <h2>{item ? "Редактировать статью" : "Создать статью"}</h2>
+          <form onSubmit={handleSubmit}>
+              <label>Заголовок (RU)</label>
+              <input name="title_ru" value={form.title_ru} onChange={handleChange} required />
+              <label>Title (EN)</label>
+              <input name="title_en" value={form.title_en} onChange={handleChange} required />
+              <label>Контент (RU)</label>
+              <RichEditor
+                  value={form.content_ru}
+                  onChange={(html) => setForm({ ...form, content_ru: html })}
+              />
 
-            <label>Content (EN)</label>
-            <RichEditor
-                value={form.content_en}
-                onChange={(html) => setForm({ ...form, content_en: html })}
-            />
-                  <div className="image-upload">
-                      <label className="image-label">Картинка статьи</label>
+              <label>Content (EN)</label>
+              <RichEditor
+                  value={form.content_en}
+                  onChange={(html) => setForm({ ...form, content_en: html })}
+              />
+                    <div className="image-upload">
+                        <label className="image-label">Картинка статьи</label>
 
-                      <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFile}
-                          key={preview}
-                      />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFile}
+                            key={preview}
+                        />
 
-                      {preview && (
-                          <div className="image-preview">
-                              <img src={preview} alt="preview" />
-                          </div>
-                      )}
-                  </div>
+                        {preview && (
+                            <div className="image-preview">
+                                <img src={preview} alt="preview" />
+                            </div>
+                        )}
+                    </div>
 
-            <div className="modal-actions">
-                <button type="submit" className="save-btn">Сохранить</button>
+              <div className="modal-actions">
+                <button type="submit" className="save-btn" disabled={saving}>
+                  {saving ? "Сохранение…" : "Сохранить"}
+                </button>
                 <button type="button" className="cancel-btn" onClick={onClose}>Отмена</button>
-            </div>
-        </form>
+              </div>
+          </form>
       </div>
     </div>
   );

@@ -23,7 +23,14 @@ export default function NewsDetail() {
       });
   }, [id]);
 
-  if (loading) return <div className="news-detail-loading">Загрузка...</div>;
+  if (loading) {
+    return (
+      <div className="loader-wrap">
+        <div className="loader" />
+      </div>
+    );
+  }
+
   if (!item) return <div className="news-detail-error">Статья не найдена</div>;
 
   return (
