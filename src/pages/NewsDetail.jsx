@@ -4,7 +4,7 @@ import axios from "axios";
 import "./NewsPage.css";
 import { getImageUrl } from "../utils";
 
-const API_URL = "http://127.0.0.1:8000/api/news";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function NewsDetail() {
   const { id } = useParams();
