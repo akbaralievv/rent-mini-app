@@ -3,8 +3,7 @@ import axios from "axios";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
-    const tgUserId = 8563532803
-        // window.Telegram?.WebApp?.initDataUnsafe?.user?.id ?? null;
+    const tgUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id ?? null;
 
     const [userId] = useState(tgUserId);
     const [status, setStatus] = useState(
