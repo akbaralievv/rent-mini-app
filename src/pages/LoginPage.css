@@ -119,3 +119,11 @@
 .password-eye:hover {
     color: var(--tg-text);
 }
+.masked {
+    -webkit-text-security: disc;
+    text-security: disc;
+}
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-textfield-decoration-container {
+    display: none !important;
+}

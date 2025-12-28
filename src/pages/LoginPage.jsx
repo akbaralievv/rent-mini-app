@@ -42,7 +42,8 @@ export default function LoginPage() {
 
                 <div className="password-field">
                     <input
-                        type={show ? "text" : "password"}
+                        type="text"
+                        className={show ? "" : "masked"}
                         placeholder="Введите пароль"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
