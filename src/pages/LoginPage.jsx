@@ -54,7 +54,6 @@ export default function LoginPage() {
                         type="button"
                         className="password-eye"
                         onClick={() => setShow((v) => !v)}
-                        aria-label={show ? "Скрыть пароль" : "Показать пароль"}
                     >
                         {show ? "🙈" : "👁️"}
                     </button>
