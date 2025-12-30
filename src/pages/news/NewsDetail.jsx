@@ -1,27 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "./NewsPage.css";
-import { getImageUrl } from "../utils";
-
-const API_URL = import.meta.env.VITE_API_URL + "/api/news";
+import { getImageUrl } from "../../utils";
+import AppLayout from "../../layouts/AppLayout";
+import { useGetNewsByIdQuery } from "../../redux/services/news";
 
 export default function NewsDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [item, setItem] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    axios.get(`${API_URL}/${id}`)
-      .then(res => {
-        setItem(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  }, [id]);
+  const { data: item, isLoading: loading, isError } = useGetNewsByIdQuery(id);
 
   if (loading) {
     return (
@@ -31,11 +18,11 @@ export default function NewsDetail() {
     );
   }
 
-  if (!item) return <div className="news-detail-error">Статья не найдена</div>;
+  if (isError || !item) return <div className="news-detail-error">Статья не найдена</div>;
 
   return (
+    <AppLayout onBack={() => navigate(-1)}>
     <div className="news-detail-page">
-      <button className="back-btn" onClick={() => navigate(-1)}>Назад</button>
       <div className="news-detail-card">
         <p className="news-date">{item.status}: {new Date(item.created_at).toLocaleDateString()}</p>
         <img src={getImageUrl(item.image)} alt={item.title_ru} className="news-detail-image" />
@@ -43,5 +30,6 @@ export default function NewsDetail() {
         <div className="news-detail-content" dangerouslySetInnerHTML={{ __html: item.content_ru }} />
       </div>
     </div>
+    </AppLayout>
   );
 }

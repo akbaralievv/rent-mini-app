@@ -1,6 +1,16 @@
 :root {
   --tg-font:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Roboto, Inter, Helvetica, Arial, sans-serif;
+  --tg-bg: #0f1720;
+  --tg-card: #1b2430;
+  --tg-card-2: #222d3a;
+  --tg-border: rgba(255, 255, 255, 0.06);
+  --tg-text: #e5e7eb;
+  --tg-muted: #9ca3af;
+  --tg-accent: #097dd3;
+  --tg-danger: #ff4d4f;
+  --tg-warning: #fbbf24;
+  --tg-success: #10b981;
 }
 
 * {
@@ -10,7 +20,7 @@
   font-family: var(--tg-font);
 }
 body {
-  background: #0f1720;
+  background: var(--tg-bg);
 }
 
 /* Loader */

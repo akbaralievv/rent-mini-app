@@ -1,9 +1,11 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import NewsPage from './pages/NewsPage'
-import NewsDetail from './pages/NewsDetail'
+import NewsPage from './pages/news/NewsPage'
+import NewsDetail from './pages/news/NewsDetail'
 import { useEffect } from 'react';
 import { useAuth } from './auth/useAuth';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/login/LoginPage';
+import Menu from './pages/menu/Menu';
+import ContractsPage from './pages/contracts/ContractsPage';
 
 
 function Router() {
@@ -16,8 +18,10 @@ function Router() {
 
   return (
     <Routes>
-      <Route path="/" element={<NewsPage />} />
+      <Route path="/" element={<Menu />} />
+      <Route path="/news" element={<NewsPage />} />
       <Route path="/news/:id" element={<NewsDetail />} />
+      <Route path="/contracts" element={<ContractsPage />} />
     </Routes>
   );
 }

@@ -1,23 +1,17 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { Provider } from 'react-redux'
 import './index.css'
 import App from './App.jsx'
-import axios from 'axios';
 import { AuthProvider } from './auth/AuthProvider.jsx';
-
-axios.interceptors.request.use((config) => {
-  const tg = window.Telegram?.WebApp;
-  const id = tg?.initDataUnsafe?.user?.id;
-  if (id) {
-    config.headers["X-Telegram-User"] = id;
-  }
-  return config;
-});
+import { store } from './redux/store.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-    <App />
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </Provider>
   </StrictMode>,
 )

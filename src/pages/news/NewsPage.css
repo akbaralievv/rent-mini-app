@@ -1,27 +1,11 @@
-:root {
-    --tg-bg: #0f1720;
-    --tg-card: #1b2430;
-    --tg-card-2: #222d3a;
-    --tg-border: rgba(255, 255, 255, 0.06);
-    --tg-text: #e5e7eb;
-    --tg-muted: #9ca3af;
-    --tg-accent: #2ea6ff;
-    --tg-danger: #ff4d4f;
-    --tg-warning: #fbbf24;
-    --tg-success: #10b981;
-}
-
 .news-page {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 32px 10px;
     min-height: 100vh;
 }
 .news-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
 }
 .news-header h1 {
     font-weight: 700;
@@ -33,7 +17,7 @@
     color: #fff;
     border: none;
     padding: 10px 10px;
-    border-radius: 14px;
+    border-radius: 6px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
@@ -107,14 +91,14 @@
 .delete-btn {
     flex: 1;
     padding: 8px 0;
-    border-radius: 12px;
+    border-radius: 6px;
     font-size: 14px;
     font-weight: 600;
     border: none;
     cursor: pointer;
 }
 .edit-btn {
-    background: #fbbf24;
+    background: #e9a800;
     color: #fff;
 }
 .delete-btn {
@@ -229,7 +213,7 @@
     color: #fff;
     border: none;
     padding: 10px;
-    border-radius: 14px;
+    border-radius: 6px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -240,7 +224,7 @@
     color: #fff;
     border: none;
     padding: 10px;
-    border-radius: 14px;
+    border-radius: 6px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -266,10 +250,7 @@
 
 /* News Detail */
 .news-detail-page {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 32px 10px;
-    min-height: 80vh;
+    min-height: 100vh;
     background: var(--tg-bg);
     color: var(--tg-text);
 }
@@ -278,7 +259,7 @@
     background: var(--tg-card);
     border-radius: 18px;
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
-    padding: 32px 28px 36px 28px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;

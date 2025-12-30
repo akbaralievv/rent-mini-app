@@ -1,32 +1,24 @@
 import { useState } from "react";
-import axios from "axios";
 import "./LoginPage.css";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../../auth/useAuth";
+import { useLoginMutation } from "../../redux/services/auth";
 
 export default function LoginPage() {
     const { userId, setStatus } = useAuth();
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
+    const [login, { isLoading: loading }] = useLoginMutation();
 
     const submit = async () => {
         if (!password) return;
 
         try {
-            setLoading(true);
             setError("");
-
-            await axios.post(
-                import.meta.env.VITE_API_URL + "/api/telegram/login",
-                { user_id: userId, password }
-            );
-
+            await login({ userId, password }).unwrap();
             setStatus("auth");
         } catch(err) {
-            setError(err.response?.data?.message || "Ошибка входа");
-        } finally {
-            setLoading(false);
+            setError(err.data?.message || "Ошибка входа");
         }
     };
 
