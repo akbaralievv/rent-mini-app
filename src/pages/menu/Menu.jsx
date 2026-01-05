@@ -8,7 +8,8 @@ export default function Menu() {
         <AppLayout title="Меню">
             <div className="menu-list">
                 <MenuItem icon="📰" title="Статьи" to="/news" />
-                <MenuItem icon="📄" title="Договора" to="/contracts" />
+                <MenuItem icon="📄" title="Договоры" to="/contracts" />
+                <MenuItem icon="🎨" title="Шаблоны договоров" to="/contracts/templates" />
             </div>
         </AppLayout>
     );

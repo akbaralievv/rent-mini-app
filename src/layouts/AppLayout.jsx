@@ -9,7 +9,7 @@ export default function AppLayout({ title, children, onBack }) {
 
     useEffect(() => {
         const tg = window.Telegram?.WebApp;
-        if (!tg) return;
+        if (!tg || !tg.BackButton) return;
 
         if (!isRoot) {
             tg.BackButton.show();
@@ -22,6 +22,7 @@ export default function AppLayout({ title, children, onBack }) {
             tg.BackButton.offClick();
         };
     }, [isRoot, navigate]);
+    
     return (
         <div className="app-layout">
             <div className="app-header">

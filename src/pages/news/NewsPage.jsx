@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NewsPage.css';
-import { getImageUrl } from '../../utils';
+import { getErrorMessage, getImageUrl } from '../../utils';
 import RichEditor from '../../components/RichEditor';
 import AppLayout from '../../layouts/AppLayout';
 import {
@@ -32,7 +32,7 @@ function NewsPage() {
       setDeletingId(id);
       await deleteNews(id).unwrap();
     } catch (e) {
-      alert(`Ошибка при удалении: ${e.data?.message || e.message}`);
+      alert(`Ошибка при удалении: ${getErrorMessage(e)}`);
     } finally {
       setDeletingId(null);
     }
@@ -67,13 +67,13 @@ function NewsPage() {
 
       setModalOpen(false);
     } catch (e) {
-      alert(`Ошибка при сохранении: ${e.data?.message || e.message}`);
+      alert(`Ошибка при сохранении: ${getErrorMessage(e)}`);
     }
   };
 
   useEffect(() => {
     if (error) {
-      alert(`Ошибка загрузки статей: ${error.message || 'Неизвестная ошибка'}`);
+      alert(`Ошибка загрузки статей: ${getErrorMessage(error)}`);
     }
   }, [error]);
 

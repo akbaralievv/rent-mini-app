@@ -1,26 +1,17 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL + '/api',
-  prepareHeaders: (headers) => {
-    const tg = window.Telegram?.WebApp;
-    const id = tg?.initDataUnsafe?.user?.id;
-    if (id) {
-      headers.set('X-Telegram-User', id.toString());
-    }
-    return headers;
-  },
-});
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQuery } from './baseQuery';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery,
+  tagTypes: ['Auth'],
   endpoints: (builder) => ({
     checkAuth: builder.query({
       query: (userId) => ({
         url: '/telegram/check',
         params: { user_id: userId },
       }),
+      providesTags: ['Auth'],
     }),
     login: builder.mutation({
       query: ({ userId, password }) => ({
@@ -28,6 +19,7 @@ export const authApi = createApi({
         method: 'POST',
         body: { user_id: userId, password },
       }),
+      invalidatesTags: ['Auth'],
     }),
   }),
 });

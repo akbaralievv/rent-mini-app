@@ -1,0 +1,377 @@
+.contracts-page {
+  min-height: 100vh;
+}
+
+.contracts-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.contracts-empty {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.contracts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contract-card {
+  background: var(--tg-card);
+  border-radius: 14px;
+  padding: 16px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    box-shadow 0.15s;
+}
+
+.contract-card:hover {
+  background: var(--tg-card-2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.contract-main h3 {
+  color: var(--tg-text);
+  margin-bottom: 6px;
+}
+
+.contract-meta {
+  color: var(--tg-muted);
+  font-size: 14px;
+}
+
+.contract-footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contract-date {
+  color: var(--tg-muted);
+  font-size: 13px;
+}
+
+.contract-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.contract-actions .edit-btn {
+  background: #e9a800;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.contract-actions .delete-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.contract-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contract-detail .card {
+  background: var(--tg-card);
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid var(--tg-border);
+}
+
+.contract-detail .card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tg-text);
+  margin-bottom: 10px;
+}
+
+.contract-detail .card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tg-text);
+  margin-bottom: 8px;
+}
+
+.contract-detail .card p {
+  font-size: 14px;
+  color: var(--tg-text);
+  margin-bottom: 6px;
+}
+
+.contract-detail .card p b {
+  color: #fff;
+  font-weight: 600;
+}
+
+.contract-detail pre {
+  background: #0f1720;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  color: #d1d5db;
+  overflow-x: auto;
+  border: 1px solid var(--tg-border);
+}
+
+.fee-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px dashed var(--tg-border);
+  color: var(--tg-text);
+}
+
+.fee-row:last-child {
+  border-bottom: none;
+}
+
+.contract-detail .actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.contract-detail .actions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--tg-accent);
+  color: #fff;
+  transition: opacity 0.15s;
+}
+
+.contract-detail .actions button:hover {
+  opacity: 0.9;
+}
+
+.contract-detail .actions button.danger {
+  background: var(--tg-danger);
+}
+
+@media (max-width: 480px) {
+  .contract-detail .actions {
+    flex-direction: column;
+  }
+}
+
+.wizard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wizard-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.wizard-nav button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--tg-card-2);
+  color: var(--tg-text);
+  transition: background 0.15s;
+}
+
+.wizard-nav button:hover {
+  background: var(--tg-card);
+}
+
+.wizard-nav button.primary {
+  background: var(--tg-accent);
+  color: #fff;
+}
+
+.wizard-nav button.primary:hover {
+  opacity: 0.9;
+}
+.driver-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.driver-block input {
+  background: #0f1720;
+  border: 1px solid var(--tg-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--tg-text);
+}
+
+.driver-block input::placeholder {
+  color: var(--tg-muted);
+}
+
+.driver-block input:focus {
+  outline: none;
+  border-color: var(--tg-accent);
+  box-shadow: 0 0 0 2px rgba(9, 125, 211, 0.15);
+}
+.fees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.fees-grid input {
+  background: #0f1720;
+  border: 1px solid var(--tg-border);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 14px;
+  color: var(--tg-text);
+}
+
+.fees-grid input::placeholder {
+  color: var(--tg-muted);
+}
+
+.select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.select-card {
+  background: var(--tg-card-2);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  color: var(--tg-muted);
+  transition:
+    background 0.15s,
+    box-shadow 0.15s;
+}
+
+.select-card:hover {
+  background: var(--tg-card);
+}
+
+.select-card.active {
+  outline: 2px solid var(--tg-accent);
+}
+
+.hint {
+  color: var(--tg-muted);
+  text-align: center;
+  margin-top: 40px;
+}
+
+.card .hint {
+  margin-top: 0;
+}
+
+.card h2 {
+  color: var(--tg-text);
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--tg-card);
+  color: var(--tg-text);
+  font-size: 14px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.15);
+}
+
+.section-divider {
+  border-top: 1px dashed #ddd;
+}
+
+.preview-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.preview-label {
+  font-weight: 600;
+  min-width: 120px;
+  color: var(--tg-muted);
+}
+
+.preview-value {
+  color: var(--tg-text);
+}
+
+.primary {
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: #4f8cff;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary:hover {
+  background: #3a75e6;
+}
+
+.drivers-step {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.step-selected {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--tg-muted);
+}
+.step-selected b {
+  color: var(--tg-text);
+}
+.step-hint {
+  margin-top: 10px;
+  font-size: 13px;
+}
+.step-hint.error {
+  color: var(--tg-muted);
+}

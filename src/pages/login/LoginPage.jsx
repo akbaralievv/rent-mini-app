@@ -2,9 +2,10 @@ import { useState } from "react";
 import "./LoginPage.css";
 import { useAuth } from "../../auth/useAuth";
 import { useLoginMutation } from "../../redux/services/auth";
+import { getErrorMessage } from "../../utils";
 
 export default function LoginPage() {
-    const { userId, setStatus } = useAuth();
+    const { userId } = useAuth();
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [show, setShow] = useState(false);
@@ -16,9 +17,9 @@ export default function LoginPage() {
         try {
             setError("");
             await login({ userId, password }).unwrap();
-            setStatus("auth");
+            
         } catch(err) {
-            setError(err.data?.message || "Ошибка входа");
+            setError(getErrorMessage(err, "Ошибка входа"));
         }
     };
 

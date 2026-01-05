@@ -1,16 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL + '/api',
-  prepareHeaders: (headers) => {
-    const tg = window.Telegram?.WebApp;
-    const id = tg?.initDataUnsafe?.user?.id;
-    if (id) {
-      headers.set('X-Telegram-User', id.toString());
-    }
-    return headers;
-  },
-})
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQuery } from './baseQuery';
 
 export const newsApi = createApi({
   reducerPath: 'newsApi',
@@ -49,7 +38,7 @@ export const newsApi = createApi({
       invalidatesTags: ['News'],
     }),
   }),
-})
+});
 
 export const {
   useGetNewsQuery,
@@ -57,4 +46,4 @@ export const {
   useCreateNewsMutation,
   useUpdateNewsMutation,
   useDeleteNewsMutation,
-} = newsApi
+} = newsApi;
