@@ -1,0 +1,42 @@
+.card {
+  background: #141d26;
+  border-radius: 14px;
+  padding: 16px;
+  color: #fff;
+  position: relative;
+}
+
+.cardTitle {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.row b {
+  margin-left: auto;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.income {
+  background: #2ecc71;
+}
+
+.expense {
+  background: #e74c3c;
+}
+
+.balance {
+  background: #f1c40f;
+}

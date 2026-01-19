@@ -10,6 +10,7 @@ export default function Menu() {
                 <MenuItem icon="📰" title="Статьи" to="/news" />
                 <MenuItem icon="📄" title="Договоры" to="/contracts" />
                 <MenuItem icon="🎨" title="Шаблоны договоров" to="/contracts/templates" />
+                <MenuItem icon="📊" title="Фин. отчет" to="/financial-main" />
             </div>
         </AppLayout>
     );

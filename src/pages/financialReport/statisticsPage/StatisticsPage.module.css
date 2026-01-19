@@ -1,0 +1,232 @@
+.section {
+  background: var(--tg-item-button-bg);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.itemBack {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 14px 16px;
+  color: #fff;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.itemBack {
+  text-align: center;
+  font-weight: 500;
+}
+
+.verticalIndent {
+  margin-bottom: 16px;
+}
+
+.selectBlock {
+  margin-top: 12px;
+  background: var(--tg-item-button-bg);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  height: 300px;
+  overflow-y: scroll;
+}
+.selectBlock::-webkit-scrollbar {
+  width: 8px;
+}
+
+.selectBlock::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+}
+
+.selectBlock::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  border: 2px solid rgba(0, 0, 0, 0); /* чтобы был эффект тонкого thumb */
+  background-clip: padding-box;
+}
+
+.selectBlock::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+  background-clip: padding-box;
+}
+
+.selectBlock::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.28);
+  background-clip: padding-box;
+}
+
+.selectTitle {
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.selectItem {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 14px 14px;
+  cursor: pointer;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.selectItem:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.selectActive {
+  background: rgba(77, 163, 255, 0.12);
+}
+
+.check {
+  font-size: 14px;
+}
+
+.selectedCarText {
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.selectedCarText {
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Карточка статистики как в телеге */
+.statCard {
+  background: #141d26;
+  border-radius: 14px;
+  padding: 14px;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.statTitle {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.statLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.statSmall {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.block {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.blockTitle {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+/* Заказы */
+.orderItem {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.orderItem:last-child {
+  border-bottom: none;
+}
+
+.orderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 13px;
+}
+
+.orderStatus {
+  color: rgba(46, 204, 113, 0.95);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.orderBottom {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
+.orderClient {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.orderSum {
+  white-space: nowrap;
+}
+
+/* Пагинация */
+.pagination {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pageBtn {
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  min-width: 110px;
+}
+
+.pageBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.pageInfo {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}

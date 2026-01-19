@@ -11,6 +11,9 @@
   --tg-danger: #ff4d4f;
   --tg-warning: #fbbf24;
   --tg-success: #10b981;
+
+  --tg-item-button-bg: #212a33;
+  --tg-item-button-bg-hover: #2a3440;
 }
 
 * {

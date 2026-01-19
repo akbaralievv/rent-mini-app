@@ -1,0 +1,192 @@
+.verticalIndent {
+  margin-bottom: 8px;
+}
+
+.verticalIndent16 {
+  margin-bottom: 16px;
+}
+
+/* блок секции как в телеге */
+.section {
+  background: var(--tg-item-button-bg);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Операция */
+.row {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px solid var(--tg-bg);
+  transition: background 0.12s ease;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.topLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.hash {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.date {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  color: white;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.sum {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 900;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.currency {
+  opacity: 0.6;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* Нижняя строка */
+.bottomLine {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.carName {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.desc {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* Заглушка — высота как у 5 элементов */
+.emptyWrap {
+  min-height: 340px;
+  /* примерно как 5 элементов */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.emptyTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 6px;
+}
+
+.emptyText {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.3;
+  max-width: 300px;
+}
+
+/* Пагинация */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.pageBtn {
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: background 0.12s ease, transform 0.12s ease;
+  min-width: 110px;
+}
+
+.pageBtn:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.pageBtn:active {
+  transform: scale(0.98);
+}
+
+.pageBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.pageInfo {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Кнопка В меню */
+.itemBack {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 14px 16px;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 700;
+}

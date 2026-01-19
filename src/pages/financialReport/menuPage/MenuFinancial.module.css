@@ -1,0 +1,110 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== Card ===== */
+.card {
+  background: #141d26;
+  border-radius: 14px;
+  padding: 16px;
+  color: #fff;
+  position: relative;
+}
+
+.cardTitle {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.row b {
+  margin-left: auto;
+}
+
+/* ===== Dots ===== */
+.dotIncome,
+.dotExpense,
+.dotBalance {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dotIncome {
+  background: #2ecc71;
+}
+
+.dotExpense {
+  background: #e74c3c;
+}
+
+.dotBalance {
+  background: #f1c40f;
+}
+
+/* ===== Sections ===== */
+.section {
+  background: var(--tg-item-button-bg);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* ===== Items ===== */
+.item,
+.itemBack {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 14px 16px;
+  color: #fff;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.itemBack {
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ===== Loader ===== */
+.loader {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: #3498db;
+  animation: loadingBar 1s ease-in-out forwards;
+  z-index: 9999;
+}
+
+@keyframes loadingBar {
+  from {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  to {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}

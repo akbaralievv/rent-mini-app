@@ -10,6 +10,11 @@ import ContractsDetail from './pages/contracts/ContractsDetail';
 import ContractWizard from './pages/contracts/ContractWizzard';
 import ContractTemplatesPage from './pages/contracts/contractTemplates/ContractTemplatesPage';
 import ContractTemplatesWizzard from './pages/contracts/contractTemplates/ContractTemplatesWizzard';
+import MenuFinancial from './pages/financialReport/menuPage/MenuFinancial';
+import OperationPage from './pages/financialReport/operationPage/OperationPage';
+import ReportsPage from './pages/financialReport/reportsPage/ReportsPage';
+import StatisticsPage from './pages/financialReport/statisticsPage/StatisticsPage';
+import DetailsPage from './pages/financialReport/detailsPage/DetailsPage';
 
 function Router() {
   const { status } = useAuth();
@@ -35,6 +40,12 @@ function Router() {
       <Route path="/contracts/templates" element={<ContractTemplatesPage />} />
       <Route path="/contracts/templates/new" element={<ContractTemplatesWizzard key={id ?? 'new'} />} />
       <Route path="/contracts/templates/:id/edit" element={<ContractTemplatesWizzard key={id ?? 'new'} />} />
+
+      <Route path="/financial-main" element={<MenuFinancial />} />
+      <Route path="/financial-main/operation" element={<OperationPage />} />
+      <Route path="/financial-main/reports" element={<ReportsPage />} />
+      <Route path="/financial-main/statistics" element={<StatisticsPage />} />
+      <Route path="/financial-main/details" element={<DetailsPage />} />
     </Routes>
   );
 }
