@@ -6,6 +6,7 @@ import ButtonSection from '../../../components/ButtonSection/ButtonSection'
 import DuoButtons from '../../../components/DuoButtons/DuoButtons'
 import { deposit, transactions } from '../../../common/mockData'
 import ReportCard from '../../../components/ReportCard/ReportCard'
+import { BadgeDollarSign, BadgeDollarSignIcon, BarChart3, FolderDown, Landmark, PiggyBank, Receipt, ShieldCheck, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 
@@ -76,61 +77,59 @@ export default function MenuFinancial() {
       <div className={styles.main}>
 
         {/* ===== Card ===== */}
-
-        <ReportCard title="Финансовый отчет за все время" items={[
-          { key: "balance", label: "Баланс", value: balance, variant: "income" },
-          { key: "decrease", label: "Расходы", value: decrease, variant: "expense" },
-          { key: "deposit", label: "Депозиты", value: depositPlus, variant: "balance" },
-        ]} />
-
-        <DuoButtons buttons={[
-          {
-            text: '✅ Доходы',
-            onClick: () => navigate('/financial-main/operation', {
-              state: { key: "increase" },
-            }),
-          },
-          {
-            text: '💸 Расходы',
-            onClick: () => navigate('/financial-main/operation', {
-              state: { key: "decrease" },
-            }),
-          },
-          {
-            text: '📋 Депозиты',
-            onClick: () => navigate('/financial-main/operation', {
-              state: { key: "deposit" },
-            }),
-          },
-        ]} />
+        <div>
+          <ReportCard title="Финансовый отчет за все время" items={[
+            { key: "balance", label: "Баланс", value: balance, variant: "income" },
+            { key: "decrease", label: "Расходы", value: decrease, variant: "expense" },
+            { key: "deposit", label: "Депозиты", value: depositPlus, variant: "balance" },
+          ]} />
+          <div className={'miniBlock'}>
+            <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
+              Детализация доступна в разделах ниже — выберите нужный тип операций.</span>
+          </div>
+        </div>
         <ButtonSection
+          title='Финансы'
           buttons={[
             {
-              icon: '📊',
+              icon: <TrendingUp />,
+              text: 'Доходы',
+              onClick: () => navigate('/financial-main/operation', {
+                state: { key: "increase" },
+              }),
+            },
+            {
+              icon: <TrendingDown />,
+              text: 'Расходы',
+              onClick: () => navigate('/financial-main/operation', {
+                state: { key: "decrease" },
+              }),
+            },
+            {
+              icon: <Wallet />,
+              text: 'Депозиты',
+              onClick: () => navigate('/financial-main/operation', {
+                state: { key: "deposit" },
+              }),
+            },
+          ]} />
+        <ButtonSection
+          title='Инструменты'
+          buttons={[
+            {
+              icon: <BarChart3 strokeWidth={1.5} />,
               text: 'Статистика',
               onClick: () => handleClick(navigate('/financial-main/statistics'))
             },
             {
-              icon: '🗂️',
+              icon: <FolderDown strokeWidth={1.5} />,
               text: 'Экспорт отчета',
               onClick: () => handleClick(navigate('/financial-main/reports'))
             },
           ]}
         />
-
-        <div className={styles.section}>
-          <button
-            className={styles.itemBack}
-            onClick={() => handleClick(() => navigate(-1))}
-          >
-            ⬅ В меню
-          </button>
-        </div>
-
       </div>
 
-      {/* ===== Bottom Loader ===== */}
-      {loading && <div className={styles.loader} />}
     </AppLayout>
   )
 }

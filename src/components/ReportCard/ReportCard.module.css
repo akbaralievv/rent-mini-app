@@ -1,13 +1,20 @@
 .card {
-  background: #141d26;
-  border-radius: 14px;
-  padding: 16px;
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 14px;
   color: #fff;
-  position: relative;
+}
+
+.itemBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #2b3542;
+  padding: 8px 12px;
+  border-radius: 8px;
 }
 
 .cardTitle {
-  font-weight: 600;
   margin-bottom: 12px;
 }
 
@@ -15,7 +22,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
   font-size: 14px;
 }
 
@@ -30,13 +36,13 @@
 }
 
 .income {
-  background: #2ecc71;
+  background: var(--tg-success);
 }
 
 .expense {
-  background: #e74c3c;
+  background: var(--tg-danger);
 }
 
 .balance {
-  background: #f1c40f;
+  background: var(--tg-warning);
 }

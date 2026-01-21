@@ -5,6 +5,9 @@ import DuoButtons from "../../../components/DuoButtons/DuoButtons";
 import styles from "./DetailsPage.module.css";
 
 import { transactions, deposit } from "../../../common/mockData";
+import ButtonSection from "../../../components/ButtonSection/ButtonSection";
+import { ChevronLeft, ChevronRight, File, Minus, MinusCircle, Plus, PlusCircle, TrendingDown, TrendingUp } from "lucide-react";
+import { tgTheme } from "../../../common/commonStyle";
 
 const types = [
   { key: "increase", value: "доходы" },
@@ -98,20 +101,25 @@ export default function DetailsPage() {
       <div className={styles.section}>
         {!currentType && (
           <div className={styles.emptyWrap}>
-            <div className={styles.emptyIcon}>📒</div>
-            <div className={styles.emptyTitle}>Тип не выбран</div>
+            <div className={styles.emptyIcon}>
+              <File color={tgTheme.text} size={32}/>
+            </div>
+            <div className={'font16w600'}>Тип не выбран</div>
             <div className={styles.emptyText}>
-              Выберите “Доходы / Расходы / Депозиты”, чтобы увидеть список операций.
+              <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
+                Выберите “Доходы / Расходы / Депозиты”, чтобы увидеть список операций.
+              </span>
             </div>
           </div>
         )}
 
         {currentType && filteredList.length === 0 && (
           <div className={styles.emptyWrap}>
-            <div className={styles.emptyIcon}>🗒️</div>
-            <div className={styles.emptyTitle}>Нет операций</div>
+            <div className={'font16w600'}>Нет операций</div>
             <div className={styles.emptyText}>
-              По выбранному типу пока нет данных.
+              <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
+                По выбранному типу пока нет данных.
+              </span>
             </div>
           </div>
         )}
@@ -125,24 +133,19 @@ export default function DetailsPage() {
             >
               <div className={styles.topLine}>
                 <div className={styles.left}>
-                  <span className={styles.hash}>#{item.id}</span>
-                  <span className={styles.date}>{formatDate(item.created_at)}</span>
-
-                  {currentType === "increase" && "✅"}
-                  {currentType === "decrease" && "❌"}
-                  {currentType === "depositPlus" && "🔽"}
-                  {currentType === "depositMinus" && "🔼"}
+                  <span className={'font16w500'}>#{item.id}</span>
+                  <span className={'font16w500'}>{formatDate(item.created_at)}</span>
                 </div>
 
-                <div className={styles.sum}>
-                  {formatMoney(item.sum)}{" "}
+                <div className={`${styles.sum} ${item.increse ? styles.colorIncrease : styles.colorDecrease} font14w600`}>
+                  {item.increse ? '+' : '-'}{formatMoney(item.sum)}{" "}
                   <span className={styles.currency}>AED</span>
                 </div>
               </div>
 
               <div className={styles.bottomLine}>
-                <div className={styles.carName}>🚗 {item.car_name || "—"}</div>
-                <div className={styles.desc}>{item.description || ""}</div>
+                <div className={'font14w500'}>{item.car_name || "—"}</div>
+                <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{item.description || ""}</span>
               </div>
             </button>
           ))}
@@ -155,7 +158,7 @@ export default function DetailsPage() {
               onClick={handlePrev}
               disabled={!canPrev}
             >
-              ⬅️ Назад
+              <ChevronLeft color={tgTheme.btnActive} />
             </button>
 
             <div className={styles.pageInfo}>
@@ -168,49 +171,39 @@ export default function DetailsPage() {
               onClick={handleNext}
               disabled={!canNext}
             >
-              Вперёд ➡️
+              <ChevronRight color={tgTheme.btnActive} />
             </button>
           </div>
         )}
       </div>
-      <div className={styles.verticalIndent16} />
+      <div className={styles.verticalIndent36} />
 
-      <DuoButtons
+      <div className={styles.verticalIndent} />
+      <ButtonSection
+        title="Тип операции"
         buttons={[
           {
-            text: "✅ Доходы",
+            icon: <TrendingUp strokeWidth={1.5} />,
+            text: "Доходы",
             onClick: () => setCurrentType("increase"),
           },
           {
-            text: "💸 Расходы",
+            icon: <TrendingDown strokeWidth={1.5} />,
+            text: "Расходы",
             onClick: () => setCurrentType("decrease"),
           },
-        ]}
-      />
-
-      <div className={styles.verticalIndent} />
-
-      <DuoButtons
-        buttons={[
           {
-            text: "📋 Депозиты +",
+            icon: <Plus strokeWidth={1.5} />,
+            text: "Депозиты",
             onClick: () => setCurrentType("depositPlus"),
           },
           {
-            text: "📋 Депозиты -",
+            icon: <Minus strokeWidth={1.5} />,
+            text: "Депозиты",
             onClick: () => setCurrentType("depositMinus"),
           },
         ]}
       />
-      <div className={styles.section}>
-        <button
-          type="button"
-          className={styles.itemBack}
-          onClick={() => navigate(-1)}
-        >
-          ⬅️ В меню
-        </button>
-      </div>
     </AppLayout>
   );
 }

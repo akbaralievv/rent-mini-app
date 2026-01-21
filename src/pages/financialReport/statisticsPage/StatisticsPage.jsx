@@ -5,6 +5,8 @@ import ReportCard from "../../../components/ReportCard/ReportCard";
 import { transactions } from "../../../common/mockData";
 import ButtonSection from "../../../components/ButtonSection/ButtonSection";
 import styles from "./StatisticsPage.module.css";
+import { Car, Check, ListCollapse, PersonStandingIcon, Rows3, User } from "lucide-react";
+import { tgTheme } from "../../../common/commonStyle";
 
 const PAGE_SIZE = 5;
 
@@ -118,21 +120,21 @@ export default function StatisticsPage() {
 
       {selectedCar === "all" && (
         <div className={styles.statCard}>
-          <div className={styles.statTitle}>📊 Статистика по авто за всё время</div>
+          <div className={styles.statTitle}>Статистика по авто за всё время</div>
 
           <div className={styles.statLine}>
-            <span>📦 Общее кол-во заказов:</span>
+            <span>Общее кол-во заказов:</span>
             <b>{statsAllCars.totalOrders}</b>
           </div>
 
           <div className={styles.statLine}>
-            <span>💰 Общая сумма:</span>
+            <span>Общая сумма:</span>
             <b>{formatMoney(statsAllCars.totalIncome)} AED</b>
           </div>
 
           {statsAllCars.best && (
             <div className={styles.block}>
-              <div className={styles.blockTitle}>⭐ Лучший по прибыли:</div>
+              <div className={styles.blockTitle}>Лучший по прибыли:</div>
               <div className={styles.statSmall}>
                 <div><b>Авто:</b> {statsAllCars.best.car}</div>
                 <div><b>Доход:</b> {formatMoney(statsAllCars.best.income)} AED</div>
@@ -143,7 +145,7 @@ export default function StatisticsPage() {
 
           {statsAllCars.worst && (
             <div className={styles.block}>
-              <div className={styles.blockTitle}>👎 Худший по прибыли:</div>
+              <div className={styles.blockTitle}>Худший по прибыли:</div>
               <div className={styles.statSmall}>
                 <div><b>Авто:</b> {statsAllCars.worst.car}</div>
                 <div><b>Доход:</b> {formatMoney(statsAllCars.worst.income)} AED</div>
@@ -156,92 +158,80 @@ export default function StatisticsPage() {
 
       {selectedCar !== "all" && statsCar && (
         <div className={styles.statCard}>
-          <div className={styles.statTitle}>🚗 Статистика по автомобилю</div>
+          <div className={`${styles.statTitle} font20w700`}>
+            Статистика по автомобилю
+          </div>
 
-          <div className={styles.statSmall}>
+          <div className={`${styles.statSmall} font14w400`}>
             <div><b>ID:</b> {statsCar.carId}</div>
             <div><b>Модель:</b> {statsCar.model}</div>
             <div><b>Номер:</b> {statsCar.number}</div>
           </div>
 
           <div className={styles.block}>
-            <div className={styles.blockTitle}>📊 Статистика по авто за всё время</div>
-
-            <div className={styles.statLine}>
-              <span>📦 Кол-во заказов:</span>
-              <b>{statsCar.ordersCount}</b>
+            <div className={`${styles.blockTitle} font16w600`}>
+              Статистика по авто за всё время
             </div>
 
             <div className={styles.statLine}>
-              <span>💰 Сумма:</span>
-              <b>{formatMoney(statsCar.incomeSum)} AED</b>
+              <span className="font14w400">Кол-во заказов:</span>
+              <b className="font14w600">{statsCar.ordersCount}</b>
             </div>
 
             <div className={styles.statLine}>
-              <span>⏱ Кол-во дней аренды:</span>
-              <b>{statsCar.rentDays}</b>
+              <span className="font14w400">Сумма:</span>
+              <b className="font14w600">{formatMoney(statsCar.incomeSum)} AED</b>
+            </div>
+
+            <div className={styles.statLine}>
+              <span className="font14w400">Кол-во дней аренды:</span>
+              <b className="font14w600">{statsCar.rentDays}</b>
             </div>
           </div>
 
           <div className={styles.block}>
-            <div className={styles.blockTitle}>🗂 Заказы:</div>
+            <div className={`${styles.blockTitle} font16w600`}>
+              Заказы:
+            </div>
 
             {pagedOrders.map((o, idx) => (
               <div key={o.id} className={styles.orderItem}>
                 <div className={styles.orderTop}>
-                  <b>
+                  <b className="font14w600">
                     {idx + 1 + (page - 1) * PAGE_SIZE}. {formatDate(o.created_at)}
                   </b>
-                  <span className={styles.orderStatus}>✅ Завершен</span>
+
+                  <span className={`${styles.orderStatus} font12w500`}>
+                    Завершен
+                  </span>
                 </div>
 
                 <div className={styles.orderBottom}>
-                  <div className={styles.orderClient}>👤 {o.payer}</div>
-                  <div className={styles.orderSum}>💰 {formatMoney(o.sum)} AED</div>
+                  <div className={`${styles.orderClient} font14w400`}>
+                    <span>{o.payer}</span>
+                  </div>
+
+                  <div className={`${styles.orderSum} font14w600`}>
+                    {formatMoney(o.sum)} AED
+                  </div>
                 </div>
               </div>
             ))}
-
-            {/* пагинация */}
-            {statsCar.orders.length > PAGE_SIZE && (
-              <div className={styles.pagination}>
-                <button
-                  type="button"
-                  className={styles.pageBtn}
-                  onClick={() => canPrev && setPage((p) => p - 1)}
-                  disabled={!canPrev}
-                >
-                  ⬅️ Назад
-                </button>
-
-                <div className={styles.pageInfo}>
-                  {page} / {totalPages}
-                </div>
-
-                <button
-                  type="button"
-                  className={styles.pageBtn}
-                  onClick={() => canNext && setPage((p) => p + 1)}
-                  disabled={!canNext}
-                >
-                  Вперёд ➡️
-                </button>
-              </div>
-            )}
           </div>
         </div>
       )}
-      <div className={styles.verticalIndent}/>
+
+      <div className={styles.verticalIndent} />
 
       <ButtonSection
         buttons={[
           {
-            icon: "📋",
+            icon: <ListCollapse strokeWidth={1.5} />,
             text: "Детализация",
             onClick: () => navigate("/financial-main/details"),
           },
           {
-            icon: "🚗",
+            icon: <Car strokeWidth={1.5} />,
             text: selectedCar == 'all' ? "Статистика по авто" : carTitle,
             onClick: () => setIsCarSelectOpen((p) => !p),
           },
@@ -261,8 +251,8 @@ export default function StatisticsPage() {
               setIsCarSelectOpen(false);
             }}
           >
-            <span>📊 Все авто</span>
-            {selectedCar === "all" && <span className={styles.check}>✅</span>}
+            <span>Все авто</span>
+            {selectedCar === "all" && <span className={styles.check}><Check color={tgTheme.accent} size={22} /></span>}
           </button>
 
           {carsList.map((car) => (
@@ -276,18 +266,13 @@ export default function StatisticsPage() {
                 setIsCarSelectOpen(false);
               }}
             >
-              <span>🚗 {car}</span>
-              {selectedCar === car && <span className={styles.check}>✅</span>}
+              <span>{car}</span>
+              {selectedCar === car && <span className={styles.check}><Check color={tgTheme.accent} size={22} /></span>}
             </button>
           ))}
         </div>
       )}
 
-      <div className={styles.section}>
-        <button type="button" className={styles.itemBack} onClick={() => navigate(-1)}>
-          ⬅️ В меню
-        </button>
-      </div>
     </AppLayout>
   );
 }

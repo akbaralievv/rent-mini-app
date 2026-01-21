@@ -1,29 +1,42 @@
 :root {
-  --tg-font:
-    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Roboto, Inter, Helvetica, Arial, sans-serif;
-  --tg-bg: #0f1720;
-  --tg-card: #1b2430;
-  --tg-card-2: #222d3a;
-  --tg-border: rgba(255, 255, 255, 0.06);
-  --tg-text: #e5e7eb;
-  --tg-muted: #9ca3af;
-  --tg-accent: #097dd3;
-  --tg-danger: #ff4d4f;
+  --tg-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --tg-bg: #191e23;
+  --tg-card: #1c2228;
+  --tg-card-2: #202830;
+  --tg-border: #2b323a;
+  --tg-text: #fefeff;
+  --tg-text-secondary: #818f9b;
+  --tg-muted: #545158;
+  --tg-accent: #4689d3;
+  --tg-danger: #d47062;
   --tg-warning: #fbbf24;
   --tg-success: #10b981;
+  --tg-filter-bg: #2e3a47;
 
+  --tg-btn-active: #5c6874;
   --tg-item-button-bg: #212a33;
   --tg-item-button-bg-hover: #2a3440;
+}
+
+button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  padding: 0;
 }
 
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: var(--tg-font);
 }
+
 body {
   background: var(--tg-bg);
+  font-family: var(--tg-font);
 }
 
 /* Loader */
@@ -42,4 +55,107 @@ body {
   border: 4px solid #e5e7eb;
   border-top-color: #3b82f6;
   animation: spin 0.8s linear infinite;
+}
+
+.miniBlock {
+  margin: 6px 12px;
+}
+
+.font12w400 {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--tg-text);
+}
+
+.font12w500 {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--tg-text);
+}
+
+.font13w400 {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--tg-text);
+}
+
+.font13w500 {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--tg-text);
+}
+
+.font14w400 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--tg-text);
+}
+
+.font14w500 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--tg-text);
+}
+
+.font14w600 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--tg-text);
+}
+
+.font16w400 {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--tg-text);
+}
+
+.font16w500 {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--tg-text);
+}
+
+.font16w600 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--tg-text);
+}
+
+.font18w600 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--tg-text);
+}
+
+.font20w700 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 26px;
+  color: var(--tg-text);
+}
+
+.font24w700 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 30px;
+  color: var(--tg-text);
+}
+
+.tracking-tight {
+  letter-spacing: -0.2px;
+}
+
+.tracking-normal {
+  letter-spacing: 0;
 }

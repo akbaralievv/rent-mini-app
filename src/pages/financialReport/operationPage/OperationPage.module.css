@@ -1,9 +1,8 @@
 .section {
   background: var(--tg-item-button-bg);
-  border-radius: 14px;
+  border-radius: 8px;
   overflow: hidden;
   margin-top: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Каждая операция */
@@ -59,27 +58,14 @@
   flex-shrink: 0;
 }
 
-.badgePlus {
-  background: rgba(46, 204, 113, 0.18);
-  color: #2ecc71;
-}
-
-.badgeMinus {
-  background: rgba(231, 76, 60, 0.18);
-  color: #e74c3c;
-}
-
 .sum {
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 800;
-  font-size: 14px;
   white-space: nowrap;
 }
 
 .currency {
-  opacity: 0.6;
   font-weight: 600;
   margin-left: 4px;
+  color: var(--tg-text);
 }
 
 /* Нижняя строка */
@@ -87,7 +73,6 @@
   margin-top: 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 .carName {
@@ -106,7 +91,7 @@
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 10px;
   padding: 12px 14px;
 }
@@ -115,18 +100,7 @@
   border: none;
   cursor: pointer;
   border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: background 0.12s ease, transform 0.12s ease;
-  min-width: 110px;
-}
-
-.pageBtn:hover {
-  background: rgba(255, 255, 255, 0.09);
+  background-color: transparent;
 }
 
 .pageBtn:active {
@@ -156,4 +130,63 @@
   font-size: 14px;
   cursor: pointer;
   font-weight: 600;
+}
+
+.colorIncrease {
+  color: #2ecc71;
+}
+
+.colorDecrease {
+  color: #e3695d;
+}
+
+.filterBtn {
+  background-color: var(--tg-card-2);
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.headerFilter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.filterBlock {
+  position: absolute;
+  top: 35px;
+  background-color: var(--tg-filter-bg);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 180px;
+}
+
+.filterBlock button {
+  padding: 8px 16px;
+  padding-right: 12px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filterBlock button:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }

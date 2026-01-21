@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./OperationPage.module.css";
 
 import { transactions, deposit } from "../../../common/mockData";
+import { Calendar, CalendarCheck, Check, ChevronDown, ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
+import { tgTheme } from "../../../common/commonStyle";
 
 const type = [
   { key: "increase", value: "Доходы" },
@@ -29,10 +31,12 @@ export default function OperationPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const key = location.state?.key; // increase | decrease | deposit
-  const title = type.find((el) => el.key === key)?.value || "Операции";
+  const [key, setKey] = useState(location.state?.key);
+
+  const [title, setTitle] = useState(type.find((el) => el.key === key)?.value || "Операции");
 
   const [page, setPage] = useState(1);
+  const [filterVisible, setFilterVisible] = useState(false);
 
   const list = useMemo(() => {
     let data = [];
@@ -50,6 +54,7 @@ export default function OperationPage() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTitle(type.find((el) => el.key === key)?.value || "Операции")
     setPage(1);
   }, [key]);
 
@@ -77,33 +82,79 @@ export default function OperationPage() {
     if (canNext) setPage((p) => p + 1);
   };
 
+  const chooseType = (key) => {
+    setFilterVisible(false);
+    setKey(key);
+  }
+
   return (
     <AppLayout
       onBack={() => navigate(-1)}
       title={`${title} (стр. ${page})`}
     >
       {/* список */}
+      <div className={styles.header}>
+        <div className={styles.headerFilter + ' miniBlock'}>
+          <span className="font16w600">Тип</span>
+          <button onClick={() => setFilterVisible(true)} className={styles.filterBtn}>
+            <ListFilter color={tgTheme.textSecondary} size={16} />
+            <span className={'font13w500'}>{title}</span>
+            <ChevronDown color={tgTheme.textSecondary} size={16} />
+          </button>
+          {
+            filterVisible && <div className={styles.filterBlock}>
+              <button onClick={() => chooseType('decrease')}>
+                <span className="font14w600">
+                  Расходы
+                </span>
+                {
+                  key == 'decrease' && <Check color={tgTheme.accent} size={22} />
+                }
+              </button>
+              <button onClick={() => chooseType('increase')}>
+                <span className="font14w600">
+                  Доходы
+                </span>
+                {
+                  key == 'increase' && <Check color={tgTheme.accent} size={22} />
+                }
+              </button>
+              <button onClick={() => chooseType('deposit')}>
+                <span className="font14w600">
+                  Депозиты
+                </span>
+                {
+                  key == 'deposit' && <Check color={tgTheme.accent} size={22} />
+                }
+              </button>
+            </div>
+          }
+        </div>
+        <div className={styles.headerFilter + ' miniBlock'}>
+          <button onClick={() => { }} className={styles.filterBtn}>
+            <Calendar color={tgTheme.textSecondary} size={16} />
+            <span className={'font13w500'}>01.02-01.02</span>
+            <ChevronDown color={tgTheme.textSecondary} size={16} />
+          </button>
+        </div>
+      </div>
       <div className={styles.section}>
         {pageData.map((item) => (
           <button key={`${key}-${item.id}`} className={styles.row} type="button">
             <div className={styles.topLine}>
               <div className={styles.left}>
-                <span className={styles.hash}>#{item.id}</span>
-                <span className={styles.date}>{formatDate(item.created_at)}</span>
-
-                {
-                  item.increse ? '✅' : '❌'
-                }
+                <span className={'font16w500'}>#{item.id}</span>
+                <span className={'font16w500'}>{formatDate(item.created_at)}</span>
               </div>
 
-              <div className={styles.sum}>
-                {formatMoney(item.sum)} <span className={styles.currency}>AED</span>
+              <div className={styles.sum + ' ' + (item.increse ? styles.colorIncrease : styles.colorDecrease) + ' font14w600'}>
+                {item.increse ? '+' : '-'}{formatMoney(item.sum)} <span className={styles.currency}>AED</span>
               </div>
             </div>
 
             <div className={styles.bottomLine}>
-              <div className={styles.carName}>{item.car_name || "—"}</div>
-              <div className={styles.desc}>{item.description || ""}</div>
+              <div className={'font14w500'}>{item.car_name || "—"}</div>
+              <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{item.description || ""}</span>
             </div>
           </button>
         ))}
@@ -116,7 +167,7 @@ export default function OperationPage() {
             onClick={handlePrev}
             disabled={!canPrev}
           >
-            ⬅️ Назад
+            <ChevronLeft color={tgTheme.btnActive} />
           </button>
 
           <div className={styles.pageInfo}>
@@ -129,17 +180,11 @@ export default function OperationPage() {
             onClick={handleNext}
             disabled={!canNext}
           >
-            Вперёд ➡️
+            <ChevronRight color={tgTheme.btnActive} />
           </button>
         </div>
       </div>
 
-      {/* в меню */}
-      <div className={styles.section}>
-        <button type="button" className={styles.itemBack} onClick={() => navigate(-1)}>
-          ⬅ В меню
-        </button>
-      </div>
     </AppLayout>
   );
 }

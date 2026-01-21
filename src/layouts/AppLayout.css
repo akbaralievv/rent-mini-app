@@ -7,13 +7,11 @@
 .app-header {
     display: flex;
     align-items: center;
-    gap: 12px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 10;
-    background: rgba(15, 23, 32, 0.72);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     height: 60px;
@@ -24,7 +22,7 @@
     background: none;
     border: none;
     font-size: 22px;
-    color: var(--tg-accent);
+    color: var(--tg-btn-active);
     cursor: pointer;
     padding: 4px;
     border-radius: 10px;
@@ -34,10 +32,11 @@
 }
 
 .back-arrow:hover {
-    background: rgba(46, 166, 255, 0.12);
+    background: var(--tg-card-2);
 }
 
 .app-title {
+    margin-left: 12px;
     font-size: 20px;
     font-weight: 700;
     color: var(--tg-text);

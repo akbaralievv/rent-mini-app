@@ -6,6 +6,9 @@ import { deposit, transactions } from '../../../common/mockData'
 import AppLayout from '../../../layouts/AppLayout'
 import { useNavigate } from 'react-router-dom'
 import DuoButtons from '../../../components/DuoButtons/DuoButtons'
+import { CarIcon, ClipboardList, FileDown, ListOrdered } from 'lucide-react'
+import { tgTheme } from '../../../common/commonStyle'
+import ButtonSection from '../../../components/ButtonSection/ButtonSection'
 
 function formatDate(iso) {
   const [y, m, d] = iso.split('-')
@@ -88,49 +91,52 @@ export default function ReportsPage() {
     <AppLayout onBack={() => navigate(-1)} title={'Отчет'}>
       <div className={styles.card}>
         {/* Верхний блок */}
-        <div className={styles.fileBlock}>
-          <div className={styles.fileIcon}>⬇️</div>
+        <div>
 
-          <div className={styles.fileInfo}>
-            <div className={styles.fileName}>finance_report.xlsx</div>
-            <div className={styles.fileMeta}>
-              <span>{rows.length} строк</span>
-              <span className={styles.dot}>•</span>
-              <button
-                className={styles.downloadBtn}
-                type="button"
-                onClick={handleDownload}
-              >
-                Загрузить
-              </button>
+          <div className={styles.fileCard}>
+            <div className={styles.fileBlock}>
+              <div className={styles.fileIcon}><FileDown strokeWidth={1.5} color={tgTheme.text} /></div>
+
+              <div className={styles.fileInfo}>
+                <div className={styles.fileName}>finance_report.xlsx</div>
+                <div className={styles.fileMeta}>
+                  <span>{rows.length} строк</span>
+                  <span className={styles.dot}>•</span>
+                </div>
+              </div>
             </div>
+            <button
+              className={styles.downloadBtn}
+              type="button"
+              onClick={handleDownload}
+            >
+              <span className='font14w600'>
+                Скачать
+              </span>
+            </button>
           </div>
-        </div>
 
-        <div className={styles.content}>
-          <div className={styles.title}>Отчет сформирован.</div>
-          <div className={styles.subtitle}>
-            Сформировано на основе транзакций и депозитов по датам.
+          <div className={'miniBlock'}>
+            <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
+              Сформировано на основе транзакций и депозитов по датам.
+            </span>
           </div>
         </div>
-        <DuoButtons
+        <ButtonSection
+          title='Тип отчета'
           buttons={[
             {
-              text: 'Заказы',
-              onClick: () => alert('фильтра по заказам нету')
+              icon: <CarIcon />,
+              text: 'По авто',
+              onClick: () => alert('Фильтра по заказам нету')
             },
             {
-              text: 'Машины',
-              onClick: () => alert('фильтра по машинам нету')
+              icon: <ClipboardList />,
+              text: 'По заказам',
+              onClick: () => alert('Фильтра по заказам нету')
             },
           ]}
         />
-        {}
-        <div className={styles.section}>
-          <button type="button" className={styles.itemBack} onClick={() => navigate(-1)}>
-            ⬅ В меню
-          </button>
-        </div>
       </div>
     </AppLayout>
   )

@@ -2,8 +2,8 @@
   margin-bottom: 8px;
 }
 
-.verticalIndent16 {
-  margin-bottom: 16px;
+.verticalIndent36 {
+  margin-bottom: 36px;
 }
 
 /* блок секции как в телеге */
@@ -79,9 +79,9 @@
 }
 
 .currency {
-  opacity: 0.6;
   font-weight: 600;
   margin-left: 4px;
+  color: var(--tg-text);
 }
 
 /* Нижняя строка */
@@ -139,7 +139,7 @@
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 10px;
   padding: 12px 14px;
 }
@@ -148,18 +148,7 @@
   border: none;
   cursor: pointer;
   border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: background 0.12s ease, transform 0.12s ease;
-  min-width: 110px;
-}
-
-.pageBtn:hover {
-  background: rgba(255, 255, 255, 0.09);
+  background-color: transparent;
 }
 
 .pageBtn:active {
@@ -174,7 +163,7 @@
 .pageInfo {
   color: rgba(255, 255, 255, 0.6);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -189,4 +178,12 @@
   font-size: 14px;
   cursor: pointer;
   font-weight: 700;
+}
+
+.colorIncrease {
+  color: #2ecc71;
+}
+
+.colorDecrease {
+  color: #e3695d;
 }

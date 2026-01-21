@@ -12,6 +12,9 @@
   width: 100%;
   /* background: linear-gradient(180deg, #101722 0%, #0f141d 100%); */
   border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
   /* box-shadow: 0 10px 35px rgba(0, 0, 0, 0.55); */
   /* border: 1px solid rgba(255, 255, 255, 0.06); */
 }
@@ -20,10 +23,15 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 14px;
+  background: #2b3642;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.fileCard {
+  border-radius: 12px;
   padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--tg-card-2);
 }
 
 .fileIcon {
@@ -32,8 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
   font-size: 18px;
 }
 
@@ -66,17 +73,16 @@
 }
 
 .downloadBtn {
-  background: transparent;
-  border: none;
-  padding: 0;
+  border-radius: 8px;
+  padding: 8px 0px;
+  width: 46%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tg-accent);
   cursor: pointer;
-  color: #4da3ff;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.downloadBtn:hover {
-  text-decoration: underline;
+  border: none;
+  margin-top: 8px;
 }
 
 .content {

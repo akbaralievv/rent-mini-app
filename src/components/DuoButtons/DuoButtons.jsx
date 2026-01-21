@@ -7,7 +7,12 @@ export default function DuoButtons({ buttons = [] }) {
       {
         buttons.map((el) => {
           return <button className={styles.item} onClick={() => el.onClick()}>
-            {el.text}
+            <div>
+              {el.icon}
+              <span>
+                {el.text}
+              </span>
+            </div>
           </button>
         })
       }

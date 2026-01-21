@@ -2,16 +2,40 @@
 import AppLayout from "../../layouts/AppLayout";
 import MenuItem from "../../components/MenuItem";
 import "./Menu.css";
+import ButtonSection from "../../components/ButtonSection/ButtonSection";
+import { useNavigate } from "react-router-dom";
+import { BarChart3, FileSignature, Newspaper, Palette } from "lucide-react";
 
 export default function Menu() {
-    return (
-        <AppLayout title="Меню">
-            <div className="menu-list">
-                <MenuItem icon="📰" title="Статьи" to="/news" />
-                <MenuItem icon="📄" title="Договоры" to="/contracts" />
-                <MenuItem icon="🎨" title="Шаблоны договоров" to="/contracts/templates" />
-                <MenuItem icon="📊" title="Фин. отчет" to="/financial-main" />
-            </div>
-        </AppLayout>
-    );
+  const navigate = useNavigate();
+  return (
+    <AppLayout title="Меню">
+      <div className="menu-list">
+        <ButtonSection
+          buttons={[
+            {
+              icon: <Newspaper strokeWidth={1.5}/>,
+              text: 'Статьи',
+              onClick: () => navigate('/news')
+            },
+            {
+              icon: <FileSignature strokeWidth={1.5}/>,
+              text: 'Договоры',
+              onClick: () => navigate('/contracts')
+            },
+            {
+              icon: <Palette strokeWidth={1.5}/>,
+              text: 'Шаблоны договоров',
+              onClick: () => navigate('/contracts/templates')
+            },
+            {
+              icon: <BarChart3 strokeWidth={1.5}/>,
+              text: 'Фин. отчет',
+              onClick: () => navigate('/financial-main')
+            },
+          ]}
+        />
+      </div>
+    </AppLayout>
+  );
 }
