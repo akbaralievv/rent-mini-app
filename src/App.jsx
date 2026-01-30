@@ -19,6 +19,7 @@ import ClientsDocumentsPage from './pages/clientsDocument/ClientsDocumentsPage';
 import CompanyDocumentPage from './pages/companyDocument/CompanyDocumentPage';
 import CompanyDocumentDetailPage from './pages/companyDocument/companyDocumentDetail/CompanyDocumentDetailPage';
 import OperationEditPage from './pages/financialReport/operationPage/OperationEditPage/OperationEditPage';
+import TagsPage from './pages/financialReport/tagsPage/TagsPage';
 
 function Router() {
   const { status } = useAuth();
@@ -52,6 +53,7 @@ function Router() {
       <Route path="/financial-main/reports" element={<ReportsPage />} />
       <Route path="/financial-main/statistics" element={<StatisticsPage />} />
       <Route path="/financial-main/details" element={<DetailsPage />} />
+      <Route path="/financial-main/tags" element={<TagsPage />} />
 
       <Route path="/clients-document" element={<ClientsDocumentsPage />} />
       <Route path="/company-document" element={<CompanyDocumentPage />} />

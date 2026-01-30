@@ -6,7 +6,7 @@ import ButtonSection from '../../../components/ButtonSection/ButtonSection'
 import DuoButtons from '../../../components/DuoButtons/DuoButtons'
 import { deposit, transactions } from '../../../common/mockData'
 import ReportCard from '../../../components/ReportCard/ReportCard'
-import { BadgeDollarSign, BadgeDollarSignIcon, BarChart3, FolderDown, Landmark, PiggyBank, Receipt, ShieldCheck, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
+import { BadgeDollarSign, BadgeDollarSignIcon, BarChart3, FolderDown, Landmark, PiggyBank, Receipt, ShieldCheck, Tags, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 
@@ -116,6 +116,11 @@ export default function MenuFinancial() {
         <ButtonSection
           title='Инструменты'
           buttons={[
+            {
+              icon: <Tags strokeWidth={1.5} />,
+              text: 'Теги финансов',
+              onClick: () => handleClick(navigate('/financial-main/tags'))
+            },
             {
               icon: <BarChart3 strokeWidth={1.5} />,
               text: 'Статистика',
