@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import AppLayout from '../../layouts/AppLayout'
 import { useNavigate } from 'react-router-dom'
 import styles from './ClientsDocumentsPage.module.css'
-import { ArrowDown, Calendar, ChevronDown, Eye, Plus, Trash2, X, Upload } from 'lucide-react'
+import { ArrowDown, Calendar, Check, ChevronDown, Eye, Plus, Trash2, X, Upload } from 'lucide-react'
 import { tgTheme } from '../../common/commonStyle'
 import FileItem from '../../components/FileItem/FileItem'
 import { getErrorMessage, getImageUrl } from '../../utils'
@@ -16,6 +16,10 @@ export default function ClientsDocumentsPage() {
   const navigate = useNavigate()
 
   const [isOpen, setIsOpen] = useState(false)
+  const [selectionMode, setSelectionMode] = useState(false)
+  const [selectedIds, setSelectedIds] = useState(new Set())
+  const longPressTimerRef = useRef(null)
+  const longPressTriggeredRef = useRef(false)
 
   const [form, setForm] = useState({
     client: '',
@@ -71,10 +75,95 @@ export default function ClientsDocumentsPage() {
     }
   }
 
+  const startSelection = (id) => {
+    setSelectionMode(true)
+    setSelectedIds(new Set([id]))
+  }
+
+  const toggleSelection = (id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      if (next.size === 0) setSelectionMode(false)
+      return next
+    })
+  }
+
+  const clearLongPress = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current)
+      longPressTimerRef.current = null
+    }
+  }
+
+  const handlePressStart = (id, e) => {
+    if (e?.target?.closest?.('button')) return
+    clearLongPress()
+    longPressTriggeredRef.current = false
+    longPressTimerRef.current = setTimeout(() => {
+      longPressTriggeredRef.current = true
+      startSelection(id)
+    }, 350)
+  }
+
+  const handlePressEnd = () => {
+    clearLongPress()
+  }
+
+  const handleDeleteSelected = async () => {
+    if (selectedIds.size === 0) return
+    if (!confirm('Удалить выбранные документы?')) return
+    try {
+      const ids = Array.from(selectedIds)
+      await Promise.all(ids.map((id) => deleteClientDocument(id).unwrap()))
+      setSelectedIds(new Set())
+      setSelectionMode(false)
+    } catch (err) {
+      alert(getErrorMessage(err, 'Не удалось удалить документы'))
+    }
+  }
+
+  const download = (fileUrl) => {
+    const a = document.createElement('a');
+    a.href = fileUrl;
+    a.download = '';
+    a.click();
+  };
+
+  const handleDownloadSelected = async () => {
+    if (selectedIds.size === 0) return
+    try {
+      const ids = Array.from(selectedIds)
+      await Promise.all(ids.map((id) => {
+        const doc = documents.find(d => d.id === id)
+        if (doc) {
+          const docUrl = getImageUrl(doc.url)
+          download(docUrl)
+        }
+      }))
+    } catch (err) {
+      alert(getErrorMessage(err, 'Не удалось скачать документы'))
+    } 
+  }
+  
   return (
     <AppLayout title={'Документы клиентов'} onBack={() => navigate(-1)}>
       <div>
-        <div className={styles.headerFilter + ' miniBlock'}>
+        {selectionMode ? <div className={`${styles.headerFilter} miniBlock ${styles.isSelectionMode}`}>
+          <button className={styles.filterBtn} onClick={handleDownloadSelected}>
+            <ArrowDown size={16} color={tgTheme.text} strokeWidth={1.5} />
+            <span className={'font13w500'}>Скачать</span>
+          </button>
+
+          <button onClick={handleDeleteSelected} className={styles.filterBtn}>
+            <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
+            <span className={'font13w500'}>Удалить</span>
+          </button>
+        </div> : <div className={styles.headerFilter + ' miniBlock'}>
           <button className={styles.filterBtn} onClick={() => setIsOpen(true)}>
             <Plus color={tgTheme.textSecondary} size={16} />
             <span className={'font13w500'}>Добавить</span>
@@ -85,7 +174,7 @@ export default function ClientsDocumentsPage() {
             <span className={'font13w500'}>01.02-01.02</span>
             <ChevronDown color={tgTheme.textSecondary} size={16} />
           </button>
-        </div>
+        </div>}
       </div>
 
       <div className={styles.wrapper}>
@@ -94,9 +183,32 @@ export default function ClientsDocumentsPage() {
         <div className={styles.list}>
           {documents.map((el) => {
             const docUrl = getImageUrl(el.url)
+            const isSelected = selectedIds.has(el.id)
             return (
-              <div key={el.id} className={styles.item}>
+              <div
+                key={el.id}
+                className={`${styles.item} ${selectionMode ? styles.itemSelectable : ''} ${isSelected ? styles.itemSelected : ''}`}
+                onMouseDown={(e) => handlePressStart(el.id, e)}
+                onMouseUp={handlePressEnd}
+                onMouseLeave={handlePressEnd}
+                onTouchStart={(e) => handlePressStart(el.id, e)}
+                onTouchEnd={handlePressEnd}
+                onClick={(e) => {
+                  if (!selectionMode) return
+                  if (e?.target?.closest?.('button')) return
+                  if (longPressTriggeredRef.current) {
+                    longPressTriggeredRef.current = false
+                    return
+                  }
+                  toggleSelection(el.id)
+                }}
+              >
                 <div className={styles.left}>
+                  {selectionMode && (
+                    <div className={`${styles.checkbox} ${isSelected ? styles.checkboxChecked : ''}`}>
+                      {isSelected && <Check size={12} color="#fff" />}
+                    </div>
+                  )}
                   <div className={styles.icon}>
                     <FileItem name={el.name} />
                   </div>
@@ -117,12 +229,14 @@ export default function ClientsDocumentsPage() {
                   <button
                     className={styles.btn}
                     onClick={() => window.open(docUrl, '_blank')}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
                     <Eye size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
                   <button
                     className={styles.btn}
-                    onClick={() => window.open(docUrl, '_blank')}
+                    onClick={() => download(docUrl)}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
                     <ArrowDown size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
@@ -130,6 +244,7 @@ export default function ClientsDocumentsPage() {
                     className={styles.btn}
                     onClick={() => handleDelete(el.id)}
                     disabled={isDeleting}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
                     <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>

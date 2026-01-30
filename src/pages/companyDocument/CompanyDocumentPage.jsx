@@ -71,7 +71,7 @@ export default function CompanyDocumentPage() {
               text: section.name,
               actions: [
                 {
-                  icon: <Edit2 size={16} color={tgTheme.text} />,
+                  icon: <Edit2 size={16} color={tgTheme.btnActive} />,
                   onClick: () => handleEdit(section),
                 },
               ],

@@ -21,6 +21,15 @@
     border 0.15s ease;
 }
 
+.itemSelectable {
+  cursor: pointer;
+}
+
+.itemSelected {
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--tg-item-button-bg-hover);
+}
+
 .item:hover {
   transform: translateY(-1px);
   background: var(--tg-item-button-bg-hover);
@@ -31,6 +40,22 @@
   align-items: center;
   gap: 10px;
   min-width: 0;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkboxChecked {
+  background: var(--tg-accent);
+  border-color: var(--tg-accent);
 }
 
 .icon {
@@ -279,4 +304,10 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+.isSelectionMode {
+  justify-content: flex-start;
+}
+.isSelectionMode button:last-child {
+  background: var(--tg-danger);
 }
