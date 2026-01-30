@@ -17,7 +17,7 @@ import StatisticsPage from './pages/financialReport/statisticsPage/StatisticsPag
 import DetailsPage from './pages/financialReport/detailsPage/DetailsPage';
 import ClientsDocumentsPage from './pages/clientsDocument/ClientsDocumentsPage';
 import CompanyDocumentPage from './pages/companyDocument/CompanyDocumentPage';
-import CompanyDocumentDetailPage from './pages/companyDocument/companyDocumentDetail/companyDocumentDetailPage';
+import CompanyDocumentDetailPage from './pages/companyDocument/companyDocumentDetail/CompanyDocumentDetailPage';
 import OperationEditPage from './pages/financialReport/operationPage/OperationEditPage/OperationEditPage';
 
 function Router() {
