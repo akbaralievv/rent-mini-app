@@ -32,8 +32,6 @@ function formatMoney(num) {
 export default function OperationPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data: tags } = useGetTagsQuery();
-  console.log(tags);
 
   const [key, setKey] = useState(location.state?.key);
 

@@ -26,17 +26,16 @@ export default function ButtonSection({ buttons = [], title = '' }) {
                 {Array.isArray(el.actions) && el.actions.length > 0 && (
                   <div className={styles.actions}>
                     {el.actions.map((action, actionIndex) => (
-                      <button
+                      <div
                         key={actionIndex}
                         className={styles.actionBtn}
                         onClick={(e) => {
                           e.stopPropagation()
                           action.onClick?.()
                         }}
-                        type="button"
                       >
                         {action.icon}
-                      </button>
+                      </div>
                     ))}
                   </div>
                 )}

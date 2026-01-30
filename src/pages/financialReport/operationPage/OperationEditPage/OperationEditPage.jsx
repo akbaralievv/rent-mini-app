@@ -65,12 +65,6 @@ export default function OperationEditPage() {
       return;
     }
 
-    if (isEdit) {
-      console.log("UPDATE OPERATION", { id, ...form });
-    } else {
-      console.log("CREATE OPERATION", form);
-    }
-
     navigate(-1);
   };
 
