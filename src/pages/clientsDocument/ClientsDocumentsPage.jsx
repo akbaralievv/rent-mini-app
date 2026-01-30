@@ -131,6 +131,7 @@ export default function ClientsDocumentsPage() {
     const a = document.createElement('a');
     a.href = fileUrl;
     a.download = '';
+    a.target = '_blank';
     a.click();
   };
 
@@ -149,7 +150,7 @@ export default function ClientsDocumentsPage() {
       alert(getErrorMessage(err, 'Не удалось скачать документы'))
     } 
   }
-  
+
   return (
     <AppLayout title={'Документы клиентов'} onBack={() => navigate(-1)}>
       <div>

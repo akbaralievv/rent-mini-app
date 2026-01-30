@@ -151,6 +151,7 @@ const handleDeleteSelected = async () => {
     const a = document.createElement('a');
     a.href = fileUrl;
     a.download = '';
+    a.target = '_blank';
     a.click();
   };
 
