@@ -7,6 +7,8 @@ import { contractColorSchemesApi } from './services/contractColorShemes';
 import { contractTemplatesApi } from './services/contractTemplates';
 import { ordersApi } from './services/orders';
 import { carsApi } from './services/cars';
+import { tagsApi } from './services/tagsAction';
+import { companyDocumentSectionsApi } from './services/getCompanySectionsAction';
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +19,8 @@ export const store = configureStore({
     [ordersApi.reducerPath]: ordersApi.reducer,
     [contractColorSchemesApi.reducerPath]: contractColorSchemesApi.reducer,
     [contractTemplatesApi.reducerPath]: contractTemplatesApi.reducer,
+    [tagsApi.reducerPath]: tagsApi.reducer,
+    [companyDocumentSectionsApi.reducerPath]: companyDocumentSectionsApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -28,6 +32,8 @@ export const store = configureStore({
       ordersApi.middleware,
       contractTemplatesApi.middleware,
       contractColorSchemesApi.middleware,
+      tagsApi.middleware,
+      companyDocumentSectionsApi.middleware,
     ),
 });
 

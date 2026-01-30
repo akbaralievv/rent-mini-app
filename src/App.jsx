@@ -15,6 +15,10 @@ import OperationPage from './pages/financialReport/operationPage/OperationPage';
 import ReportsPage from './pages/financialReport/reportsPage/ReportsPage';
 import StatisticsPage from './pages/financialReport/statisticsPage/StatisticsPage';
 import DetailsPage from './pages/financialReport/detailsPage/DetailsPage';
+import ClientsDocumentsPage from './pages/clientsDocument/ClientsDocumentsPage';
+import CompanyDocumentPage from './pages/companyDocument/CompanyDocumentPage';
+import CompanyDocumentDetailPage from './pages/companyDocument/companyDocumentDetail/companyDocumentDetailPage';
+import OperationEditPage from './pages/financialReport/operationPage/OperationEditPage/OperationEditPage';
 
 function Router() {
   const { status } = useAuth();
@@ -43,9 +47,15 @@ function Router() {
 
       <Route path="/financial-main" element={<MenuFinancial />} />
       <Route path="/financial-main/operation" element={<OperationPage />} />
+      <Route path="/operations/:id/edit" element={<OperationEditPage />} />
+      <Route path="/operations/create" element={<OperationEditPage />} />
       <Route path="/financial-main/reports" element={<ReportsPage />} />
       <Route path="/financial-main/statistics" element={<StatisticsPage />} />
       <Route path="/financial-main/details" element={<DetailsPage />} />
+
+      <Route path="/clients-document" element={<ClientsDocumentsPage />} />
+      <Route path="/company-document" element={<CompanyDocumentPage />} />
+      <Route path="/company-document/:id" element={<CompanyDocumentDetailPage />} />
     </Routes>
   );
 }

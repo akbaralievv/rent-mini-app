@@ -1,3 +1,5 @@
+import { File, FileDoc, FileImage, FileJpg, FilePdf, FilePng, FileText, FileXls, FileZip } from "phosphor-react";
+
 export const tgTheme = {
 
   bg: '#191e23',
@@ -17,4 +19,28 @@ export const tgTheme = {
   btnActive: '#5c6874',
   itemButtonBg: '#212a33',
   itemButtonBgHover: '#2a3440',
+
+  white: '#ffffff'
 };
+
+export const fileIconMap = {
+  pdf: FilePdf,
+  doc: FileDoc,
+  docx: FileDoc,
+  xls: FileXls,
+  xlsx: FileXls,
+  txt: FileText,
+  jpg: FileJpg,
+  jpeg: FileJpg,
+  png: FilePng,
+  gif: FileImage,
+  zip: FileZip,
+  rar: FileZip,
+}
+
+export function getFileIcon(fileName) {
+  const ext = fileName.split('.').pop().toLowerCase()
+  return fileIconMap[ext] || File
+}
+
+

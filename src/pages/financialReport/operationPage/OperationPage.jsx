@@ -4,8 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./OperationPage.module.css";
 
 import { transactions, deposit } from "../../../common/mockData";
-import { Calendar, CalendarCheck, Check, ChevronDown, ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
+import { ArrowDown, Calendar, CalendarCheck, Check, ChevronDown, ChevronLeft, ChevronRight, ClipboardEditIcon, Edit, Edit2, Eye, ListFilter, Plus, Trash2 } from "lucide-react";
 import { tgTheme } from "../../../common/commonStyle";
+import Tag from "../../../components/Tag/Tag";
+import { useGetTagsQuery } from "../../../redux/services/tagsAction";
 
 const type = [
   { key: "increase", value: "Доходы" },
@@ -30,6 +32,8 @@ function formatMoney(num) {
 export default function OperationPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { data: tags } = useGetTagsQuery();
+  console.log(tags);
 
   const [key, setKey] = useState(location.state?.key);
 
@@ -138,9 +142,15 @@ export default function OperationPage() {
           </button>
         </div>
       </div>
+      <div className={styles.headerFilter + ' miniBlock'}>
+        <button className={styles.filterBtn} onClick={() => navigate("/operations/create")}>
+          <Plus color={tgTheme.textSecondary} size={16} />
+          <span className={'font13w500'}>Добавить</span>
+        </button>
+      </div>
       <div className={styles.section}>
         {pageData.map((item) => (
-          <button key={`${key}-${item.id}`} className={styles.row} type="button">
+          <div key={`${key}-${item.id}`} className={styles.row} >
             <div className={styles.topLine}>
               <div className={styles.left}>
                 <span className={'font16w500'}>#{item.id}</span>
@@ -152,11 +162,29 @@ export default function OperationPage() {
               </div>
             </div>
 
-            <div className={styles.bottomLine}>
-              <div className={'font14w500'}>{item.car_name || "—"}</div>
-              <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{item.description || ""}</span>
+            <Tag />
+
+            <div className={styles.cardFooter}>
+              <div className={styles.bottomLine}>
+                <div className={'font14w500'}>{item.car_name || "—"}</div>
+                <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{item.description || ""}</span>
+              </div>
+              <div className={styles.right}>
+                <button
+                  className={styles.btn}
+                  onClick={() => navigate(`/operations/${item.id}/edit`)}
+                >
+                  <ClipboardEditIcon size={16} color={tgTheme.text} strokeWidth={1.5} />
+                </button>
+                <button
+                  className={styles.btn}
+                  onClick={() => { }}
+                >
+                  <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
+                </button>
+              </div>
             </div>
-          </button>
+          </div>
         ))}
 
         {/* пагинация */}

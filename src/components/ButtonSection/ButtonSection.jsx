@@ -14,15 +14,17 @@ export default function ButtonSection({ buttons = [], title = '' }) {
       }
       <div className={styles.section}>
         {
-          buttons.map((el) => {
-            return <button className={styles.item} onClick={() => el.onClick()}>
+          buttons.map((el, index) => {
+            return <button className={styles.item} onClick={() => el.onClick()} key={index}>
               <div className={styles.itemLeft}>
                 {el.icon}
                 <span className='font14w500'>
                   {el.text}
                 </span>
               </div>
-              <ChevronRight color={tgTheme.btnActive} size={20} />
+              {
+                !el.arrowHide && <ChevronRight color={tgTheme.btnActive} size={20} />
+              }
             </button>
           })
         }

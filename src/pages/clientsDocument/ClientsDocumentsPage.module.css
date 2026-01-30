@@ -1,0 +1,275 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Карточка элемента */
+.item {
+  display: flex;
+  flex-direction: column;
+
+  padding: 12px 12px;
+  border-radius: 8px;
+  gap: 10px;
+
+  background: var(--tg-card-2);
+
+  transition: transform 0.15s ease, background 0.15s ease, border 0.15s ease;
+}
+
+.item:hover {
+  transform: translateY(-1px);
+  background: var(--tg-item-button-bg-hover);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--tg-item-button-bg-hover);
+
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.name {
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  opacity: 0.6;
+}
+
+.right {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn {
+  border-radius: 10px;
+  width: 20px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.filterBtn {
+  background-color: var(--tg-card-2);
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.headerFilter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+/* ✅ MODAL */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  z-index: 999;
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  background: var(--tg-card-2);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.modalClose {
+  background: transparent;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalClose:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.modalBody {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.input {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ✅ красивый выбор файла */
+.filePick {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.filePick:hover {
+  transform: translateY(-1px);
+}
+
+.filePickLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filePickRight {
+  max-width: 60%;
+  overflow: hidden;
+}
+
+.fileHint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fileInputHidden {
+  display: none;
+}
+
+.removeFileBtn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  cursor: pointer;
+  width: fit-content;
+  padding: 6px 0;
+}
+
+.modalFooter {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.secondaryBtn {
+  border-radius: 8px;
+  padding: 8px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+}
+
+.secondaryBtn:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.primaryBtn {
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tg-accent);
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+}
+
+.primaryBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}

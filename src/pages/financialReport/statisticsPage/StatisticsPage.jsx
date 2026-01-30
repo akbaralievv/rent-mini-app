@@ -103,7 +103,10 @@ export default function StatisticsPage() {
   }, [selectedCar, ordersByCar]);
 
   const totalPages = Math.max(1, Math.ceil((statsCar?.orders?.length || 0) / PAGE_SIZE));
+  
+  // eslint-disable-next-line no-unused-vars
   const canPrev = page > 1;
+  // eslint-disable-next-line no-unused-vars
   const canNext = page < totalPages;
 
   const pagedOrders = useMemo(() => {

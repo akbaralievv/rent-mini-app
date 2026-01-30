@@ -1,0 +1,13 @@
+.tagNeutralDot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  background: var(--tg-filter-bg);
+  border: 1px solid hsl(212, 20%, 33%);
+}
+
