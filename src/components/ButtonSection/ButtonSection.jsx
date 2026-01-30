@@ -22,9 +22,26 @@ export default function ButtonSection({ buttons = [], title = '' }) {
                   {el.text}
                 </span>
               </div>
-              {
-                !el.arrowHide && <ChevronRight color={tgTheme.btnActive} size={20} />
-              }
+              <div className={styles.itemRight}>
+                {Array.isArray(el.actions) && el.actions.length > 0 && (
+                  <div className={styles.actions}>
+                    {el.actions.map((action, actionIndex) => (
+                      <button
+                        key={actionIndex}
+                        className={styles.actionBtn}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          action.onClick?.()
+                        }}
+                        type="button"
+                      >
+                        {action.icon}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {!el.arrowHide && <ChevronRight color={tgTheme.btnActive} size={20} />}
+              </div>
             </button>
           })
         }

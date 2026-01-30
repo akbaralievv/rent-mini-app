@@ -9,6 +9,8 @@ import { ordersApi } from './services/orders';
 import { carsApi } from './services/cars';
 import { tagsApi } from './services/tagsAction';
 import { companyDocumentSectionsApi } from './services/getCompanySectionsAction';
+import { clientDocumentsApi } from './services/getClientsDocumentsAction';
+import { companySectionDocumentsApi } from './services/companySectionDocuments';
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +23,8 @@ export const store = configureStore({
     [contractTemplatesApi.reducerPath]: contractTemplatesApi.reducer,
     [tagsApi.reducerPath]: tagsApi.reducer,
     [companyDocumentSectionsApi.reducerPath]: companyDocumentSectionsApi.reducer,
+    [clientDocumentsApi.reducerPath]: clientDocumentsApi.reducer,
+    [companySectionDocumentsApi.reducerPath]: companySectionDocumentsApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -34,6 +38,8 @@ export const store = configureStore({
       contractColorSchemesApi.middleware,
       tagsApi.middleware,
       companyDocumentSectionsApi.middleware,
+      clientDocumentsApi.middleware,
+      companySectionDocumentsApi.middleware,
     ),
 });
 

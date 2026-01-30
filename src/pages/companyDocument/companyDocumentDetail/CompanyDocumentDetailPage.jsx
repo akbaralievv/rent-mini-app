@@ -1,12 +1,20 @@
 import React, { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styles from './CompanyDocumentDetailPage.module.css'
-import { ArrowDown, Calendar, ChevronDown, Eye, File, Plus, Trash2, X, Upload } from 'lucide-react'
-import { clientsDocumentMockData } from '../../../common/clientsDocumentData'
+import { ArrowDown, Calendar, ChevronDown, Eye, Plus, Trash2, X, Upload } from 'lucide-react'
 import AppLayout from '../../../layouts/AppLayout'
 import { tgTheme } from '../../../common/commonStyle'
 import FileItem from '../../../components/FileItem/FileItem'
-import { useGetCompanyDocumentSectionsQuery } from '../../../redux/services/getCompanySectionsAction'
+import {
+  useDeleteCompanyDocumentSectionMutation,
+  useGetCompanyDocumentSectionsQuery,
+} from '../../../redux/services/getCompanySectionsAction'
+import { getErrorMessage, getImageUrl } from '../../../utils'
+import {
+  useCreateCompanySectionDocumentMutation,
+  useDeleteCompanySectionDocumentMutation,
+  useGetCompanySectionDocumentsQuery,
+} from '../../../redux/services/companySectionDocuments'
 
 export default function CompanyDocumentDetailPage() {
   const navigate = useNavigate();
@@ -15,13 +23,20 @@ export default function CompanyDocumentDetailPage() {
       data: sections = [],
     } = useGetCompanyDocumentSectionsQuery();
 
-  const [documents, setDocuments] = useState(clientsDocumentMockData)
+  const sectionId = params.id
+  const {
+    data: documents = [],
+    isLoading,
+    isError,
+    error,
+  } = useGetCompanySectionDocumentsQuery(sectionId)
+
+  const [createDocument, { isLoading: isCreating }] = useCreateCompanySectionDocumentMutation()
+  const [deleteDocument, { isLoading: isDeleting }] = useDeleteCompanySectionDocumentMutation()
+  const [deleteSection, { isLoading: isDeletingSection }] = useDeleteCompanyDocumentSectionMutation()
   const [isOpen, setIsOpen] = useState(false)
 
   const [form, setForm] = useState({
-    name: '',
-    date: '',
-    client: '',
     file: null,
   })
 
@@ -36,27 +51,46 @@ export default function CompanyDocumentDetailPage() {
 
   const closeModal = () => {
     setIsOpen(false)
-    setForm({ name: '', date: '', client: '', file: null })
+    setForm({ file: null })
   }
 
-  const handleSave = () => {
-    // Простая валидация
-    if (!form.name?.trim()) return alert('Введите название документа')
-    if (!form.date) return alert('Выберите дату')
+  const handleSave = async () => {
     if (!form.file) return alert('Выберите файл')
 
-    // ⚠️ Тут вместо mock — обычно отправка на сервер (FormData)
-    const newDoc = {
-      id: Date.now(),
-      name: form.name.trim(),
-      date: form.date,
-      size: formatBytes(form.file.size),
-      url: URL.createObjectURL(form.file), // временно для просмотра
-      client: form.client?.trim() || '',
-    }
+    const formData = new FormData()
+    formData.append('file', form.file)
 
-    setDocuments((prev) => [newDoc, ...prev])
-    closeModal()
+    try {
+      await createDocument({ sectionId, formData }).unwrap()
+      closeModal()
+    } catch (err) {
+      alert(getErrorMessage(err, 'Не удалось загрузить документ'))
+    }
+  }
+
+  const handleDelete = async (id) => {
+    if (!id) return
+    if (!confirm('Удалить документ?')) return
+    try {
+      await deleteDocument(id).unwrap()
+    } catch (err) {
+      alert(getErrorMessage(err, 'Не удалось удалить документ'))
+    }
+  }
+
+  const handleDeleteSection = async () => {
+    if (!sectionId) return
+    if (documents.length > 0) {
+      alert('Сначала удалите все документы раздела')
+      return
+    }
+    if (!confirm('Удалить раздел?')) return
+    try {
+      await deleteSection(sectionId).unwrap()
+      navigate(-1)
+    } catch (err) {
+      alert(getErrorMessage(err, 'Не удалось удалить раздел'))
+    }
   }
 
   return (
@@ -77,8 +111,11 @@ export default function CompanyDocumentDetailPage() {
       </div>
 
       <div className={styles.wrapper}>
+        {isLoading && <div className={'font13w500'}>Загрузка...</div>}
+        {isError && <div className={'font13w500'}>{getErrorMessage(error, 'Ошибка загрузки')}</div>}
         <div className={styles.list}>
           {documents.map((el) => {
+            const docUrl = getImageUrl(el.url)
             return (
               <div key={el.id} className={styles.item}>
                 <div className={styles.left}>
@@ -91,9 +128,9 @@ export default function CompanyDocumentDetailPage() {
                       {el.name}
                     </div>
                     <div className={styles.meta}>
-                      <span>{formatDate(el.date)}</span>
+                      <span>{formatDate(el.created_at || el.date)}</span>
                       <span className={styles.dot}>•</span>
-                      <span>{el.size}</span>
+                      <span>{formatBytes(el.size) || el.size}</span>
                     </div>
                   </div>
                 </div>
@@ -101,19 +138,20 @@ export default function CompanyDocumentDetailPage() {
                 <div className={styles.right}>
                   <button
                     className={styles.btn}
-                    onClick={() => window.open(el.url, '_blank')}
+                    onClick={() => window.open(docUrl, '_blank')}
                   >
                     <Eye size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
                   <button
                     className={styles.btn}
-                    onClick={() => window.open(el.url, '_blank')}
+                    onClick={() => window.open(docUrl, '_blank')}
                   >
                     <ArrowDown size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
                   <button
                     className={styles.btn}
-                    onClick={() => alert('Тут будет удаление')}
+                    onClick={() => handleDelete(el.id)}
+                    disabled={isDeleting}
                   >
                     <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
@@ -136,16 +174,6 @@ export default function CompanyDocumentDetailPage() {
             </div>
 
             <div className={styles.modalBody}>
-              <div className={styles.field}>
-                <span className={'font16w500'}>Название</span>
-                <input
-                  className={`${styles.input} font14w500`}
-                  value={form.name}
-                  onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
-                  placeholder="Например: Паспорт клиента"
-                />
-              </div>
-
               {/* ✅ custom file input */}
               <div className={styles.field}>
                 <span className={'font16w500'}>Файл</span>
@@ -189,13 +217,29 @@ export default function CompanyDocumentDetailPage() {
               <button className={styles.secondaryBtn} onClick={closeModal}>
                 <span className='font14w600'>Отмена</span>
               </button>
-              <button className={styles.primaryBtn} onClick={handleSave}>
+              <button className={styles.primaryBtn} onClick={handleSave} disabled={isCreating}>
                 <span className='font14w600'>Сохранить</span>
               </button>
             </div>
           </div>
         </div>
       )}
+      <div className={'miniBlock'}>
+        <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
+          Чтобы удалить раздел, удалите все документы в нем</span>
+      </div>
+      <div className={styles.footerActions}>
+        <button
+          className={styles.deleteSectionBtn}
+          onClick={handleDeleteSection}
+          disabled={isDeletingSection || documents.length > 0}
+        >
+          <span className='font16w500'>
+
+          Удалить раздел
+          </span>
+        </button>
+      </div>
     </AppLayout>
   )
 }

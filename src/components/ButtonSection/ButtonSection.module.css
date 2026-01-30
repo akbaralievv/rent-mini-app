@@ -28,6 +28,33 @@
   align-items: center;
 }
 
+.itemRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tg-text);
+}
+
+.actionBtn:hover {
+  opacity: 0.75;
+}
+
 .item:last-child {
   border-bottom: none;
 }

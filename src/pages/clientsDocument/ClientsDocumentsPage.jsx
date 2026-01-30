@@ -2,23 +2,35 @@ import React, { useMemo, useState } from 'react'
 import AppLayout from '../../layouts/AppLayout'
 import { useNavigate } from 'react-router-dom'
 import styles from './ClientsDocumentsPage.module.css'
-import { clientsDocumentMockData } from '../../common/clientsDocumentData'
-import { ArrowDown, Calendar, ChevronDown, Eye, File, Plus, Trash2, X, Upload } from 'lucide-react'
+import { ArrowDown, Calendar, ChevronDown, Eye, Plus, Trash2, X, Upload } from 'lucide-react'
 import { tgTheme } from '../../common/commonStyle'
 import FileItem from '../../components/FileItem/FileItem'
+import { getErrorMessage, getImageUrl } from '../../utils'
+import {
+  useCreateClientDocumentMutation,
+  useDeleteClientDocumentMutation,
+  useGetClientDocumentsQuery,
+} from '../../redux/services/getClientsDocumentsAction'
 
 export default function ClientsDocumentsPage() {
   const navigate = useNavigate()
 
-  const [documents, setDocuments] = useState(clientsDocumentMockData)
   const [isOpen, setIsOpen] = useState(false)
 
   const [form, setForm] = useState({
-    name: '',
-    date: '',
     client: '',
     file: null,
   })
+
+  const {
+    data: documents = [],
+    isLoading,
+    isError,
+    error,
+  } = useGetClientDocumentsQuery()
+
+  const [createClientDocument, { isLoading: isCreating }] = useCreateClientDocumentMutation()
+  const [deleteClientDocument, { isLoading: isDeleting }] = useDeleteClientDocumentMutation()
 
   const fileMeta = useMemo(() => {
     if (!form.file) return null
@@ -31,27 +43,32 @@ export default function ClientsDocumentsPage() {
 
   const closeModal = () => {
     setIsOpen(false)
-    setForm({ name: '', date: '', client: '', file: null })
+    setForm({ client: '', file: null })
   }
 
-  const handleSave = () => {
-    // Простая валидация
-    if (!form.name?.trim()) return alert('Введите название документа')
-    if (!form.date) return alert('Выберите дату')
+  const handleSave = async () => {
     if (!form.file) return alert('Выберите файл')
 
-    // ⚠️ Тут вместо mock — обычно отправка на сервер (FormData)
-    const newDoc = {
-      id: Date.now(),
-      name: form.name.trim(),
-      date: form.date,
-      size: formatBytes(form.file.size),
-      url: URL.createObjectURL(form.file), // временно для просмотра
-      client: form.client?.trim() || '',
-    }
+    const formData = new FormData()
+    formData.append('file', form.file)
+    if (form.client?.trim()) formData.append('client', form.client.trim())
 
-    setDocuments((prev) => [newDoc, ...prev])
-    closeModal()
+    try {
+      await createClientDocument(formData).unwrap()
+      closeModal()
+    } catch (err) {
+      alert(getErrorMessage(err, 'Не удалось загрузить документ'))
+    }
+  }
+
+  const handleDelete = async (id) => {
+    if (!id) return
+    if (!confirm('Удалить документ?')) return
+    try {
+      await deleteClientDocument(id).unwrap()
+    } catch (err) {
+      alert(getErrorMessage(err, 'Не удалось удалить документ'))
+    }
   }
 
   return (
@@ -72,8 +89,11 @@ export default function ClientsDocumentsPage() {
       </div>
 
       <div className={styles.wrapper}>
+        {isLoading && <div className={styles.statusWrapper + ' font13w500'}>Загрузка...</div>}
+        {isError && <div className={styles.statusWrapper + ' font13w500'}>{getErrorMessage(error, 'Ошибка загрузки')}</div>}
         <div className={styles.list}>
           {documents.map((el) => {
+            const docUrl = getImageUrl(el.url)
             return (
               <div key={el.id} className={styles.item}>
                 <div className={styles.left}>
@@ -86,9 +106,9 @@ export default function ClientsDocumentsPage() {
                       {el.name}
                     </div>
                     <div className={styles.meta}>
-                      <span>{formatDate(el.date)}</span>
+                      <span>{formatDate(el.created_at || el.date)}</span>
                       <span className={styles.dot}>•</span>
-                      <span>{el.size}</span>
+                      <span>{formatBytes(el.size) || el.size}</span>
                     </div>
                   </div>
                 </div>
@@ -96,19 +116,20 @@ export default function ClientsDocumentsPage() {
                 <div className={styles.right}>
                   <button
                     className={styles.btn}
-                    onClick={() => window.open(el.url, '_blank')}
+                    onClick={() => window.open(docUrl, '_blank')}
                   >
                     <Eye size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
                   <button
                     className={styles.btn}
-                    onClick={() => window.open(el.url, '_blank')}
+                    onClick={() => window.open(docUrl, '_blank')}
                   >
                     <ArrowDown size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
                   <button
                     className={styles.btn}
-                    onClick={() => alert('Тут будет удаление')}
+                    onClick={() => handleDelete(el.id)}
+                    disabled={isDeleting}
                   >
                     <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
@@ -131,16 +152,6 @@ export default function ClientsDocumentsPage() {
             </div>
 
             <div className={styles.modalBody}>
-              <div className={styles.field}>
-                <span className={'font16w500'}>Название</span>
-                <input
-                  className={`${styles.input} font14w500`}
-                  value={form.name}
-                  onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
-                  placeholder="Например: Паспорт клиента"
-                />
-              </div>
-
               <div className={styles.field}>
                 <span className={'font16w500'}>Клиент (опционально)</span>
                 <input
@@ -194,7 +205,7 @@ export default function ClientsDocumentsPage() {
               <button className={styles.secondaryBtn} onClick={closeModal}>
                 <span className='font14w600'>Отмена</span>
               </button>
-              <button className={styles.primaryBtn} onClick={handleSave}>
+              <button className={styles.primaryBtn} onClick={handleSave} disabled={isCreating}>
                 <span className='font14w600'>Сохранить</span>
               </button>
             </div>
