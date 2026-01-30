@@ -1,0 +1,118 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  z-index: 999;
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  background: var(--tg-card-2);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalClose {
+  background: transparent;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalClose:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.modalBody {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.modalFooter {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.secondaryBtn {
+  border-radius: 8px;
+  padding: 8px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+}
+
+.secondaryBtn:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.primaryBtn {
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tg-accent);
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+}
+
+.primaryBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.typeInput {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}

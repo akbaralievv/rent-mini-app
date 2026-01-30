@@ -22,10 +22,10 @@ export const tagsApi = createApi({
     }),
 
     updateTag: builder.mutation({
-      query: ({ id, name }) => ({
+      query: ({ id, name, type }) => ({
         url: `/finance-tags/${id}`,
         method: 'PUT',
-        body: { name },
+        body: { name, type },
       }),
       invalidatesTags: (result, error, { id }) => [
         { type: 'Tags', id },
@@ -33,11 +33,19 @@ export const tagsApi = createApi({
       ],
     }),
 
+    deleteTag: builder.mutation({
+      query: (id) => ({
+        url: `/finance-tags/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Tags'],
+    }),
   }),
-});
+})
 
 export const {
   useGetTagsQuery,
   useCreateTagMutation,
   useUpdateTagMutation,
-} = tagsApi;
+  useDeleteTagMutation,
+} = tagsApi
