@@ -7,13 +7,8 @@
   background: var(--tg-card-2);
   border-radius: 8px;
   padding: 12px;
-  padding-top: 0px;
+  padding-top: 0;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
-}
-
-.modalHeader {
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .modalBody {
@@ -42,14 +37,47 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
+.selectWrapper {
+  position: relative;
+}
+
 .selectLike {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: var(--tg-item-button-bg-hover);
   padding: 10px 12px;
+  width: 100%;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.dropdown {
+  position: absolute;
+  top: 38px;
+  background-color: var(--tg-filter-bg);
+  border-radius: 8px;
+  width: 100%;
+  z-index: 10;
+  border: 1px solid var(--tg-border);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    0 12px 28px rgba(0, 0, 0, 0.22);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown button {
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown button:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
 }
 
 .modalFooter {
@@ -70,4 +98,78 @@
   padding: 8px 12px;
   background: var(--tg-accent);
   cursor: pointer;
+}
+
+/* ===== calendar ===== */
+
+.calendar {
+  position: absolute;
+  top: 38px;
+  background: var(--tg-filter-bg);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid var(--tg-border);
+  z-index: 10;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendarDay {
+  background: transparent;
+  border-radius: 6px;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.calendarDay:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.calendarHeader button {
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.calendarHeader span {
+  font-weight: 600;
+}
+
+.dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  border: 2px solid rgba(0, 0, 0, 0);
+  /* чтобы был эффект тонкого thumb */
+  background-clip: padding-box;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+  background-clip: padding-box;
+}
+
+.dropdown::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.28);
+  background-clip: padding-box;
 }
