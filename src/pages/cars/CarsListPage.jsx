@@ -103,7 +103,7 @@ export default function CarsListPage() {
           <div className={styles.headerFilter + ' miniBlock'}>
             <button
               className={styles.filterBtn}
-              onClick={() => navigate('/operations/create')}
+              onClick={() => { }}
             >
               <Plus color={tgTheme.textSecondary} size={16} />
               <span className="font13w500">Добавить</span>
@@ -123,7 +123,7 @@ export default function CarsListPage() {
           <div
             key={car.id}
             className={styles.item}
-            onClick={() => navigate(`/cars/${car.car_number}`)}
+            onClick={() => { }}
           >
             <div className={styles.top}>
               <div className={styles.image}>
