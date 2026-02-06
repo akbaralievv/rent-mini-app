@@ -1,0 +1,97 @@
+/* ===============================
+   Общие состояния
+================================ */
+
+.state {
+  text-align: center;
+  padding: 24px 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.stateError {
+  text-align: center;
+  padding: 24px 12px;
+  color: #e74c3c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ===============================
+   Telegram-style карточка
+================================ */
+
+.tgCard {
+  background: var(--tg-card-2);
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+/* Заголовок */
+.tgTitle {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+/* Строка статуса */
+.tgLine {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ===============================
+   Секции B2C / B2B
+================================ */
+
+.tgSection {
+  margin-top: 12px;
+}
+
+.tgSectionTitle {
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tgRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ===============================
+   Нижний блок (клиент / заказ)
+================================ */
+
+.tgFooter {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tgFooterMuted {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
+
+/* Цена */
+.tgPrice {
+  margin-top: 6px;
+  font-weight: 800;
+  color: #2ecc71;
+}

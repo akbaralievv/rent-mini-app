@@ -11,6 +11,7 @@ import { tagsApi } from './services/tagsAction';
 import { companyDocumentSectionsApi } from './services/getCompanySectionsAction';
 import { clientDocumentsApi } from './services/getClientsDocumentsAction';
 import { companySectionDocumentsApi } from './services/companySectionDocuments';
+import { carApi } from './services/carAction';
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +26,7 @@ export const store = configureStore({
     [companyDocumentSectionsApi.reducerPath]: companyDocumentSectionsApi.reducer,
     [clientDocumentsApi.reducerPath]: clientDocumentsApi.reducer,
     [companySectionDocumentsApi.reducerPath]: companySectionDocumentsApi.reducer,
+    [carApi.reducerPath]: carApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -40,6 +42,7 @@ export const store = configureStore({
       companyDocumentSectionsApi.middleware,
       clientDocumentsApi.middleware,
       companySectionDocumentsApi.middleware,
+      carApi.middleware,
     ),
 });
 
