@@ -7,8 +7,14 @@ export const companySectionDocumentsApi = createApi({
   tagTypes: ['CompanySectionDocuments'],
   endpoints: (builder) => ({
     getCompanySectionDocuments: builder.query({
-      query: (sectionId) => `/company-document-sections/${sectionId}/documents`,
-      providesTags: (result, error, sectionId) => [
+      query: ({ sectionId, from, to }) => ({
+        url: `/company-document-sections/${sectionId}/documents`,
+        params: {
+          ...(from && { from }),
+          ...(to && { to }),
+        },
+      }),
+      providesTags: (result, error, { sectionId }) => [
         { type: 'CompanySectionDocuments', id: sectionId },
       ],
     }),

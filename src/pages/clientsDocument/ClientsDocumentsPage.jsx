@@ -11,6 +11,8 @@ import {
   useDeleteClientDocumentMutation,
   useGetClientDocumentsQuery,
 } from '../../redux/services/getClientsDocumentsAction'
+import DateFilter from '../../components/DateFilter/DateFilter'
+import { parseUiDateRange } from '../../common/utils/helpers'
 
 export default function ClientsDocumentsPage() {
   const navigate = useNavigate()
@@ -20,18 +22,26 @@ export default function ClientsDocumentsPage() {
   const [selectedIds, setSelectedIds] = useState(new Set())
   const longPressTimerRef = useRef(null)
   const longPressTriggeredRef = useRef(false)
+  const [date, setDate] = useState(undefined);
 
   const [form, setForm] = useState({
     client: '',
     file: null,
   })
 
+  const dateParams = useMemo(
+    () => parseUiDateRange(date),
+    [date]
+  )
+
   const {
     data: documents = [],
     isLoading,
     isError,
     error,
-  } = useGetClientDocumentsQuery()
+  } = useGetClientDocumentsQuery(
+    dateParams.from ? dateParams : undefined
+  )
 
   const [createClientDocument, { isLoading: isCreating }] = useCreateClientDocumentMutation()
   const [deleteClientDocument, { isLoading: isDeleting }] = useDeleteClientDocumentMutation()
@@ -148,7 +158,7 @@ export default function ClientsDocumentsPage() {
       }))
     } catch (err) {
       alert(getErrorMessage(err, 'Не удалось скачать документы'))
-    } 
+    }
   }
 
   return (
@@ -164,18 +174,16 @@ export default function ClientsDocumentsPage() {
             <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
             <span className={'font13w500'}>Удалить</span>
           </button>
-        </div> : <div className={styles.headerFilter + ' miniBlock'}>
-          <button className={styles.filterBtn} onClick={() => setIsOpen(true)}>
-            <Plus color={tgTheme.textSecondary} size={16} />
-            <span className={'font13w500'}>Добавить</span>
-          </button>
-
-          <button onClick={() => { }} className={styles.filterBtn}>
-            <Calendar color={tgTheme.textSecondary} size={16} />
-            <span className={'font13w500'}>01.02-01.02</span>
-            <ChevronDown color={tgTheme.textSecondary} size={16} />
-          </button>
-        </div>}
+        </div> : <>
+          <div className={styles.headerFilter + ' miniBlock'}>
+            <button className={styles.filterBtn} onClick={() => setIsOpen(true)}>
+              <Plus color={tgTheme.textSecondary} size={16} />
+              <span className={'font13w500'}>Добавить</span>
+            </button>
+            <DateFilter date={date} setDate={setDate} listBlockPosition='left' />
+          </div>
+        </>
+        }
       </div>
 
       <div className={styles.wrapper}>

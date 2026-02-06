@@ -1,0 +1,93 @@
+
+.calendar {
+  position: absolute;
+  top: 38px;
+  background: var(--tg-filter-bg);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--tg-border);
+  z-index: 10;
+}
+
+.calendarLeft {
+  right: 0px;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendarDay {
+  background: transparent;
+  border-radius: 6px;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  width: 245px;
+  margin-left: 8px;
+
+}
+
+.calendarHeader button {
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 0px;
+  width: 35px;
+}
+
+.calendarHeader span {
+  font-weight: 600;
+}
+
+.weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+  text-align: center;
+  border-radius: 8px;
+  padding: 4px 0;
+  background-color: var(--tg-item-button-bg-hover);
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendarDay {
+  border-radius: 6px;
+  padding: 2px 0;
+  cursor: pointer;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.active {
+  background: var(--tg-accent);
+}
+
+.range {
+  background: var(--tg-accent-2);
+}
+
+.chooseBtn {
+  background-color: red;
+  margin-left: auto;
+  display: flex;
+  margin-top: 10px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background-color: var(--tg-accent);
+}

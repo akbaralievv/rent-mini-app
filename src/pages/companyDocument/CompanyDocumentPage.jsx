@@ -92,7 +92,7 @@ export default function CompanyDocumentPage() {
         <div className={styles.modalOverlay} onMouseDown={closeModal}>
           <div className={styles.modal} onMouseDown={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
-              <span className={'font18w600'}>{editingSection ? 'Редактировать папку' : 'Добавить папку'}</span>
+              <span className={'font18w600'}>{editingSection ? 'Редактировать раздел' : 'Добавить раздел'}</span>
 
               <button className={styles.modalClose} onClick={closeModal}>
                 <X size={18} color={tgTheme.textSecondary} />

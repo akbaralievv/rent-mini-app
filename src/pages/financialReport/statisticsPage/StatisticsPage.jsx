@@ -255,7 +255,7 @@ export default function StatisticsPage() {
             }}
           >
             <span>Все авто</span>
-            {selectedCar === "all" && <span className={styles.check}><Check color={tgTheme.accent} size={22} /></span>}
+            {selectedCar === "all" && <span className={styles.check}><Check color={tgTheme.accent} size={20} /></span>}
           </button>
 
           {carsList.map((car) => (
@@ -270,7 +270,7 @@ export default function StatisticsPage() {
               }}
             >
               <span>{car}</span>
-              {selectedCar === car && <span className={styles.check}><Check color={tgTheme.accent} size={22} /></span>}
+              {selectedCar === car && <span className={styles.check}><Check color={tgTheme.accent} size={20} /></span>}
             </button>
           ))}
         </div>

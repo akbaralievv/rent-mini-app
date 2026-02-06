@@ -7,7 +7,8 @@ import { transactions, deposit } from "../../../common/mockData";
 import { ArrowDown, Calendar, CalendarCheck, Check, ChevronDown, ChevronLeft, ChevronRight, ClipboardEditIcon, Edit, Edit2, Eye, ListFilter, Plus, Trash2 } from "lucide-react";
 import { tgTheme } from "../../../common/commonStyle";
 import Tag from "../../../components/Tag/Tag";
-import { useGetTagsQuery } from "../../../redux/services/tagsAction";
+import DateFilter from "../../../components/DateFilter/DateFilter";
+import BackdropModal from "../../../components/BackdropModal/BackdropModal";
 
 const type = [
   { key: "increase", value: "Доходы" },
@@ -39,6 +40,7 @@ export default function OperationPage() {
 
   const [page, setPage] = useState(1);
   const [filterVisible, setFilterVisible] = useState(false);
+  const [dateFilter, setDateFilter] = useState(undefined);
 
   const list = useMemo(() => {
     let data = [];
@@ -104,47 +106,46 @@ export default function OperationPage() {
             <ChevronDown color={tgTheme.textSecondary} size={16} />
           </button>
           {
-            filterVisible && <div className={styles.filterBlock}>
-              <button onClick={() => chooseType('decrease')}>
-                <span className="font14w600">
-                  Расходы
-                </span>
-                {
-                  key == 'decrease' && <Check color={tgTheme.accent} size={22} />
-                }
-              </button>
-              <button onClick={() => chooseType('increase')}>
-                <span className="font14w600">
-                  Доходы
-                </span>
-                {
-                  key == 'increase' && <Check color={tgTheme.accent} size={22} />
-                }
-              </button>
-              <button onClick={() => chooseType('deposit')}>
-                <span className="font14w600">
-                  Депозиты
-                </span>
-                {
-                  key == 'deposit' && <Check color={tgTheme.accent} size={22} />
-                }
-              </button>
-            </div>
+            filterVisible && <>
+              <BackdropModal onClick={() => setFilterVisible(false)} />
+              <div className={styles.filterBlock}>
+                <button onClick={() => chooseType('decrease')}>
+                  <span className="font14w600">
+                    Расходы
+                  </span>
+                  {
+                    key == 'decrease' && <Check color={tgTheme.accent} size={20} />
+                  }
+                </button>
+                <button onClick={() => chooseType('increase')}>
+                  <span className="font14w600">
+                    Доходы
+                  </span>
+                  {
+                    key == 'increase' && <Check color={tgTheme.accent} size={20} />
+                  }
+                </button>
+                <button onClick={() => chooseType('deposit')}>
+                  <span className="font14w600">
+                    Депозиты
+                  </span>
+                  {
+                    key == 'deposit' && <Check color={tgTheme.accent} size={20} />
+                  }
+                </button>
+              </div>
+            </>
           }
         </div>
         <div className={styles.headerFilter + ' miniBlock'}>
-          <button onClick={() => { }} className={styles.filterBtn}>
-            <Calendar color={tgTheme.textSecondary} size={16} />
-            <span className={'font13w500'}>01.02-01.02</span>
-            <ChevronDown color={tgTheme.textSecondary} size={16} />
+          <button className={styles.filterBtn} onClick={() => navigate("/operations/create")}>
+            <Plus color={tgTheme.textSecondary} size={16} />
+            <span className={'font13w500'}>Добавить</span>
           </button>
         </div>
       </div>
       <div className={styles.headerFilter + ' miniBlock'}>
-        <button className={styles.filterBtn} onClick={() => navigate("/operations/create")}>
-          <Plus color={tgTheme.textSecondary} size={16} />
-          <span className={'font13w500'}>Добавить</span>
-        </button>
+        <DateFilter date={dateFilter} setDate={setDateFilter} />
       </div>
       <div className={styles.section}>
         {pageData.map((item) => (

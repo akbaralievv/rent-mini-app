@@ -7,7 +7,13 @@ export const clientDocumentsApi = createApi({
 	tagTypes: ['ClientDocuments'],
 	endpoints: (builder) => ({
 		getClientDocuments: builder.query({
-			query: () => '/client-documents',
+			query: ({ from, to } = {}) => ({
+				url: '/client-documents',
+				params: {
+					...(from && { from }),
+					...(to && { to }),
+				},
+			}),
 			providesTags: ['ClientDocuments'],
 		}),
 

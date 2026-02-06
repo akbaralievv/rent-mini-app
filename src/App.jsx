@@ -20,6 +20,8 @@ import CompanyDocumentPage from './pages/companyDocument/CompanyDocumentPage';
 import CompanyDocumentDetailPage from './pages/companyDocument/companyDocumentDetail/CompanyDocumentDetailPage';
 import OperationEditPage from './pages/financialReport/operationPage/OperationEditPage/OperationEditPage';
 import TagsPage from './pages/financialReport/tagsPage/TagsPage';
+import CarsListPage from './pages/cars/CarsListPage';
+import CarDetailPage from './pages/cars/carDetail/CarDetailPage';
 
 function Router() {
   const { status } = useAuth();
@@ -54,6 +56,9 @@ function Router() {
       <Route path="/financial-main/statistics" element={<StatisticsPage />} />
       <Route path="/financial-main/details" element={<DetailsPage />} />
       <Route path="/financial-main/tags" element={<TagsPage />} />
+
+      <Route path="/cars" element={<CarsListPage />} />
+      <Route path="/cars/:id" element={<CarDetailPage />} />
 
       <Route path="/clients-document" element={<ClientsDocumentsPage />} />
       <Route path="/company-document" element={<CompanyDocumentPage />} />

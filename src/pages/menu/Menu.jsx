@@ -4,7 +4,7 @@ import MenuItem from "../../components/MenuItem";
 import "./Menu.css";
 import ButtonSection from "../../components/ButtonSection/ButtonSection";
 import { useNavigate } from "react-router-dom";
-import { BarChart3, FileSignature, FileText, FileUser, Newspaper, Palette } from "lucide-react";
+import { BarChart3, Car, FileSignature, FileText, FileUser, Newspaper, Palette } from "lucide-react";
 import { useGetTagsQuery } from "../../redux/services/tagsAction";
 import { useGetCompanyDocumentSectionsQuery } from "../../redux/services/getCompanySectionsAction";
 
@@ -39,6 +39,11 @@ export default function Menu() {
               icon: <BarChart3 strokeWidth={1.5} />,
               text: 'Фин. отчет',
               onClick: () => navigate('/financial-main')
+            },
+            {
+              icon: <Car strokeWidth={1.5} />,
+              text: 'Список авто',
+              onClick: () => navigate('/cars')
             },
           ]}
         />

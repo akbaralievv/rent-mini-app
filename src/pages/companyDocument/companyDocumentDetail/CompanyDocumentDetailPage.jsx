@@ -15,21 +15,34 @@ import {
   useDeleteCompanySectionDocumentMutation,
   useGetCompanySectionDocumentsQuery,
 } from '../../../redux/services/companySectionDocuments'
+import DateFilter from '../../../components/DateFilter/DateFilter'
+import { parseUiDateRange } from '../../../common/utils/helpers'
 
 export default function CompanyDocumentDetailPage() {
   const navigate = useNavigate();
   const params = useParams();
+  const [date, setDate] = useState(undefined);
+
   const {
-      data: sections = [],
-    } = useGetCompanyDocumentSectionsQuery();
+    data: sections = [],
+  } = useGetCompanyDocumentSectionsQuery();
 
   const sectionId = params.id
+  const dateParams = useMemo(
+    () => parseUiDateRange(date),
+    [date]
+  )
+
   const {
     data: documents = [],
     isLoading,
     isError,
     error,
-  } = useGetCompanySectionDocumentsQuery(sectionId)
+  } = useGetCompanySectionDocumentsQuery(
+    dateParams.from
+      ? { sectionId, ...dateParams }
+      : { sectionId }
+  )
 
   const [createDocument, { isLoading: isCreating }] = useCreateCompanySectionDocumentMutation()
   const [deleteDocument, { isLoading: isDeleting }] = useDeleteCompanySectionDocumentMutation()
@@ -135,7 +148,7 @@ export default function CompanyDocumentDetailPage() {
   const handlePressEnd = () => {
     clearLongPress()
   }
-const handleDeleteSelected = async () => {
+  const handleDeleteSelected = async () => {
     if (selectedIds.size === 0) return
     if (!confirm('Удалить выбранные документы?')) return
     try {
@@ -156,21 +169,21 @@ const handleDeleteSelected = async () => {
   };
 
   const handleDownloadSelected = async () => {
-      if (selectedIds.size === 0) return
-      try {
-        const ids = Array.from(selectedIds)
-        await Promise.all(ids.map((id) => {
-          const doc = documents.find(d => d.id === id)
-          if (doc) {
-            const docUrl = getImageUrl(doc.url)
-            download(docUrl)
-          }
-        }))
-      } catch (err) {
-        alert(getErrorMessage(err, 'Не удалось скачать документы'))
-      } 
+    if (selectedIds.size === 0) return
+    try {
+      const ids = Array.from(selectedIds)
+      await Promise.all(ids.map((id) => {
+        const doc = documents.find(d => d.id === id)
+        if (doc) {
+          const docUrl = getImageUrl(doc.url)
+          download(docUrl)
+        }
+      }))
+    } catch (err) {
+      alert(getErrorMessage(err, 'Не удалось скачать документы'))
     }
-  
+  }
+
   return (
     <AppLayout title={sections.find(el => el.id == params.id)?.name || 'Не найдено'} onBack={() => navigate(-1)}>
       <div>
@@ -193,11 +206,7 @@ const handleDeleteSelected = async () => {
               <span className={'font13w500'}>Добавить</span>
             </button>
 
-            <button onClick={() => { }} className={styles.filterBtn}>
-              <Calendar color={tgTheme.textSecondary} size={16} />
-              <span className={'font13w500'}>01.02-01.02</span>
-              <ChevronDown color={tgTheme.textSecondary} size={16} />
-            </button>
+            <DateFilter date={date} setDate={setDate} listBlockPosition='left' />
           </div>
         )}
       </div>
@@ -354,7 +363,7 @@ const handleDeleteSelected = async () => {
         >
           <span className='font16w500'>
 
-          Удалить раздел
+            Удалить раздел
           </span>
         </button>
       </div>

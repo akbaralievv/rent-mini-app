@@ -6,6 +6,8 @@ import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { transactions, deposit } from "../../../../common/mockData";
 import { tgTheme } from "../../../../common/commonStyle";
 import { useGetTagsQuery } from "../../../../redux/services/tagsAction";
+import { formatDate } from "../../../../common/utils/helpers";
+import CalendarCustom from "../../../../components/CalendarCustom/CalendarCustom";
 
 const TYPE_OPTIONS = [
   { key: "decrease", label: "Расходы", increse: false, deposit: false },
@@ -16,16 +18,21 @@ const TYPE_OPTIONS = [
 
 export default function OperationEditPage() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams() || {};
   const isEdit = Boolean(id);
   const { data: tags = [] } = useGetTagsQuery();
 
   const current = useMemo(() => {
-    if (!isEdit) return null;
-    return [...transactions, ...deposit].find(
-      (el) => String(el.id) === String(id)
-    );
-  }, [id, isEdit]);
+    if (!isEdit) return null
+
+    const list = [
+      ...(transactions || []),
+      ...(deposit || []),
+    ].filter(Boolean)
+
+    return list.find(el => String(el.id) === String(id)) || null
+  }, [id, isEdit])
+
 
   const [form, setForm] = useState({
     increse: false,
@@ -35,7 +42,7 @@ export default function OperationEditPage() {
     car_name: "",
     description: "",
   });
-  const [tag, setTag] = useState(tags[0].id);
+  const [tag, setTag] = useState(tags[0]?.id);
 
   const [typeOpen, setTypeOpen] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
@@ -183,15 +190,16 @@ export default function OperationEditPage() {
                   <ChevronDown size={16} color={tgTheme.textSecondary} />
                 </button>
 
-                {dateOpen && (
-                  <Calendar
-                    value={form.created_at}
-                    onSelect={(date) => {
-                      onChange("created_at", date);
-                      setDateOpen(false);
-                    }}
-                  />
-                )}
+                <CalendarCustom
+                  date={form.created_at}
+                  setDate={(date) => {
+                    onChange("created_at", date);
+                  }}
+                  visible={dateOpen}
+                  mode="single"
+                  setVisible={setDateOpen}
+                />
+
               </div>
             </div>
 
@@ -240,8 +248,6 @@ export default function OperationEditPage() {
   );
 }
 
-/* ================= helpers ================= */
-
 function getTypeLabel(form) {
   if (form.deposit && form.increse) return "Депозит +";
   if (form.deposit && !form.increse) return "Депозит −";
@@ -249,91 +255,3 @@ function getTypeLabel(form) {
   return "Расходы";
 }
 
-function Calendar({ value, onSelect }) {
-  const initial = value ? new Date(value) : new Date();
-
-  const [year, setYear] = useState(initial.getFullYear());
-  const [month, setMonth] = useState(initial.getMonth());
-
-  const monthNames = [
-    "Январь", "Февраль", "Март", "Апрель",
-    "Май", "Июнь", "Июль", "Август",
-    "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-  ];
-
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDay = new Date(year, month, 1).getDay() || 7;
-
-  const days = [];
-  for (let i = 1; i < firstDay; i++) days.push(null);
-  for (let d = 1; d <= daysInMonth; d++) days.push(d);
-
-  const prevMonth = () => {
-    if (month === 0) {
-      setMonth(11);
-      setYear(y => y - 1);
-    } else {
-      setMonth(m => m - 1);
-    }
-  };
-
-  const nextMonth = () => {
-    if (month === 11) {
-      setMonth(0);
-      setYear(y => y + 1);
-    } else {
-      setMonth(m => m + 1);
-    }
-  };
-
-  return (
-    <div className={styles.calendar}>
-
-      {/* HEADER */}
-      <div className={styles.calendarHeader}>
-        <button onClick={prevMonth}>
-          <ChevronLeft size={16} color={tgTheme.white} />
-        </button>
-        <span className="font18w600">
-          {monthNames[month]} {year}
-        </span>
-        <button onClick={nextMonth}>
-          <ChevronRight size={16} color={tgTheme.white} />
-        </button>
-      </div>
-
-      {/* GRID */}
-      <div className={styles.calendarGrid}>
-        {days.map((day, i) =>
-          day ? (
-            <button
-              key={i}
-              className={styles.calendarDay}
-              onClick={() =>
-                onSelect(
-                  `${year}-${pad(month + 1)}-${pad(day)}`
-                )
-              }
-            >
-              <span className="font16w500">
-                {day}
-              </span>
-            </button>
-          ) : (
-            <div key={i} />
-          )
-        )}
-      </div>
-    </div>
-  );
-}
-
-
-function pad(n) {
-  return String(n).padStart(2, "0");
-}
-
-function formatDate(str) {
-  const [y, m, d] = str.split("-");
-  return `${d}.${m}.${y}`;
-}

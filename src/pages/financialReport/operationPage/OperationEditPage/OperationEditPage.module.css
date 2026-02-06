@@ -100,53 +100,6 @@
   cursor: pointer;
 }
 
-/* ===== calendar ===== */
-
-.calendar {
-  position: absolute;
-  top: 38px;
-  background: var(--tg-filter-bg);
-  border-radius: 12px;
-  padding: 12px;
-  border: 1px solid var(--tg-border);
-  z-index: 10;
-}
-
-.calendarGrid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-}
-
-.calendarDay {
-  background: transparent;
-  border-radius: 6px;
-  padding: 6px 0;
-  cursor: pointer;
-}
-
-.calendarDay:hover {
-  background: var(--tg-item-button-bg-hover);
-}
-
-.calendarHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.calendarHeader button {
-  background: transparent;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 4px 8px;
-}
-
-.calendarHeader span {
-  font-weight: 600;
-}
-
 .dropdown::-webkit-scrollbar {
   width: 8px;
 }

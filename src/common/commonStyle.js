@@ -44,3 +44,35 @@ export function getFileIcon(fileName) {
 }
 
 
+export const STATUS_MAPPING = {
+  free: 'Готов к аренде',
+  'Wait confirm': 'Ожидание подтверждения',
+  'Ready for rent': 'Готов к аренде',
+  Booked: 'Забронирован',
+  Delivery: 'Доставка',
+  Rented: 'Арендован',
+  Fence: 'Подменное авто',
+  'In company': 'В компании',
+  Service: 'Сервис',
+  ended: 'Завершен',
+}
+
+export const STATUS_EMOJI = {
+  free: '🟢',
+  'Wait confirm': '⏳',
+  'Ready for rent': '🟢',
+  Booked: '📘',
+  Delivery: '🚚',
+  Rented: '🚗',
+  Fence: '🚧',
+  'In company': '🏢',
+  Service: '🔧',
+}
+
+export const RENT_STATUS = {
+  'Wait confirm': '🚗 Активный',
+  Booked: '🚗 Активный',
+  Delivery: '🚗 Активный',
+  Rented: '🚗 Активный',
+  Fence: '🚗 Активный',
+}
