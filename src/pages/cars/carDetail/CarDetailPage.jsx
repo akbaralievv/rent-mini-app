@@ -25,10 +25,12 @@ import {
   Images,
   DollarSign,
   Eye,
-  ListOrdered
+  ListOrdered,
+  X
 } from 'lucide-react'
 import { STATUS_MAPPING, tgTheme } from '../../../common/commonStyle'
 import ButtonSection from '../../../components/ButtonSection/ButtonSection'
+import CalendarCustom from '../../../components/CalendarCustom/CalendarCustom'
 
 function formatMoney(num) {
   return Number(num || 0).toLocaleString("ru-RU")
@@ -46,6 +48,17 @@ export default function CarDetailPage() {
   } = useGetCarByNumberQuery(id)
 
   const data = car?.car || {}
+
+  // const [dateEditVisible, setDateEditVisible] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsOpen(false);
+  }
+  const handleSave = () => {
+
+  }
 
   return (
     <AppLayout title={`Детализация (${data.car_number})`} onBack={() => navigate(-1)}>
@@ -216,13 +229,13 @@ export default function CarDetailPage() {
             {
               icon: <Car size={20} color={tgTheme.white} />,
               text: 'Изменить модель',
-              onClick: () => { },
+              onClick: () => setIsOpen(true),
               arrowHide: true,
             },
             {
               icon: <Calendar size={20} color={tgTheme.white} />,
               text: 'дата аренды: 02.02.2026-09.09.2027',
-              onClick: () => { },
+              onClick: () => setIsOpen(true),
               arrowHide: true
             },
             {
@@ -296,6 +309,43 @@ export default function CarDetailPage() {
           ]}
         />
       </div>
+      {isOpen && (
+        <div className={styles.modalOverlay} onMouseDown={closeModal}>
+          <div className={styles.modal} onMouseDown={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <span className={'font18w600'}>{'Редактировать авто'}</span>
+
+              <button className={styles.modalClose} onClick={closeModal}>
+                <X size={18} color={tgTheme.textSecondary} />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              <div className={styles.field}>
+                <span className={'font12w500'} style={{ color: tgTheme.textSecondary }}>Текущая модель:  jklj kljdsfjkld</span>
+                <span className={'font16w500'}>Новая модель</span>
+                <input
+                  className={`${styles.input} font14w500`}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="модель"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className={styles.modalFooter}>
+              <button className={styles.secondaryBtn} onClick={closeModal}>
+                <span className="font14w600">Отмена</span>
+              </button>
+
+              <button className={styles.primaryBtn} onClick={handleSave} >
+                <span className="font14w600">Сохранить</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   )
 }
