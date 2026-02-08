@@ -4,6 +4,9 @@ import AppLayout from '../../layouts/AppLayout';
 import './ContractsPage.css';
 import { useGetContractsQuery } from '../../redux/services/contracts';
 import { getErrorMessage } from '../../utils';
+import CustomButton from '../../components/CustomButton/CustomButton';
+import { Plus } from 'lucide-react';
+import { tgTheme } from '../../common/commonStyle';
 
 export default function ContractsPage() {
   const navigate = useNavigate();
@@ -21,9 +24,11 @@ export default function ContractsPage() {
       <div className="contracts-page">
         <div className="contracts-header">
           <div />
-          <button className="create-btn" onClick={() => navigate('/contracts/new')}>
-            Создать договор
-          </button>
+          <CustomButton
+            onClick={() => navigate('/contracts/new')}
+            icon={<Plus color={tgTheme.textSecondary} size={16} />}
+            text='Создать договор'
+          />
         </div>
 
         {loading ? (

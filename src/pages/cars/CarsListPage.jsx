@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { STATUS_MAPPING, tgTheme } from '../../common/commonStyle'
 import BackdropModal from '../../components/BackdropModal/BackdropModal'
+import CustomButton from '../../components/CustomButton/CustomButton'
 
 const PAGE_SIZE = 5
 
@@ -101,13 +102,9 @@ export default function CarsListPage() {
           </div>
 
           <div className={styles.headerFilter + ' miniBlock'}>
-            <button
-              className={styles.filterBtn}
-              onClick={() => { }}
-            >
-              <Plus color={tgTheme.textSecondary} size={16} />
-              <span className="font13w500">Добавить</span>
-            </button>
+            <CustomButton
+              icon={<Plus color={tgTheme.textSecondary} size={16} />}
+              text='Добавить' onClick={() => { }} />
           </div>
         </div>
 
@@ -123,7 +120,7 @@ export default function CarsListPage() {
           <div
             key={car.id}
             className={styles.item}
-            onClick={() => { }}
+            onClick={() => navigate('/cars/' + car.car_number)}
           >
             <div className={styles.top}>
               <div className={styles.image}>

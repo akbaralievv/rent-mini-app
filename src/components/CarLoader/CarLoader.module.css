@@ -1,0 +1,90 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Дорога */
+.road {
+  position: absolute;
+  bottom: 42px;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Контейнер машины */
+.carContainer {
+  position: absolute;
+  bottom: 50px;
+  animation: drive 2.5s linear infinite;
+}
+
+/* Машина */
+.car {
+  color: var(--tg-text, white);
+  animation: shake 0.15s infinite;
+}
+
+/* Пыль */
+.dust,
+.dust2 {
+  position: absolute;
+  bottom: -6px;
+  left: 6px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  animation: dust 0.7s ease-out infinite;
+}
+
+.dust2 {
+  left: 0px;
+  animation-delay: 0.2s;
+}
+
+/* ==============================
+   АНИМАЦИИ
+================================ */
+
+/* Слева → центр → вправо */
+@keyframes drive {
+  0% {
+    transform: translateX(-120vw);
+  }
+  40% {
+    transform: translateX(0);
+  }
+  60% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(120vw);
+  }
+}
+
+/* Лёгкое дрожание */
+@keyframes shake {
+  0% { transform: translateY(0px); }
+  25% { transform: translateY(-1px); }
+  50% { transform: translateY(1px); }
+  75% { transform: translateY(-1px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Пыль назад */
+@keyframes dust {
+  0% {
+    opacity: 0.6;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-20px) scale(1.8);
+  }
+}

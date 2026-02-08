@@ -10,6 +10,9 @@ import {
   useUpdateNewsMutation,
   useDeleteNewsMutation,
 } from '../../redux/services/news';
+import CustomButton from '../../components/CustomButton/CustomButton';
+import { tgTheme } from '../../common/commonStyle';
+import { Plus } from 'lucide-react';
 
 function NewsPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -94,9 +97,9 @@ function NewsPage() {
       <div className="news-page">
         <div className="news-header">
           <div />
-          <button className="create-btn" onClick={handleCreate}>
-            Создать статью
-          </button>
+          <CustomButton
+            icon={<Plus color={tgTheme.textSecondary} size={16} />}
+            text='Создать статью' onClick={() => handleCreate()} />
         </div>
         {loading ? (
           <div className="loader-wrap">
@@ -156,18 +159,18 @@ function NewsModal({ item, onClose, onSave, saving }) {
   const [form, setForm] = useState(
     item
       ? {
-          ...item,
-          content_ru: item.content_ru || '',
-          content_en: item.content_en || '',
-        }
+        ...item,
+        content_ru: item.content_ru || '',
+        content_en: item.content_en || '',
+      }
       : {
-          title_ru: '',
-          title_en: '',
-          content_ru: '',
-          content_en: '',
-          image: '',
-          status: 'published',
-        },
+        title_ru: '',
+        title_en: '',
+        content_ru: '',
+        content_en: '',
+        image: '',
+        status: 'published',
+      },
   );
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(item && item.image ? getImageUrl(item.image) : '');

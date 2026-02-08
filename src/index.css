@@ -19,6 +19,12 @@
   --tg-item-button-bg-hover: #2a3440;
 }
 
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
 button {
   -webkit-appearance: none;
   appearance: none;

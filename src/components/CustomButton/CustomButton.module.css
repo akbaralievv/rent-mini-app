@@ -1,0 +1,9 @@
+.filterBtn {
+  background-color: var(--tg-card-2);
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+}
