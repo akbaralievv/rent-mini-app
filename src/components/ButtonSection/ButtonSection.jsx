@@ -18,7 +18,7 @@ export default function ButtonSection({ buttons = [], title = '' }) {
             return <button className={styles.item} onClick={() => el.onClick()} key={index}>
               <div className={styles.itemLeft}>
                 {el.icon}
-                <span className='font14w500'>
+                <span className='font14w500' style={{ color: el.color ?? tgTheme.white }}>
                   {el.text}
                 </span>
               </div>

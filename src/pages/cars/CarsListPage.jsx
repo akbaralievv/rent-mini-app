@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import AppLayout from '../../layouts/AppLayout'
 import { useNavigate } from 'react-router-dom'
-import { useGetCarsQuery } from '../../redux/services/cars'
+// import { useGetCarsQuery } from '../../redux/services/cars'
 import styles from './CarsListPage.module.css'
 import {
   Users,
@@ -18,6 +18,7 @@ import {
 import { STATUS_MAPPING, tgTheme } from '../../common/commonStyle'
 import BackdropModal from '../../components/BackdropModal/BackdropModal'
 import CustomButton from '../../components/CustomButton/CustomButton'
+import { useGetCarsQuery } from '../../redux/services/carAction'
 
 const PAGE_SIZE = 5
 

@@ -45,8 +45,6 @@ export function getFileIcon(fileName) {
 
 
 export const STATUS_MAPPING = {
-  free: 'Готов к аренде',
-  'Wait confirm': 'Ожидание подтверждения',
   'Ready for rent': 'Готов к аренде',
   Booked: 'Забронирован',
   Delivery: 'Доставка',
@@ -55,6 +53,7 @@ export const STATUS_MAPPING = {
   'In company': 'В компании',
   Service: 'Сервис',
   ended: 'Завершен',
+  'Wait confirm': 'Ожидание подтверждения',
 }
 
 export const STATUS_EMOJI = {

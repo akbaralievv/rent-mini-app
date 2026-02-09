@@ -1,0 +1,20 @@
+.itemsBlock {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.item:last-child {
+  grid-column: span 2;
+}
+
+.item {
+  background-color: var(--tg-item-button-bg-hover);
+  padding: 0px 10px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

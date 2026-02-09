@@ -2,23 +2,17 @@ import React, { useState } from 'react'
 import styles from './CarDetailPage.module.css'
 import AppLayout from '../../../layouts/AppLayout'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useGetCarByNumberQuery } from '../../../redux/services/carAction'
+import { useDeleteCarMutation, useGetCarByNumberQuery } from '../../../redux/services/carAction'
 import {
   Car,
   Calendar,
   Users,
   Fuel,
   Settings,
-  BadgeDollarSign,
-  Repeat,
   Gauge,
   Palette,
   User,
-  Plus,
   Trash,
-  ClipboardEditIcon,
-  Edit2,
-  Edit3,
   Edit,
   Wrench,
   List,
@@ -26,11 +20,18 @@ import {
   DollarSign,
   Eye,
   ListOrdered,
-  X
+  X,
+  EyeOff
 } from 'lucide-react'
 import { STATUS_MAPPING, tgTheme } from '../../../common/commonStyle'
 import ButtonSection from '../../../components/ButtonSection/ButtonSection'
 import CalendarCustom from '../../../components/CalendarCustom/CalendarCustom'
+import ItemStatus from '../FormItems/ItemStatus/ItemStatus'
+import ItemShowcase from '../FormItems/ItemShowcase/ItemShowcase'
+import ModalComponent from '../../../components/ModalComponent/ModalComponent'
+import ItemB2C from '../FormItems/ItemB2C/ItemB2C'
+import ItemB2B from '../FormItems/ItemB2B/ItemB2B'
+import ItemDesc from '../FormItems/ItemDesc/ItemDesc'
 
 function formatMoney(num) {
   return Number(num || 0).toLocaleString("ru-RU")
@@ -45,20 +46,18 @@ export default function CarDetailPage() {
     data: car = { car: {} },
     isLoading,
     isError,
-  } = useGetCarByNumberQuery(id)
+  } = useGetCarByNumberQuery(id);
+
+  const [deleteCar] = useDeleteCarMutation();
 
   const data = car?.car || {}
+  const [modalStatusVisible, setModalStatusVisible] = useState(false);
+  const [modalShowcaseVisible, setModalShowcaseVisible] = useState(false);
+  const [modalDescVisible, setModalDescVisible] = useState(false);
+  const [modalB2CVisible, setModalB2CVisible] = useState(false);
+  const [modalB2BVisible, setModalB2BVisible] = useState(false);
 
-  // const [dateEditVisible, setDateEditVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-
-  const closeModal = () => {
-    setIsOpen(false);
-  }
-  const handleSave = () => {
-
-  }
+  const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
 
   return (
     <AppLayout title={`Детализация (${data.car_number})`} onBack={() => navigate(-1)}>
@@ -229,25 +228,25 @@ export default function CarDetailPage() {
             {
               icon: <Car size={20} color={tgTheme.white} />,
               text: 'Изменить модель',
-              onClick: () => setIsOpen(true),
+              onClick: () => { },
               arrowHide: true,
             },
             {
               icon: <Calendar size={20} color={tgTheme.white} />,
               text: 'дата аренды: 02.02.2026-09.09.2027',
-              onClick: () => setIsOpen(true),
+              onClick: () => { },
               arrowHide: true
             },
             {
               icon: <Settings size={20} color={tgTheme.white} />,
               text: 'Изменить статус',
-              onClick: () => { },
+              onClick: () => setModalStatusVisible(true),
               arrowHide: true
             },
             {
               icon: <Edit size={20} color={tgTheme.white} />,
               text: 'Ред. описание',
-              onClick: () => { },
+              onClick: () => setModalDescVisible(true),
               arrowHide: true
             },
             {
@@ -257,28 +256,30 @@ export default function CarDetailPage() {
               arrowHide: true
             },
             {
-              icon: <Eye size={20} color={tgTheme.white} />,
-              text: 'Показан на витрине (да)',
-              onClick: () => { },
+              icon: car.car.b2c_status == 'yes' ? <Eye size={20} color={tgTheme.white} />
+                : <EyeOff size={20} color={tgTheme.white} />,
+              text: `Показан на витрине (${car.car.b2c_status == 'yes' ? 'да' : 'нет'})`,
+              onClick: () => setModalShowcaseVisible(true),
               arrowHide: true
             },
             {
               icon: <DollarSign size={20} color={tgTheme.white} />,
               text: 'Ред. B2C цену',
-              onClick: () => { },
+              onClick: () => setModalB2CVisible(true),
               arrowHide: true
             },
             {
               icon: <DollarSign size={20} color={tgTheme.white} />,
               text: 'Ред. B2B цену',
-              onClick: () => { },
+              onClick: () => setModalB2BVisible(true),
               arrowHide: true
             },
             {
-              icon: <Trash size={20} color={tgTheme.white} />,
+              icon: <Trash size={20} color={tgTheme.danger} />,
               text: 'Удалить авто',
-              onClick: () => { },
-              arrowHide: true
+              onClick: () => setModalDeleteVisible(true),
+              arrowHide: true,
+              color: tgTheme.danger
             },
           ]}
         />
@@ -309,43 +310,60 @@ export default function CarDetailPage() {
           ]}
         />
       </div>
-      {isOpen && (
-        <div className={styles.modalOverlay} onMouseDown={closeModal}>
-          <div className={styles.modal} onMouseDown={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <span className={'font18w600'}>{'Редактировать авто'}</span>
+      <ItemStatus visible={modalStatusVisible} setVisible={setModalStatusVisible}
+        status={car.car.status} car_number={car.car.car_number} />
+      <ItemShowcase visible={modalShowcaseVisible} setVisible={setModalShowcaseVisible}
+        showcase={car.car.b2c_status} car_number={car.car.car_number} />
+      <ItemDesc visible={modalDescVisible} setVisible={setModalDescVisible}
+        descRu={car.car.car_description} descEn={car.car.car_description_eng} car_number={car.car.car_number} />
+      <ItemB2C visible={modalB2CVisible} setVisible={setModalB2CVisible}
+        periods={[
+          {
+            text: 'День',
+            key: 'b2c_price_3_aed',
+            value: car.car.car_price_3,
+          },
+          {
+            text: 'Неделя',
+            key: 'b2c_price_7_aed',
+            value: car.car.car_price_7,
+          },
+          {
+            text: 'Месяц',
+            key: 'b2c_price_30_aed',
+            value: car.car.car_price_30,
+          },
+        ]} car_number={car.car.car_number} />
+      <ItemB2B visible={modalB2BVisible} setVisible={setModalB2BVisible}
+        periods={[
+          {
+            text: 'День',
+            key: 'b2b_price_1_aed',
+            value: car.car.car_price_b2b_1,
+          },
+          {
+            text: 'Неделя',
+            key: 'b2b_price_7_aed',
+            value: car.car.car_price_b2b_7,
+          },
+          {
+            text: 'Месяц',
+            key: 'b2b_price_30_aed',
+            value: car.car.car_price_b2b_30,
+          },
+        ]} car_number={car.car.car_number} />
 
-              <button className={styles.modalClose} onClick={closeModal}>
-                <X size={18} color={tgTheme.textSecondary} />
-              </button>
-            </div>
-
-            <div className={styles.modalBody}>
-              <div className={styles.field}>
-                <span className={'font12w500'} style={{ color: tgTheme.textSecondary }}>Текущая модель:  jklj kljdsfjkld</span>
-                <span className={'font16w500'}>Новая модель</span>
-                <input
-                  className={`${styles.input} font14w500`}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="модель"
-                  autoFocus
-                />
-              </div>
-            </div>
-
-            <div className={styles.modalFooter}>
-              <button className={styles.secondaryBtn} onClick={closeModal}>
-                <span className="font14w600">Отмена</span>
-              </button>
-
-              <button className={styles.primaryBtn} onClick={handleSave} >
-                <span className="font14w600">Сохранить</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ModalComponent visible={modalDeleteVisible} setVisible={setModalDeleteVisible}
+        textButton='Удалить' title={'Удалить авто?'} onSave={() => {
+          deleteCar(car.car.car_number)
+          navigate(-1);
+        }}
+        children={<div>
+          <span className='font14w500' style={{ color: tgTheme.textSecondary }}>
+            авто "{car.car.car_name}" будет удален без возвратно.
+          </span>
+        </div>}
+      />
     </AppLayout>
   )
 }

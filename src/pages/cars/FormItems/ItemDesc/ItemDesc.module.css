@@ -1,0 +1,101 @@
+.btnBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  background-color: var(--tg-item-button-bg-hover);
+  padding: 0px 10px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 49%;
+}
+
+.descBlock {
+  height: 160px;
+  overflow-y: scroll;
+  padding: 0px 10px;
+}
+
+.content {
+  background-color: var(--tg-block-bg);
+  padding: 12px 0px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.switcherWrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.switcher {
+  position: relative;
+  display: flex;
+  border-radius: 8px;
+  background: var(--tg-card-2);
+  width: 100px;
+}
+
+.switchBtn {
+  flex: 1;
+  padding: 4px 0;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  z-index: 2;
+  transition: 0.2s ease;
+}
+
+.slider {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  height: calc(100% - 6px);
+  background: var(--tg-accent);
+  border-radius: 6px;
+  transition: 0.25s ease;
+}
+
+.slider.right {
+  transform: translateX(100%);
+}
+
+.inputBlock {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
+
+.input {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+  max-height: 150px;
+  overflow-y: auto;
+  line-height: 1.4;
+}
+
