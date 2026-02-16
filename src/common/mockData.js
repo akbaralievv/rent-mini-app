@@ -303,3 +303,13 @@ export const deposit = [
     car_name: "Volkswagen Polo",
   },
 ];
+
+export const cars_class = [
+  { id: 0, name: 'Все', key: 'all' },
+  { id: 1, name: 'Эконом', key: 'econom' },
+  { id: 2, name: 'Стандарт', key: 'standard' },
+  { id: 3, name: 'Бизнес', key: 'business' },
+  { id: 4, name: 'Спорт', key: 'sport' },
+  { id: 5, name: 'Люкс', key: 'luxury' },
+  { id: 6, name: 'Электро', key: 'electric' },
+]

@@ -29,6 +29,7 @@ export default function CalendarCustom({
   visible = false,
   mode = 'single', // single | range
   listBlockPosition = 'right', // left, right
+  isUnder = false,
 }) {
   const initial = date ? new Date(date) : new Date()
 
@@ -48,6 +49,7 @@ export default function CalendarCustom({
 
     if (mode === 'range') {
       if (!from) return
+      console.log(from)
       setDate(
         `${formatDate(from)}/${formatDate(to || from)}`
       )
@@ -150,7 +152,7 @@ export default function CalendarCustom({
     <div>
       <BackdropModal onClick={() => setVisible(false)} />
 
-      <div className={`${styles.calendar} ${listBlockPosition == 'left' && styles.calendarLeft}`}>
+      <div className={`${styles.calendar} ${listBlockPosition == 'left' && styles.calendarLeft} ${isUnder && styles.isUnder}`}>
         {/* HEADER */}
         <div className={styles.calendarHeader}>
           <span className="font16w600">

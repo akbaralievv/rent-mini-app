@@ -1,0 +1,6 @@
+.block {
+  background-color: var(--tg-card-2);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 8px;
+}

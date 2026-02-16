@@ -6,6 +6,7 @@
   --tg-border: #2b323a;
   --tg-text: #fefeff;
   --tg-text-secondary: #818f9b;
+  --tg-text-3: #818f9b;
   --tg-muted: #545158;
   --tg-accent: #4689d3;
   --tg-accent-2: hsl(210, 40%, 30%);
@@ -47,6 +48,10 @@ body {
   font-family: var(--tg-font);
 }
 
+.mt30 {
+  margin-top: 30px;
+}
+
 /* Loader */
 .loader-wrap {
   width: 100%;
@@ -67,6 +72,7 @@ body {
 
 .miniBlock {
   margin: 6px 12px;
+  margin-top: 0px;
 }
 
 .font10w400 {
@@ -173,4 +179,10 @@ body {
 
 .tracking-normal {
   letter-spacing: 0;
+}
+
+.state,
+.stateError {
+  text-align: center;
+  padding: 24px;
 }

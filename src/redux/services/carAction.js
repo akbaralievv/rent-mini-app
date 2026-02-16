@@ -26,7 +26,7 @@ export const carApi = createApi({
 
     createCar: builder.mutation({
       query: (data) => ({
-        url: '/car',
+        url: '/car/store',
         method: 'POST',
         body: data,
       }),
@@ -61,13 +61,17 @@ export const carApi = createApi({
 
     updateCarTechField: builder.mutation({
       query: ({ carNumber, field, value }) => ({
-        url: `/car/${carNumber}/tech`,
-        method: 'PATCH',
+        url: `/car/tech/${carNumber}`,
+        method: 'POST',
         body: { field, value },
       }),
-      invalidatesTags: (r, e, { carNumber }) => [
-        { type: 'Car', id: carNumber },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg
+          ? [
+            { type: 'Car', id: arg.carNumber },
+            { type: 'Cars' },
+          ]
+          : [{ type: 'Cars' }],
     }),
 
     changeCarStatus: builder.mutation({
@@ -117,11 +121,17 @@ export const carApi = createApi({
 
     createOrder: builder.mutation({
       query: ({ carNumber, data }) => ({
-        url: `/order/${carNumber}`,
+        url: `/car/order/store/${carNumber}`,
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Orders', 'Stats'],
+      invalidatesTags: (result, error, arg) =>
+        arg
+          ? [
+            { type: 'Car', id: arg.carNumber },
+            { type: 'Cars' },
+          ]
+          : [{ type: 'Cars' }],
     }),
 
     updateOrder: builder.mutation({
@@ -135,10 +145,16 @@ export const carApi = createApi({
 
     deleteOrder: builder.mutation({
       query: (orderId) => ({
-        url: `/order/${orderId}`,
-        method: 'DELETE',
+        url: `/car/order/${orderId}/delete`,
+        method: 'GET',
       }),
-      invalidatesTags: ['Orders', 'Stats'],
+      invalidatesTags: (result, error, arg) =>
+        arg
+          ? [
+            { type: 'Car', id: arg.carNumber },
+            { type: 'Cars' },
+          ]
+          : [{ type: 'Cars' }],
     }),
 
     setCarPrice: builder.mutation({
@@ -182,19 +198,25 @@ export const carApi = createApi({
 
     uploadCarImages: builder.mutation({
       query: ({ carNumber, formData }) => ({
-        url: `/car/${carNumber}/images`,
+        url: `/car/images/${carNumber}/upload-images`,
         method: 'POST',
         body: formData,
       }),
-      invalidatesTags: ['Images'],
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Car', id: arg.carNumber },
+        { type: 'Cars' },
+      ],
     }),
 
     deleteCarImages: builder.mutation({
       query: (carNumber) => ({
-        url: `/car/${carNumber}/images`,
+        url: `/car/images/${carNumber}/delete`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Images'],
+      invalidatesTags: (result, error, carNumber) => [
+        { type: 'Car', id: carNumber },
+        { type: 'Cars' },
+      ],
     }),
 
     //brands or models

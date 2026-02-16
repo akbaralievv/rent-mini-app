@@ -22,6 +22,12 @@ import OperationEditPage from './pages/financialReport/operationPage/OperationEd
 import TagsPage from './pages/financialReport/tagsPage/TagsPage';
 import CarsListPage from './pages/cars/CarsListPage';
 import CarDetailPage from './pages/cars/carDetail/CarDetailPage';
+import CarServicePage from './pages/cars/CarServicePage/CarServicePage';
+import CarImagesPage from './pages/cars/CarImagesPage/CarImagesPage';
+import CarOrdersPage from './pages/cars/CarOrdersPage/CarOrdersPage';
+import AllCharacteristicsPage from './pages/cars/AllCharacteristicsPage/AllCharacteristicsPage';
+import CarDocuments from './pages/cars/AllCharacteristicsPage/CarDocuments/CarDocuments';
+import CarCreatePage from './pages/cars/CarCreatePage/CarCreatePage';
 
 function Router() {
   const { status } = useAuth();
@@ -58,7 +64,14 @@ function Router() {
       <Route path="/financial-main/tags" element={<TagsPage />} />
 
       <Route path="/cars" element={<CarsListPage />} />
+      <Route path="/car/create" element={<CarCreatePage />} />
       <Route path="/cars/:id" element={<CarDetailPage />} />
+      <Route path="/cars/:id/services" element={<CarServicePage />} />
+      <Route path="/cars/:id/images" element={<CarImagesPage />} />
+      <Route path="/cars/:id/characteristics" element={<AllCharacteristicsPage />} />
+      <Route path="/cars/:id/orders" element={<CarOrdersPage />} />
+      <Route path="/cars/:id/orders/:orderId" element={<CarOrdersPage />} />
+      <Route path="/cars/:id/documents/" element={<CarDocuments />} />
 
       <Route path="/clients-document" element={<ClientsDocumentsPage />} />
       <Route path="/company-document" element={<CompanyDocumentPage />} />

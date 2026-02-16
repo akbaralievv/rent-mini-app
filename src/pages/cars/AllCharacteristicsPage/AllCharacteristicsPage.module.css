@@ -1,0 +1,137 @@
+.contentBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: solid var(--tg-item-button-bg-hover) 1px;
+  padding-bottom: 2px;
+}
+
+.btnEdit {
+  align-self: flex-end;
+}
+
+.dateBlock {
+  position: relative;
+}
+
+/* ////// */
+.customSelectWrapper {
+  position: relative;
+}
+
+.customSelect {
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 15;
+}
+
+.answer {
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+}
+
+.customSelect:hover {
+  background: var(--tg-card-2);
+}
+
+/* 🔥 Открываем ВВЕРХ */
+.dropdown {
+  position: absolute;
+  bottom: 110%;
+  /* вместо top */
+  left: 0;
+  width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--tg-card-2);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 100;
+  animation: fadeIn 0.15s ease;
+}
+
+.dropdownItem {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s ease;
+}
+
+.dropdownItem:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+/* Скролл красивый */
+.dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.input {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.booleanBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.booleanBlock div {
+  width: 48%;
+}

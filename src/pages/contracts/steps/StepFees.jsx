@@ -1,3 +1,5 @@
+import PreviewContract from "../components/PreviewContract/PreviewContract";
+
 const FEES = [
   ['base_rental', 'Base Rental'],
   ['salik', 'Salik'],
@@ -10,8 +12,34 @@ const FEES = [
 ];
 
 export default function StepFees({ state, setState }) {
+  console.log(state)
   return (
     <div className="card">
+      <PreviewContract
+        visible={state.template}
+        list={[
+          {
+            key: 'Выбран шаблон',
+            value: state.template.name,
+          },
+          {
+            key: 'Выбран авто',
+            value: state.car.car_name || state.car.name,
+          },
+          {
+            key: 'Выбран Заказ',
+            value: `${state.order.start_date} → ${state.order.end_date} • ${state.order.customer_name}`
+          },
+          {
+            key: '1-й водитель',
+            value: state.drivers.driver1?.name || 'не найдено'
+          },
+          {
+            key: '2-й водитель',
+            value: state.drivers.driver2?.name || 'не найдено'
+          }
+        ]}
+      />
       <h2>💰 Подробности о сборах</h2>
 
       <div className="form-grid">

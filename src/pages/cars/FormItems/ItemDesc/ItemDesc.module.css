@@ -39,8 +39,9 @@
   position: relative;
   display: flex;
   border-radius: 8px;
-  background: var(--tg-card-2);
+  background: var(--tg-card);
   width: 100px;
+  margin-top: 4px;
 }
 
 .switchBtn {

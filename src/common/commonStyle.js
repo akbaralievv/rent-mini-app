@@ -20,7 +20,8 @@ export const tgTheme = {
   itemButtonBg: '#212a33',
   itemButtonBgHover: '#2a3440',
 
-  white: '#ffffff'
+  white: '#ffffff',
+  muted2: '#666f7a'
 };
 
 export const fileIconMap = {

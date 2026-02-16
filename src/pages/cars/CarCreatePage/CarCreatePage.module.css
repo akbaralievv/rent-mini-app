@@ -1,0 +1,117 @@
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  gap: 2px;
+}
+
+.input,
+.textarea {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  /* margin-bottom: 20px; */
+  font-size: 14px;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--tg-text-3);
+}
+
+.textarea {
+  min-height: 90px;
+  resize: none;
+}
+
+.statusSwitch {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.statusBtn {
+  background-color: var(--tg-item-button-bg-hover);
+  padding: 0px 10px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.primaryBtn {
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tg-accent);
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+  align-self: flex-end;
+}
+
+.primaryBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ==== FILE PICK ==== */
+
+.fieldImg {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  gap: 6px;
+}
+
+.filePick {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.filePickLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filePickRight {
+  max-width: 70%;
+  overflow: hidden;
+}
+
+.fileHint {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fileInputHidden {
+  display: none;
+}
+
+.removeFileBtn {
+  background: transparent;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.miniBlock {
+  margin: 0px 6px;
+}

@@ -1,3 +1,5 @@
+import PreviewContract from "../components/PreviewContract/PreviewContract";
+
 const FIELDS = [
   ['name', 'Имя'],
   ['license_no', 'License No'],
@@ -30,6 +32,23 @@ export default function StepDrivers({ state, setState }) {
 
   return (
     <div className="drivers-step">
+      <PreviewContract
+        visible={state.template}
+        list={[
+          {
+            key: 'Выбран шаблон',
+            value: state.template.name,
+          },
+          {
+            key: 'Выбран авто',
+            value: state.car.car_name || state.car.name,
+          },
+          {
+            key: 'Выбран Заказ',
+            value: `${state.order.start_date} → ${state.order.end_date} • ${state.order.customer_name}`
+          }
+        ]}
+      />
       {['driver1', 'driver2'].map((driver, idx) => (
         <div className="card" key={driver}>
           <h2>👤 {idx + 1}-й водитель</h2>

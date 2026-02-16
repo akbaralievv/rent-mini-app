@@ -1,0 +1,185 @@
+.state,
+.stateError {
+  text-align: center;
+  padding: 24px;
+}
+
+.stateError {
+  color: var(--tg-danger);
+  font-weight: 600;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+/* КАРУСЕЛЬ */
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--tg-card-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.25s ease;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.visible {
+  opacity: 1;
+}
+
+/* СТРЕЛКИ */
+.arrowBlock {
+  background-color: var(--tg-card-2);
+  align-self: flex-end;
+  display: flex;
+  margin-top: 8px;
+  border-radius: 8px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.arrow {
+  border: none;
+  width: 32px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: var(--tg-block-bg);
+}
+
+.counter {
+  display: flex;
+  justify-content: center;
+  width: 46px;
+}
+
+/* LOADER */
+.loaderBlock {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.loader {
+  color: var(--tg-accent);
+  font-size: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  position: absolute;
+  animation: mulShdSpin 1.3s infinite linear;
+  transform: translateZ(0);
+}
+
+@keyframes mulShdSpin {
+
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em,
+      2em -2em 0 0em, 3em 0 0 -1em,
+      2em 2em 0 -1em, 0 3em 0 -1em,
+      -2em 2em 0 -1em, -3em 0 0 -1em,
+      -2em -2em 0 0;
+  }
+
+  50% {
+    box-shadow: 0 -3em 0 -1em,
+      2em -2em 0 -1em, 3em 0 0 -1em,
+      2em 2em 0 0em, 0 3em 0 0.2em,
+      -2em 2em 0 0, -3em 0 0 -1em,
+      -2em -2em 0 -1em;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.input {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ✅ красивый выбор файла */
+.filePick {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 10px;
+}
+
+.filePick:hover {
+  transform: translateY(-1px);
+}
+
+.filePickLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filePickRight {
+  max-width: 60%;
+  overflow: hidden;
+}
+
+.fileHint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fileInputHidden {
+  display: none;
+}
+
+.removeFileBtn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  cursor: pointer;
+  width: fit-content;
+  padding: 0px 0;
+}

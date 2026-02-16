@@ -105,7 +105,7 @@ export default function CarsListPage() {
           <div className={styles.headerFilter + ' miniBlock'}>
             <CustomButton
               icon={<Plus color={tgTheme.textSecondary} size={16} />}
-              text='Добавить' onClick={() => { }} />
+              text='Добавить' onClick={() => navigate('/car/create')} />
           </div>
         </div>
 
@@ -128,7 +128,12 @@ export default function CarsListPage() {
                 {car.car_images?.[0] ? (
                   <img src={car.car_images[0]} alt={car.car_name} />
                 ) : (
-                  <Car />
+                  <div className={styles.withoutImg}>
+                    <Car color={tgTheme.textSecondary} />
+                    <span className='font12w400' style={{ color: tgTheme.textSecondary }}>
+                      нет фото
+                    </span>
+                  </div>
                 )}
               </div>
 

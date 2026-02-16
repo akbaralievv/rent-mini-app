@@ -223,6 +223,32 @@ export default function CarDetailPage() {
         )}
         <div className={styles.topIndent} />
         <ButtonSection
+          title={'Разделы'}
+          buttons={[
+            {
+              icon: <ListOrdered size={20} color={tgTheme.white} />,
+              text: 'Заказы',
+              onClick: () => navigate(`/cars/${car.car.car_number}/orders`),
+            },
+            {
+              icon: <Wrench size={20} color={tgTheme.white} />,
+              text: 'ТО авто',
+              onClick: () => navigate(`/cars/${car.car.car_number}/services`),
+            },
+            {
+              icon: <List size={20} color={tgTheme.white} />,
+              text: 'Все характеристики',
+              onClick: () => navigate(`/cars/${car.car.car_number}/characteristics`),
+            },
+            {
+              icon: <Images size={20} color={tgTheme.white} />,
+              text: 'Картинки',
+              onClick: () => navigate(`/cars/${car.car.car_number}/images`),
+            },
+          ]}
+        />
+        <div className={styles.topIndent} />
+        <ButtonSection
           title={'Редактировать'}
           buttons={[
             {
@@ -280,32 +306,6 @@ export default function CarDetailPage() {
               onClick: () => setModalDeleteVisible(true),
               arrowHide: true,
               color: tgTheme.danger
-            },
-          ]}
-        />
-        <div className={styles.topIndent} />
-        <ButtonSection
-          title={'Разделы'}
-          buttons={[
-            {
-              icon: <ListOrdered size={20} color={tgTheme.white} />,
-              text: 'Заказы',
-              onClick: () => { },
-            },
-            {
-              icon: <Wrench size={20} color={tgTheme.white} />,
-              text: 'ТО авто',
-              onClick: () => { },
-            },
-            {
-              icon: <List size={20} color={tgTheme.white} />,
-              text: 'Все характеристики',
-              onClick: () => { },
-            },
-            {
-              icon: <Images size={20} color={tgTheme.white} />,
-              text: 'Картинки',
-              onClick: () => { },
             },
           ]}
         />

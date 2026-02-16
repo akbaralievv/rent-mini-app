@@ -47,15 +47,15 @@ export default function ContractsPage() {
                 className="contract-card"
                 onClick={() => navigate(`/contracts/${c.id}`)}>
                 <div className="contract-main">
-                  <h3>{c.doc_name || 'Договор без названия'}</h3>
-                  <p className="contract-meta">
+                  <h3 className='font18w500'>{c.doc_name || 'Договор без названия'}</h3>
+                  <p className="contract-meta font14w500" style={{ color: tgTheme.textSecondary }}>
                     {c.car_name} • {c.car_number}
                   </p>
-                  <p className="contract-meta">Клиент: {c.customer_name || '—'}</p>
+                  <p className="contract-meta" style={{ color: tgTheme.textSecondary }}>Клиент: {c.customer_name || '—'}</p>
                 </div>
 
                 <div className="contract-footer">
-                  <span className="contract-date">
+                  <span className="contract-date" style={{ color: tgTheme.textSecondary }}>
                     {new Date(c.created_at).toLocaleDateString()}
                   </span>
                 </div>

@@ -163,3 +163,11 @@
   font-weight: 600;
   white-space: nowrap;
 }
+
+.withoutImg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

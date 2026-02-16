@@ -1,0 +1,213 @@
+.state {
+  text-align: center;
+  padding: 24px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.stateError {
+  text-align: center;
+  padding: 24px;
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty {
+  text-align: center;
+  opacity: 0.6;
+  margin-top: 20px;
+}
+
+.orderCard {
+  background: var(--tg-card-2);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.orderDates {
+  opacity: 0.7;
+}
+
+.orderFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Статусы */
+.Delivery {
+  background: rgba(255, 166, 0, 0.15);
+  color: orange;
+}
+
+.Rented {
+  background: rgba(0, 255, 128, 0.15);
+  color: #00ff80;
+}
+
+.Completed {
+  background: rgba(200, 200, 200, 0.15);
+  color: #aaa;
+}
+
+.paid {
+  color: var(--tg-success);
+}
+
+.notPaid {
+  color: var(--tg-danger);
+}
+
+.tagNeutralDot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--tg-filter-bg);
+  border: 1px solid hsl(212, 20%, 33%);
+}
+
+.right {
+  align-self: flex-end;
+  display: flex;
+  gap: 4px;
+}
+
+.btn {
+  border-radius: 10px;
+  width: 20px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 4px 6px;
+}
+
+.pageBtn {
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  background-color: transparent;
+  transition: 0.15s ease;
+}
+
+.pageBtn:active {
+  transform: scale(0.96);
+}
+
+.pageBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.pageInfo {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.headerFilter {
+  display: flex;
+  justify-content: end;
+}
+
+.clientBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  gap: 2px;
+  position: relative;
+}
+
+.input,
+.textarea {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 14px;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--tg-text-3);
+}
+
+.statusSwitch {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 6px
+}
+
+.statusBtn {
+  background-color: var(--tg-item-button-bg-hover);
+  padding: 0px 10px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 32%;
+  flex: 1;
+}
+
+.answer {
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+}
+
+.errorBlock {
+  position: absolute;
+  bottom: -16px;
+}
