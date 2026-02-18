@@ -32,6 +32,7 @@ import ModalComponent from '../../../components/ModalComponent/ModalComponent'
 import ItemB2C from '../FormItems/ItemB2C/ItemB2C'
 import ItemB2B from '../FormItems/ItemB2B/ItemB2B'
 import ItemDesc from '../FormItems/ItemDesc/ItemDesc'
+import InfoModal from '../../../components/InfoModal/InfoModal'
 
 function formatMoney(num) {
   return Number(num || 0).toLocaleString("ru-RU")
@@ -56,6 +57,7 @@ export default function CarDetailPage() {
   const [modalDescVisible, setModalDescVisible] = useState(false);
   const [modalB2CVisible, setModalB2CVisible] = useState(false);
   const [modalB2BVisible, setModalB2BVisible] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
 
   const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
 
@@ -230,11 +232,11 @@ export default function CarDetailPage() {
               text: 'Заказы',
               onClick: () => navigate(`/cars/${car.car.car_number}/orders`),
             },
-            {
-              icon: <Wrench size={20} color={tgTheme.white} />,
-              text: 'ТО авто',
-              onClick: () => navigate(`/cars/${car.car.car_number}/services`),
-            },
+            // {
+            //   icon: <Wrench size={20} color={tgTheme.white} />,
+            //   text: 'ТО авто',
+            //   onClick: () => navigate(`/cars/${car.car.car_number}/services`),
+            // },
             {
               icon: <List size={20} color={tgTheme.white} />,
               text: 'Все характеристики',
@@ -260,7 +262,7 @@ export default function CarDetailPage() {
             {
               icon: <Calendar size={20} color={tgTheme.white} />,
               text: 'дата аренды: 02.02.2026-09.09.2027',
-              onClick: () => { },
+              onClick: () => setInfoVisible(true),
               arrowHide: true
             },
             {
@@ -278,7 +280,7 @@ export default function CarDetailPage() {
             {
               icon: <User size={20} color={tgTheme.white} />,
               text: 'Изменить клиента',
-              onClick: () => { },
+              onClick: () => setInfoVisible(true),
               arrowHide: true
             },
             {
@@ -363,6 +365,10 @@ export default function CarDetailPage() {
             авто "{car.car.car_name}" будет удален без возвратно.
           </span>
         </div>}
+      />
+      <InfoModal
+        visible={infoVisible}
+        setVisible={setInfoVisible}
       />
     </AppLayout>
   )

@@ -17,8 +17,11 @@ export default function ButtonSection({ buttons = [], title = '' }) {
           buttons.map((el, index) => {
             return <button className={styles.item} onClick={() => el.onClick()} key={index} disabled={el.disabled}>
               <div className={styles.itemLeft}>
-                {el.icon}
-                <span className='font14w500' style={{ color: el.disabled ? tgTheme.muted2 : el.color ?? tgTheme.white }}>
+                <div>
+                  {el.icon}
+                </div>
+                <span className={`font14w500 ${styles.textEllipsis}`}
+                  style={{ color: el.disabled ? tgTheme.muted2 : el.color ?? tgTheme.white }}>
                   {el.text}
                 </span>
               </div>

@@ -1,0 +1,55 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(1px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: 280px;
+  background: var(--tg-card);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  animation: fadeUp 0.2s ease;
+}
+
+.icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.text {
+  color: var(--tg-text);
+  margin-bottom: 16px;
+}
+
+.button {
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: var(--tg-accent);
+  color: white;
+  font-weight: 500;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+@keyframes fadeUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -22,10 +22,15 @@
   gap: 10px;
 }
 
+.item {
+  min-width: 0;
+}
+
 .itemLeft {
   display: flex;
   gap: 12px;
   align-items: center;
+  min-width: 0;
 }
 
 .itemRight {
@@ -66,4 +71,10 @@
 .titleBlock {
   margin-left: 12px;
   margin-bottom: 12px;
+}
+
+.textEllipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

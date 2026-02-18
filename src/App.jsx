@@ -28,6 +28,10 @@ import CarOrdersPage from './pages/cars/CarOrdersPage/CarOrdersPage';
 import AllCharacteristicsPage from './pages/cars/AllCharacteristicsPage/AllCharacteristicsPage';
 import CarDocuments from './pages/cars/AllCharacteristicsPage/CarDocuments/CarDocuments';
 import CarCreatePage from './pages/cars/CarCreatePage/CarCreatePage';
+import AllChatsPage from './pages/allChats/AllChatsPage';
+import WaChatsPage from './pages/allChats/WaChatsPage/WaChatsPage';
+import SiteChatsPage from './pages/allChats/SiteChatsPage/SiteChatsPage';
+import TemplatesWAPage from './pages/allChats/TemplatesWAPage/TemplatesWAPage';
 
 function Router() {
   const { status } = useAuth();
@@ -76,6 +80,11 @@ function Router() {
       <Route path="/clients-document" element={<ClientsDocumentsPage />} />
       <Route path="/company-document" element={<CompanyDocumentPage />} />
       <Route path="/company-document/:id" element={<CompanyDocumentDetailPage />} />
+
+      <Route path="/all-chats" element={<AllChatsPage />} />
+      <Route path="/all-chats/wa" element={<WaChatsPage />} />
+      <Route path="/all-chats/site" element={<SiteChatsPage />} />
+      <Route path="/all-chats/templates-wa" element={<TemplatesWAPage />} />
     </Routes>
   );
 }

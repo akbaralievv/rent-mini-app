@@ -1,32 +1,48 @@
 .card {
   background: var(--tg-card-2);
-  border-radius: 8px;
-  padding: 14px;
-  color: #fff;
-}
-
-.itemBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background-color: #2b3542;
-  padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: 14px;
+  padding: 18px;
+  color: white;
 }
 
 .cardTitle {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
-.row {
+.balanceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.balanceTop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tg-text-secondary);
+}
+
+.balanceAmount {
+  font-size: 26px;
+  letter-spacing: 0.5px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 16px 0;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.statItem {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-}
-
-.row b {
-  margin-left: auto;
 }
 
 .dot {
@@ -43,6 +59,15 @@
   background: var(--tg-danger);
 }
 
-.balance {
-  background: var(--tg-warning);
+.balanceAmount {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.smallAmount {
+  display: flex;
+  align-items: flex-end;
+  font-size: 14px;
+  font-weight: 600;
 }

@@ -78,11 +78,12 @@ export default function MenuFinancial() {
 
         {/* ===== Card ===== */}
         <div>
-          <ReportCard title="Финансовый отчет за все время" items={[
-            { key: "balance", label: "Баланс", value: balance, variant: "income" },
-            { key: "decrease", label: "Расходы", value: decrease, variant: "expense" },
-            { key: "deposit", label: "Депозиты", value: depositPlus, variant: "balance" },
-          ]} />
+          <ReportCard
+            title="Финансовый отчет за все время"
+            balance={balance}
+            income={depositPlus}
+            expense={decrease}
+          />
           <div className={'miniBlock'}>
             <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
               Детализация доступна в разделах ниже — выберите нужный тип операций.</span>

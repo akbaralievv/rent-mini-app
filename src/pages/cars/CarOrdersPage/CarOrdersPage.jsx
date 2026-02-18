@@ -8,6 +8,7 @@ import { ClipboardEditIcon, Trash2, ChevronLeft, ChevronRight, Plus, UserRound, 
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ModalComponent from '../../../components/ModalComponent/ModalComponent'
 import CalendarCustom from '../../../components/CalendarCustom/CalendarCustom'
+import InfoModal from '../../../components/InfoModal/InfoModal'
 
 const PAGE_SIZE = 5
 function toISO(dateStr) {
@@ -67,6 +68,7 @@ export default function CarOrdersPage() {
   });
   const [errors, setErrors] = useState({});
   const [calendarVisible, setCalendarVisible] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
 
   const totalPages = Math.max(1, Math.ceil(orders.length / PAGE_SIZE))
 
@@ -228,7 +230,8 @@ export default function CarOrdersPage() {
                     className={styles.btn}
                     onClick={(e) => {
                       e.stopPropagation()
-                      navigate(`/cars/${id}/orders/${order.id}/edit`)
+                      // navigate(`/cars/${id}/orders/${order.id}/edit`)
+                      setInfoVisible(true)
                     }}
                   >
                     <ClipboardEditIcon
@@ -472,6 +475,10 @@ export default function CarOrdersPage() {
         </div>}>
 
       </ModalComponent>
+      <InfoModal
+        visible={infoVisible}
+        setVisible={setInfoVisible}
+      />
     </AppLayout>
   )
 }
