@@ -174,7 +174,11 @@ export default function CarsListPage() {
               <div />
               <div className={styles.tagNeutralDot}>
                 <span className="font12w500">
-                  {STATUS_MAPPING[car.status]}
+                  {({ ...STATUS_MAPPING, Free: 'Готов к аренде' })[
+                    car.status
+                      ? car.status.charAt(0).toUpperCase() + car.status.slice(1)
+                      : ''
+                  ] || car.status}
                 </span>
               </div>
             </div>

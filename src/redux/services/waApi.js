@@ -7,7 +7,7 @@ export const waApi = createApi({
   }),
   tagTypes: ['Chats', 'History'],
   endpoints: (builder) => ({
-    
+
     getChats: builder.query({
       query: ({ page = 0, limit = 10 }) =>
         `/chats?page=${page}&limit=${limit}`,
@@ -22,11 +22,19 @@ export const waApi = createApi({
       }),
       invalidatesTags: ['History'],
     }),
+    sendImage: builder.mutation({
+      query: ({ chatId, text, media }) => ({
+        url: '/send-images',
+        method: 'POST',
+        body: { chatId, text, media },
+      }),
+      invalidatesTags: ['History'],
+    }),
 
     getHistory: builder.query({
-      query: (chatId) => `/history/${chatId}`,
+      query: ({ chatId = 0, limit = 40 }) => `/history/${chatId}?limit=${limit}`,
       providesTags: (result, error, chatId) => [
-        { type: 'History', id: chatId },
+        { type: 'History', id: chatId, },
       ],
     }),
 
@@ -36,5 +44,6 @@ export const waApi = createApi({
 export const {
   useGetChatsQuery,
   useSendMessageMutation,
+  useSendImageMutation,
   useGetHistoryQuery,
 } = waApi;
