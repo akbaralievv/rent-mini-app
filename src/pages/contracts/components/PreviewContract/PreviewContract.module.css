@@ -1,6 +1,57 @@
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  color: var(--tg-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
 .block {
-  background-color: var(--tg-card-2);
-  padding: 12px 16px;
+  background: var(--tg-item-button-bg);
   border-radius: 8px;
-  margin-top: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.key {
+  color: var(--tg-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.value {
+  color: var(--tg-text);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .item {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .value {
+    text-align: left;
+  }
 }

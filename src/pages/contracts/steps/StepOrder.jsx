@@ -1,6 +1,6 @@
-import { tgTheme } from '../../../common/commonStyle';
 import { useGetOrdersByCarQuery } from '../../../redux/services/orders';
 import PreviewContract from '../components/PreviewContract/PreviewContract';
+import styles from './ContractSteps.module.css';
 
 export default function StepOrder({ state, setState }) {
   const carNumber = state.car?.car_number || state.car?.number;
@@ -8,49 +8,83 @@ export default function StepOrder({ state, setState }) {
     skip: !carNumber,
   });
 
+  const orders = data?.orders ?? [];
+
   return (
-    <div className="card">
+    <div className={styles.stepCard}>
       <PreviewContract
-        visible={state.template}
+        visible={Boolean(state.template)}
         list={[
           {
             key: 'Выбран шаблон',
-            value: state.template.name,
+            value: state.template?.name || '',
           },
           {
             key: 'Выбран авто',
-            value: state.car.car_name || state.car.name,
+            value: state.car?.car_name || state.car?.name || '',
           },
-          ...((state.order?.id)
-            ? [{
-              key: 'Выбран Заказ',
-              value: `${state.order.start_date} → ${state.order.end_date} • ${state.order.customer_name}`
-            }]
-            : [])
+          ...(state.order?.id
+            ? [
+                {
+                  key: 'Выбран заказ',
+                  value: `${state.order.start_date} -> ${state.order.end_date} • ${state.order.customer_name}`,
+                },
+              ]
+            : []),
         ]}
       />
-      <h2>📦 Выберите заказ</h2>
-      {!carNumber ? <p className="hint">Сначала выберите автомобиль</p> : isLoading ? <div className="loader-wrap">
-        <div className="loader" />
-      </div> :
-        isError ? <p className="error">Ошибка загрузки заказов</p> :
-          data?.orders?.length === 0 ? <p className="hint">Нет доступных заказов для этого автомобиля</p> :
-            <div className="select-list">
-              {data?.orders?.map((o) => (
-                <div
-                  key={o.id}
-                  className={`select-card ${state.order?.id == o.id ? 'active' : ''}`}
-                  onClick={() => setState((s) => ({
-                    ...s,
-                    order: o,
-                  }))}>
-                  <span style={{ color: state.order?.id == o.id ? tgTheme.white : tgTheme.textSecondary }}>
-                    {o.start_date} → {o.end_date} • {o.customer_name}
+
+      <h2 className={`font18w600 ${styles.stepTitle}`}>Выберите заказ</h2>
+
+      {!carNumber && (
+        <p className={styles.stateHint}>Сначала выберите автомобиль</p>
+      )}
+
+      {carNumber && isLoading && (
+        <div className="loader-wrap">
+          <div className="loader" />
+        </div>
+      )}
+
+      {carNumber && !isLoading && isError && (
+        <p className={styles.stateError}>Ошибка загрузки заказов</p>
+      )}
+
+      {carNumber && !isLoading && !isError && orders.length === 0 && (
+        <p className={styles.stateHint}>Нет доступных заказов для этого автомобиля</p>
+      )}
+
+      {carNumber && !isLoading && !isError && orders.length > 0 && (
+        <div className={styles.selectList}>
+          {orders.map((order) => {
+            const isActive = String(state.order?.id) === String(order.id);
+
+            return (
+              <button
+                key={order.id}
+                type="button"
+                className={`${styles.selectCard} ${isActive ? styles.selectCardActive : ''}`}
+                onClick={() =>
+                  setState((prev) => ({
+                    ...prev,
+                    order,
+                  }))
+                }
+              >
+                <div className={styles.selectMain}>
+                  <span className={styles.selectTitle}>
+                    {order.start_date}
+                    {' -> '}
+                    {order.end_date}
                   </span>
+                  <span className={`${styles.badge} ${styles.badgeMuted}`}>#{order.id}</span>
                 </div>
-              ))}
-            </div>
-      }
+                <span className={styles.selectMeta}>{order.customer_name || '-'}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

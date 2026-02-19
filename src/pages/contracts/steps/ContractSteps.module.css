@@ -1,0 +1,343 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stepper {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  padding-top: 2px;
+}
+
+.stepChip {
+  min-width: fit-content;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--tg-card-2);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.stepChip:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.stepChipCurrent {
+  background: var(--tg-item-button-bg-hover);
+  outline: 1px solid rgba(70, 137, 211, 0.55);
+}
+
+.stepChipDone {
+  background: rgba(16, 185, 129, 0.18);
+}
+
+.stepIndex {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--tg-text);
+  background: rgba(129, 143, 155, 0.4);
+}
+
+.stepChipCurrent .stepIndex {
+  background: rgba(70, 137, 211, 0.55);
+}
+
+.stepChipDone .stepIndex {
+  background: rgba(16, 185, 129, 0.55);
+}
+
+.stepLabel {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--tg-text);
+}
+
+.stepShell {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hintError {
+  color: var(--tg-warning);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.navBar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.navPrimary,
+.navSecondary {
+  border: none;
+  border-radius: 8px;
+  padding: 9px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--tg-text);
+}
+
+.navPrimary {
+  background: var(--tg-accent);
+}
+
+.navSecondary {
+  background: var(--tg-card-2);
+}
+
+.navSecondary:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.navPrimary:hover {
+  opacity: 0.9;
+}
+
+.navPrimary:disabled,
+.navSecondary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.stepCard {
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stepStack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stepTitle {
+  color: var(--tg-text);
+}
+
+.stateHint {
+  color: var(--tg-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.stateError {
+  color: var(--tg-danger);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.selectList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selectCard {
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 8px;
+  background: var(--tg-item-button-bg);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.selectCard:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.selectCardActive {
+  background: var(--tg-item-button-bg-hover);
+  outline: 1px solid rgba(70, 137, 211, 0.7);
+}
+
+.selectMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.selectTitle {
+  color: var(--tg-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.selectMeta {
+  color: var(--tg-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+}
+
+.badgeMuted {
+  color: var(--tg-text);
+  background: rgba(129, 143, 155, 0.24);
+  border: 1px solid rgba(129, 143, 155, 0.35);
+}
+
+.badgeActive {
+  color: #dff5ea;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldLabel {
+  color: var(--tg-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--tg-item-button-bg);
+  color: var(--tg-text);
+  padding: 9px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(70, 137, 211, 0.75);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: var(--tg-item-button-bg);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.summaryKey {
+  color: var(--tg-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.summaryValue {
+  color: var(--tg-text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  text-align: right;
+}
+
+.saveBtn {
+  border: none;
+  border-radius: 8px;
+  background: var(--tg-accent);
+  color: var(--tg-text);
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.saveBtn:hover {
+  opacity: 0.9;
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  .summaryRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .summaryValue {
+    text-align: left;
+  }
+
+  .navBar {
+    flex-direction: column;
+  }
+
+  .navPrimary,
+  .navSecondary,
+  .saveBtn {
+    width: 100%;
+  }
+}

@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ContractTemplates.css';
-import { useGetContractTemplatesQuery } from '../../../redux/services/contractTemplates';
+import { PencilLine, Plus } from 'lucide-react';
 import AppLayout from '../../../layouts/AppLayout';
+import CustomButton from '../../../components/CustomButton/CustomButton';
+import { useGetContractTemplatesQuery } from '../../../redux/services/contractTemplates';
+import { tgTheme } from '../../../common/commonStyle';
 import { getErrorMessage } from '../../../utils';
+import styles from './ContractTemplatesPage.module.css';
 
 export default function ContractTemplatesPage() {
   const navigate = useNavigate();
@@ -18,13 +21,19 @@ export default function ContractTemplatesPage() {
   const templates = Array.isArray(data) ? data : data?.data ?? [];
 
   return (
-    <AppLayout title="Шаблоны договоров" onBack={() => navigate(-1)}>
-      <div className="contractTemplates-page">
-        <div className="contractTemplates-header">
-          <div />
-          <button className="create-btn" onClick={() => navigate('/contracts/templates/new')}>
-            Создать шаблон
-          </button>
+    <AppLayout title="Шаблоны договоров" onBack={() => navigate('/')}>
+      <div className={styles.page}>
+        <div className={`${styles.headerFilter} miniBlock`}>
+          <div className={styles.counter}>
+            <span className="font13w500">
+              Шаблонов: {templates.length}
+            </span>
+          </div>
+          <CustomButton
+            onClick={() => navigate('/contracts/templates/new')}
+            icon={<Plus color={tgTheme.textSecondary} size={16} />}
+            text='Добавить'
+          />
         </div>
 
         {loading ? (
@@ -32,31 +41,48 @@ export default function ContractTemplatesPage() {
             <div className="loader" />
           </div>
         ) : templates.length === 0 ? (
-          <div className="contractTemplates-empty">
-            <p style={{ color: 'var(--tg-muted)' }}>Шаблонов пока нет</p>
+          <div className={styles.status}>
+            <span className="font14w500" style={{ color: tgTheme.textSecondary }}>
+              Шаблоны пока не созданы
+            </span>
           </div>
         ) : (
-          <div className="contractTemplates-list">
-            {templates?.map((temp) => (
-              <div
-                key={temp.id}
-                className="contractTemplate-card"
-                onClick={() => navigate(`/contracts/templates/${temp.id}/edit`)}>
-                <div className="contractTemplate-main">
-                  <h3>{temp.name}</h3>
-                  <div className="contractTemplate-desc">
-                    <p className="contractTemplate-meta">Компания: {temp.company_name}</p>
-                    <p className="contractTemplate-meta">Телефон: {temp.company_phone}</p>
-                    <p className="contractTemplate-meta">E-mail: {temp.company_email}</p>
-                    <p className="contractTemplate-meta">Слоган: {temp.company_slogan}</p>
-                  </div>
+          <div className={styles.list}>
+            {templates.map((template) => (
+              <button
+                key={template.id}
+                type="button"
+                className={styles.item}
+                onClick={() => navigate(`/contracts/templates/${template.id}/edit`)}
+              >
+                <div className={styles.itemTop}>
+                  <span className="font16w500">
+                    {template.name || `Шаблон #${template.id}`}
+                  </span>
+                  <PencilLine size={16} color={tgTheme.textSecondary} />
                 </div>
-                <div className="contractTemplate-footer">
-                  <span className="contractTemplate-date">
-                    {new Date(temp.created_at).toLocaleDateString()}
+
+                <div className={styles.metaRow}>
+                  <span className="font13w500" style={{ color: tgTheme.textSecondary }}>
+                    ID: {template.id}
                   </span>
                 </div>
-              </div>
+
+                <div className={styles.tags}>
+                  <span
+                    className={`${styles.badge} ${
+                      template.is_active ? styles.badgeActive : styles.badgeMuted
+                    }`}
+                  >
+                    {template.is_active ? 'Активный' : 'Неактивный'}
+                  </span>
+                  {template.is_system && (
+                    <span className={`${styles.badge} ${styles.badgeSystem}`}>
+                      Системный
+                    </span>
+                  )}
+                </div>
+              </button>
             ))}
           </div>
         )}

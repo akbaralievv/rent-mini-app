@@ -1,24 +1,26 @@
-import React from 'react'
-import styles from './PreviewContract.module.css'
-import { tgTheme } from '../../../../common/commonStyle'
+import styles from './PreviewContract.module.css';
 
-export default function PreviewContract({
-  list = [],
-  visible = false,
-}) {
-  if (!visible) return null
+export default function PreviewContract({ list = [], visible = false }) {
+  if (!visible) return null;
+
+  const prepared = list.filter(
+    (item) => item && typeof item === 'object' && String(item.value ?? '').trim() !== '',
+  );
+
+  if (prepared.length === 0) return null;
+
   return (
-    <div>
-      <span className='font18w600'>Обзор на договор</span>
+    <div className={styles.preview}>
+      <span className={styles.title}>Обзор договора</span>
+
       <div className={styles.block}>
-        {
-          list.map((el) => <div className={styles.item}>
-            <span className='font14w500' style={{ color: tgTheme.textSecondary }}>
-              {el.key}: <span style={{ color: tgTheme.white }}>{el.value}</span>
-            </span>
-          </div>)
-        }
+        {prepared.map((item, index) => (
+          <div key={`${item.key}-${index}`} className={styles.item}>
+            <span className={styles.key}>{item.key}</span>
+            <span className={styles.value}>{item.value}</span>
+          </div>
+        ))}
       </div>
     </div>
-  )
+  );
 }

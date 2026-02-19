@@ -1,47 +1,54 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Download, Pencil, Trash2 } from 'lucide-react';
 import AppLayout from '../../layouts/AppLayout';
 import {
   useGetContractQuery,
   useDeleteContractMutation,
-  useSendToTelegramMutation,
 } from '../../redux/services/contracts';
-import { useState } from 'react';
 import { getErrorMessage } from '../../utils';
+import { tgTheme } from '../../common/commonStyle';
+import styles from './ContractsDetail.module.css';
+
+const API_BASE = `${(import.meta.env.VITE_API_URL || '').replace(/\/$/, '')}/api`;
+
 const hasAnyValue = (obj) =>
   obj &&
   typeof obj === 'object' &&
   Object.values(obj).some(
-    (v) =>
-      v !== null &&
-      v !== undefined &&
-      v !== '' &&
-      v !== '-' &&
-      !(Array.isArray(v) && v.length === 0) &&
-      !(typeof v === 'object' && Object.keys(v).length === 0),
+    (value) =>
+      value !== null &&
+      value !== undefined &&
+      value !== '' &&
+      value !== '-' &&
+      !(Array.isArray(value) && value.length === 0) &&
+      !(typeof value === 'object' && Object.keys(value).length === 0),
   );
 
-function InfoBlock({ title, data, labels }) {
-  if (!data || typeof data !== 'object') return null;
-  if (!hasAnyValue(data)) return null;
+const sanitizeFileName = (name) =>
+  String(name || 'contract.pdf')
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g, '_');
 
-  return (
-    <div className="card">
-      <h2>{title}</h2>
-      {Object.entries(labels).map(([key, label]) => {
-        const value = data[key];
-        if (value === null || value === undefined || value === '' || value === '-') {
-          return null;
-        }
+const extractFileName = (disposition, fallback) => {
+  if (!disposition) return sanitizeFileName(fallback);
 
-        return (
-          <p key={key}>
-            <b>{label}:</b> {String(value)}
-          </p>
-        );
-      })}
-    </div>
-  );
-}
+  const utfMatch = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+  if (utfMatch?.[1]) {
+    try {
+      return sanitizeFileName(decodeURIComponent(utfMatch[1]));
+    } catch {
+      return sanitizeFileName(fallback);
+    }
+  }
+
+  const simpleMatch = disposition.match(/filename="?([^";]+)"?/i);
+  if (simpleMatch?.[1]) {
+    return sanitizeFileName(simpleMatch[1]);
+  }
+
+  return sanitizeFileName(fallback);
+};
 
 const DRIVER_FIELDS = {
   name: 'Имя',
@@ -70,18 +77,44 @@ const FEES_FIELDS = {
   balance_due: 'Balance Due',
 };
 
+function InfoSection({ title, data, labels }) {
+  if (!data || typeof data !== 'object') return null;
+  if (!hasAnyValue(data)) return null;
+
+  return (
+    <section className={styles.card}>
+      <h3 className="font16w600">{title}</h3>
+      <div className={styles.rows}>
+        {Object.entries(labels).map(([key, label]) => {
+          const value = data[key];
+          if (value === null || value === undefined || value === '' || value === '-') {
+            return null;
+          }
+
+          return (
+            <div key={key} className={styles.row}>
+              <span className={styles.rowLabel}>{label}</span>
+              <span className={styles.rowValue}>{String(value)}</span>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export default function ContractDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [deleted, setDeleted] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   const { data, isLoading, isError } = useGetContractQuery(id, {
     skip: deleted,
   });
-  const [deleteContract, { isLoading: deleting }] = useDeleteContractMutation();
-  const [sendToTelegram, { isLoading: loadingSendToTelegram }] = useSendToTelegramMutation();
 
+  const [deleteContract, { isLoading: deleting }] = useDeleteContractMutation();
   const contract = data?.data;
 
   const handleDelete = async () => {
@@ -91,23 +124,60 @@ export default function ContractDetailPage() {
       await deleteContract(id).unwrap();
       setDeleted(true);
       navigate('/contracts');
-    } catch (e) {
-      alert(`Ошибка удаления: ${getErrorMessage(e, 'Не удалось удалить договор')}`);
+    } catch (error) {
+      alert(`Ошибка удаления: ${getErrorMessage(error, 'Не удалось удалить договор')}`);
     }
   };
 
-  const onSendToTelegram = async () => {
+  const handleDownloadPdf = async () => {
+    if (!contract?.id && !id) return;
+
+    setDownloadingPdf(true);
     try {
       const tgUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
-      if (!tgUserId) {
-        alert('Не удалось определить Telegram chat id пользователя');
-        return;
+
+      const response = await fetch(`${API_BASE}/contracts/${contract?.id ?? id}/pdf`, {
+        method: 'GET',
+        headers: tgUserId
+          ? {
+              'X-Telegram-User': String(tgUserId),
+            }
+          : {},
+      });
+
+      if (!response.ok) {
+        let message = 'Не удалось скачать PDF договора';
+        try {
+          const payload = await response.json();
+          if (payload?.message) {
+            message = payload.message;
+          }
+        } catch {
+          // Ignore parse errors for non-JSON response body.
+        }
+
+        throw new Error(message);
       }
 
-      await sendToTelegram({ contractId: contract?.id ?? id, chatId: tgUserId }).unwrap();
-      alert('📄 Договор отправлен в Telegram');
-    } catch (e) {
-      alert(`Ошибка отправки: ${getErrorMessage(e, 'Не удалось отправить договор')}`);
+      const blob = await response.blob();
+      const disposition =
+        response.headers.get('Content-Disposition') || response.headers.get('content-disposition');
+      const baseTitle = String(contract?.doc_name || `contract-${id}`).replace(/\.[^.]+$/, '');
+      const fallbackName = `${sanitizeFileName(baseTitle)}.pdf`;
+      const fileName = extractFileName(disposition, fallbackName);
+
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      alert(`Ошибка скачивания: ${getErrorMessage(error, 'Не удалось скачать PDF')}`);
+    } finally {
+      setDownloadingPdf(false);
     }
   };
 
@@ -124,51 +194,70 @@ export default function ContractDetailPage() {
   if (isError || !contract) {
     return (
       <AppLayout title="Договор">
-        <p style={{ color: 'var(--tg-danger)' }}>Ошибка загрузки договора</p>
+        <div className={styles.stateError}>Ошибка загрузки договора</div>
       </AppLayout>
     );
   }
 
-  const meta = contract.metadata || {};
-  const drivers = meta.drivers && typeof meta.drivers === 'object' ? meta.drivers : {};
-
-  const fees = meta.fees && typeof meta.fees === 'object' ? meta.fees : {};
+  const metadata = contract.metadata || {};
+  const drivers = metadata.drivers && typeof metadata.drivers === 'object' ? metadata.drivers : {};
+  const fees = metadata.fees && typeof metadata.fees === 'object' ? metadata.fees : {};
+  const period = metadata.start_date && metadata.end_date
+    ? `${metadata.start_date} -> ${metadata.end_date}`
+    : '-';
 
   return (
-    <AppLayout title={`Договор  №${meta.doc_number || contract.id}`} onBack={() => navigate(-1)}>
-      <div className="contract-detail">
-        <div className="card">
-          <h2>📄 Общая информация</h2>
-          <p>
-            <b>Номер:</b> {meta.doc_number || '—'}
-          </p>
-          <p>
-            <b>Период:</b>{' '}
-            {meta.start_date && meta.end_date ? `${meta.start_date} → ${meta.end_date}` : '—'}
-          </p>
-          <p>
-            <b>Авто:</b> {contract.car_name || '—'} • {contract.car_number || '—'}
-          </p>
-          <p>
-            <b>Клиент:</b> {contract.customer_name || '—'}
-          </p>
-          <p>
-            <b>Шаблон:</b> {contract.template_name || '—'}
-          </p>
-        </div>
+    <AppLayout title={`Договор №${metadata.doc_number || contract.id}`} onBack={() => navigate(-1)}>
+      <div className={styles.page}>
+        <section className={styles.card}>
+          <div className={styles.mainHeader}>
+            <div>
+              <h2 className="font18w600">{contract.doc_name || `Договор #${contract.id}`}</h2>
+              <p className={styles.subTitle}>
+                {contract.car_name || '-'} • {contract.car_number || '-'}
+              </p>
+            </div>
+            <span className={styles.badge}>ID {contract.id}</span>
+          </div>
 
-        <InfoBlock title="👤 1-й водитель" data={drivers.driver1 || {}} labels={DRIVER_FIELDS} />
-        <InfoBlock title="👤 2-й водитель" data={drivers.driver2 || {}} labels={DRIVER_FIELDS} />
+          <div className={styles.rows}>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Номер</span>
+              <span className={styles.rowValue}>{metadata.doc_number || '-'}</span>
+            </div>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Период</span>
+              <span className={styles.rowValue}>{period}</span>
+            </div>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Клиент</span>
+              <span className={styles.rowValue}>{contract.customer_name || '-'}</span>
+            </div>
+            <div className={styles.row}>
+              <span className={styles.rowLabel}>Шаблон</span>
+              <span className={styles.rowValue}>{contract.template_name || '-'}</span>
+            </div>
+          </div>
+        </section>
 
-        <InfoBlock title="💰 Подробности о сборах" data={fees} labels={FEES_FIELDS} />
+        <InfoSection title="1-й водитель" data={drivers.driver1 || {}} labels={DRIVER_FIELDS} />
+        <InfoSection title="2-й водитель" data={drivers.driver2 || {}} labels={DRIVER_FIELDS} />
+        <InfoSection title="Подробности по сборам" data={fees} labels={FEES_FIELDS} />
 
-        <div className="actions">
-          <button onClick={onSendToTelegram} disabled={loadingSendToTelegram}>
-            {loadingSendToTelegram ? 'Отправка...' : 'Отправить в Telegram'}
+        <div className={styles.actions}>
+          <button className={styles.primaryBtn} onClick={handleDownloadPdf} disabled={downloadingPdf}>
+            <Download size={16} color={tgTheme.text} />
+            <span className="font14w600">{downloadingPdf ? 'Скачивание...' : 'Скачать PDF'}</span>
           </button>
-          <button onClick={() => navigate(`/contracts/${id}/edit`)}>Редактировать</button>
-          <button className="danger" disabled={deleting} onClick={handleDelete}>
-            {deleting ? 'Удаление...' : 'Удалить'}
+
+          <button className={styles.secondaryBtn} onClick={() => navigate(`/contracts/${id}/edit`)}>
+            <Pencil size={16} color={tgTheme.text} />
+            <span className="font14w600">Редактировать</span>
+          </button>
+
+          <button className={styles.dangerBtn} disabled={deleting} onClick={handleDelete}>
+            <Trash2 size={16} color={tgTheme.text} />
+            <span className="font14w600">{deleting ? 'Удаление...' : 'Удалить'}</span>
           </button>
         </div>
       </div>
