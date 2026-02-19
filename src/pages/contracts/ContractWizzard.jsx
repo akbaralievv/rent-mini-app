@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AppLayout from '../../layouts/AppLayout';
 import StepTemplate from './steps/StepTemplate';
 import StepCar from './steps/StepCar';
@@ -13,26 +13,31 @@ import {
   useUpdateContractMutation,
   useGetContractQuery,
 } from '../../redux/services/contracts';
+import styles from './steps/ContractSteps.module.css';
 
-const safe = (v, fallback = '—') => typeof v === 'string' && v.trim() ? v.trim() : fallback;
+const STEP_LABELS = ['Шаблон', 'Авто', 'Заказ', 'Водители', 'Сборы', 'Проверка'];
 
-const formatDate = (d) => {
-  if (!d) return '—';
+const safe = (value, fallback = '-') =>
+  typeof value === 'string' && value.trim() ? value.trim() : fallback;
 
-  if (d.includes('/')) {
-    const [day, month, year] = d.split('/');
+const formatDate = (date) => {
+  if (!date) return '-';
+
+  if (date.includes('/')) {
+    const [day, month, year] = date.split('/');
     return `${day}-${month}-${year}`;
   }
-  if (d.includes('-')) {
-    const [year, month, day] = d.split('-');
+
+  if (date.includes('-')) {
+    const [year, month, day] = date.split('-');
     return `${day}-${month}-${year}`;
   }
-  return d;
+
+  return date;
 };
 
 const buildDocName = (state) => {
   const carName = safe(state.car?.car_name, state.car?.name).replace(/\s+/g, '_');
-
   const startDate = formatDate(state.order?.start_date || state.metadata?.start_date);
   const endDate = formatDate(state.order?.end_date || state.metadata?.end_date);
 
@@ -48,18 +53,18 @@ const normalizeDateToDigits = (value) => {
   if (!value) return '';
 
   if (/^\d{4}-\d{2}-\d{2}/.test(value)) {
-    const [y, m, d] = value.split('-');
-    return `${d}${m}${y}`;
+    const [year, month, day] = value.split('-');
+    return `${day}${month}${year}`;
   }
 
   if (/^\d{2}\/\d{2}\/\d{4}/.test(value)) {
-    const [d, m, y] = value.split('/');
-    return `${d}${m}${y}`;
+    const [day, month, year] = value.split('/');
+    return `${day}${month}${year}`;
   }
 
   if (/^\d{2}-\d{2}-\d{4}/.test(value)) {
-    const [d, m, y] = value.split('-');
-    return `${d}${m}${y}`;
+    const [day, month, year] = value.split('-');
+    return `${day}${month}${year}`;
   }
 
   const digits = value.replace(/\D/g, '');
@@ -68,15 +73,20 @@ const normalizeDateToDigits = (value) => {
 
 const buildDocNumber = (state) => {
   const orderId = padOrderId(state.order?.id);
-  const startDateRaw =
-    state.order?.start_date ||
-    state.metadata?.start_date;
-
+  const startDateRaw = state.order?.start_date || state.metadata?.start_date;
   const dateDigits = normalizeDateToDigits(startDateRaw);
 
   if (!orderId || !dateDigits) return orderId || '';
 
   return `${orderId}/${dateDigits}`;
+};
+
+const emptyWizardState = {
+  template: null,
+  car: null,
+  order: null,
+  drivers: { driver1: {}, driver2: {} },
+  fees: {},
 };
 
 export default function ContractWizard() {
@@ -85,39 +95,47 @@ export default function ContractWizard() {
   const navigate = useNavigate();
 
   const { data } = useGetContractQuery(id, { skip: !isEdit });
-  const [createContract, {isLoading: loadingCreate}] = useCreateContractMutation();
-  const [updateContract, {isLoading: loadingUpdate}] = useUpdateContractMutation();
+  const [createContract, { isLoading: loadingCreate }] = useCreateContractMutation();
+  const [updateContract, { isLoading: loadingUpdate }] = useUpdateContractMutation();
 
   const initialContractState = useMemo(() => {
     if (!data?.data) {
-      return {
-        template: null,
-        car: null,
-        order: null,
-        drivers: { driver1: {}, driver2: {} },
-        fees: {},
-      };
+      return emptyWizardState;
     }
 
-    const c = data.data;
+    const contract = data.data;
     return {
-      template: { id: c.template_id, name: c.template_name },
-      car: { number: c.car_number, name: c.car_name,  },
-      order: { id: c.order_id, customer_name: c.customer_name, start_date: c.start_date || (c.order?.start_date || c.metadata?.start_date), end_date: c.end_date || (c.order?.end_date || c.metadata?.end_date)},
-      drivers: c.metadata?.drivers || { driver1: {}, driver2: {} },
-      fees: c.metadata?.fees || {},
+      template: { id: contract.template_id, name: contract.template_name },
+      car: { number: contract.car_number, name: contract.car_name },
+      order: {
+        id: contract.order_id,
+        customer_name: contract.customer_name,
+        start_date: contract.start_date || contract.order?.start_date || contract.metadata?.start_date,
+        end_date: contract.end_date || contract.order?.end_date || contract.metadata?.end_date,
+      },
+      drivers: contract.metadata?.drivers || { driver1: {}, driver2: {} },
+      fees: contract.metadata?.fees || {},
     };
   }, [data]);
 
   const [step, setStep] = useState(0);
-  const [state, setState] = useState(initialContractState);
+  const [state, setState] = useState(emptyWizardState);
+
+  useEffect(() => {
+    if (isEdit && data?.data) {
+      setState(initialContractState);
+    }
+    if (!isEdit) {
+      setState(emptyWizardState);
+    }
+  }, [initialContractState, isEdit, data?.data]);
 
   const save = async () => {
     const carNumber = state.car?.car_number ?? state.car?.number;
     const carName = state.car?.car_name ?? state.car?.name;
 
     const payload = {
-      order_id: state.order?.id + '',
+      order_id: `${state.order?.id ?? ''}`,
       car_number: carNumber,
       car_name: carName,
       customer_name: state.order?.customer_name,
@@ -141,40 +159,78 @@ export default function ContractWizard() {
       }
 
       navigate('/contracts');
-    } catch (e) {
-      alert(getErrorMessage(e, 'Не удалось сохранить договор'));
+    } catch (error) {
+      alert(getErrorMessage(error, 'Не удалось сохранить договор'));
     }
   };
 
   const canGoNext = () => {
-    if (step === 0) return !!state.template;
-    if (step === 1) return !!state.car;
-    if (step === 2) return !!state.order;
+    if (step === 0) return Boolean(state.template);
+    if (step === 1) return Boolean(state.car);
+    if (step === 2) return Boolean(state.order);
     return true;
   };
 
   const steps = [
-    <StepTemplate state={state} setState={setState} />,
-    <StepCar state={state} setState={setState} />,
-    <StepOrder state={state} setState={setState} />,
-    <StepDrivers state={state} setState={setState} />,
-    <StepFees state={state} setState={setState} />,
-    <StepPreview state={state} onSave={save} loading={loadingCreate || loadingUpdate}/>,
+    <StepTemplate key="template" state={state} setState={setState} />,
+    <StepCar key="car" state={state} setState={setState} />,
+    <StepOrder key="order" state={state} setState={setState} />,
+    <StepDrivers key="drivers" state={state} setState={setState} />,
+    <StepFees key="fees" state={state} setState={setState} />,
+    <StepPreview key="preview" state={state} onSave={save} loading={loadingCreate || loadingUpdate} />,
   ];
+
+  const goPrev = () => setStep((prev) => Math.max(prev - 1, 0));
+  const goNext = () => {
+    if (!canGoNext()) return;
+    setStep((prev) => Math.min(prev + 1, steps.length - 1));
+  };
 
   return (
     <AppLayout
       title={isEdit ? 'Редактирование договора' : 'Создание договора'}
-      onBack={() => navigate(-1)}>
-      {steps[step]}
-      {!canGoNext() && (
-        <div className="step-hint error">
-          Пожалуйста, выберите значение, чтобы продолжить
+      onBack={() => navigate(-1)}
+    >
+      <div className={styles.page}>
+        <div className={styles.stepper}>
+          {STEP_LABELS.map((label, index) => {
+            const isCurrent = index === step;
+            const isCompleted = index < step;
+            const isAccessible = index <= step;
+
+            return (
+              <button
+                key={label}
+                type="button"
+                className={`${styles.stepChip} ${isCurrent ? styles.stepChipCurrent : ''} ${isCompleted ? styles.stepChipDone : ''}`}
+                onClick={() => isAccessible && setStep(index)}
+                disabled={!isAccessible}
+              >
+                <span className={styles.stepIndex}>{index + 1}</span>
+                <span className={styles.stepLabel}>{label}</span>
+              </button>
+            );
+          })}
         </div>
-      )}
-      <div className="wizard-nav">
-        {step > 0 && <button onClick={() => setStep(step - 1)}>⬅ Назад</button>}
-        {step < steps.length - 1 && <button disabled={!canGoNext()} onClick={() => setStep(step + 1)}>Далее ➡</button>}
+
+        <div className={styles.stepShell}>{steps[step]}</div>
+
+        {!canGoNext() && (
+          <div className={styles.hintError}>
+            Пожалуйста, заполните текущий шаг, чтобы продолжить.
+          </div>
+        )}
+
+        {step < steps.length - 1 && (
+          <div className={styles.navBar}>
+            <button type="button" className={styles.navSecondary} onClick={goPrev} disabled={step === 0}>
+              Назад
+            </button>
+            <button type="button" className={styles.navPrimary} onClick={goNext} disabled={!canGoNext()}>
+              Далее
+            </button>
+          </div>
+        )}
       </div>
     </AppLayout>
   );

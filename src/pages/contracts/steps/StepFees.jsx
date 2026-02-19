@@ -1,4 +1,5 @@
-import PreviewContract from "../components/PreviewContract/PreviewContract";
+import PreviewContract from '../components/PreviewContract/PreviewContract';
+import styles from './ContractSteps.module.css';
 
 const FEES = [
   ['base_rental', 'Base Rental'],
@@ -12,56 +13,59 @@ const FEES = [
 ];
 
 export default function StepFees({ state, setState }) {
-  console.log(state)
   return (
-    <div className="card">
+    <div className={styles.stepCard}>
       <PreviewContract
-        visible={state.template}
+        visible={Boolean(state.template)}
         list={[
           {
             key: 'Выбран шаблон',
-            value: state.template.name,
+            value: state.template?.name || '',
           },
           {
             key: 'Выбран авто',
-            value: state.car.car_name || state.car.name,
+            value: state.car?.car_name || state.car?.name || '',
           },
           {
-            key: 'Выбран Заказ',
-            value: `${state.order.start_date} → ${state.order.end_date} • ${state.order.customer_name}`
+            key: 'Выбран заказ',
+            value: state.order
+              ? `${state.order.start_date} -> ${state.order.end_date} • ${state.order.customer_name}`
+              : '',
           },
           {
             key: '1-й водитель',
-            value: state.drivers.driver1?.name || 'не найдено'
+            value: state.drivers?.driver1?.name || '-',
           },
           {
             key: '2-й водитель',
-            value: state.drivers.driver2?.name || 'не найдено'
-          }
+            value: state.drivers?.driver2?.name || '-',
+          },
         ]}
       />
-      <h2>💰 Подробности о сборах</h2>
 
-      <div className="form-grid">
-        {FEES.map(([key, label]) => (
-          <input
-            key={key}
-            className="input"
-            placeholder={label}
-            value={state.fees[key] || ''}
-            onChange={(e) =>
-              setState((s) => ({
-                ...s,
-                fees: {
-                  ...s.fees,
-                  [key]: e.target.value,
-                },
-              }))
-            }
-          />
+      <h2 className={`font18w600 ${styles.stepTitle}`}>Подробности о сборах</h2>
+
+      <div className={styles.grid}>
+        {FEES.map(([fieldKey, label]) => (
+          <label key={fieldKey} className={styles.field}>
+            <span className={styles.fieldLabel}>{label}</span>
+            <input
+              className={styles.input}
+              placeholder={label}
+              value={state.fees?.[fieldKey] || ''}
+              onChange={(event) =>
+                setState((prev) => ({
+                  ...prev,
+                  fees: {
+                    ...prev.fees,
+                    [fieldKey]: event.target.value,
+                  },
+                }))
+              }
+            />
+          </label>
         ))}
       </div>
     </div>
   );
 }
-

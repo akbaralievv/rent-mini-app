@@ -1,0 +1,156 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mainHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.subTitle {
+  margin-top: 4px;
+  color: var(--tg-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--tg-filter-bg);
+  border: 1px solid rgba(129, 143, 155, 0.35);
+  color: var(--tg-text);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--tg-item-button-bg);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.rowLabel {
+  color: var(--tg-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.rowValue {
+  color: var(--tg-text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  text-align: right;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.primaryBtn,
+.secondaryBtn,
+.dangerBtn {
+  border: none;
+  border-radius: 8px;
+  padding: 9px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.primaryBtn {
+  background: var(--tg-accent);
+}
+
+.secondaryBtn {
+  background: var(--tg-card-2);
+}
+
+.secondaryBtn:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.dangerBtn {
+  background: var(--tg-danger);
+}
+
+.primaryBtn:hover,
+.dangerBtn:hover {
+  opacity: 0.9;
+}
+
+.primaryBtn:disabled,
+.secondaryBtn:disabled,
+.dangerBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.stateError {
+  color: var(--tg-danger);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .mainHeader {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .rowValue {
+    text-align: left;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .primaryBtn,
+  .secondaryBtn,
+  .dangerBtn {
+    width: 100%;
+  }
+}
