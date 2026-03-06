@@ -76,11 +76,6 @@ export default function OperationEditPage() {
       return;
     }
 
-    if (!form.order_id) {
-      setError("Пожалуйста выберите заказ.");
-      return;
-    }
-
     try {
       if (id) {
         await updateTransaction({ id: id, body: form }).unwrap();
@@ -188,7 +183,7 @@ export default function OperationEditPage() {
                 >
                   <span className="font14w600">
                     {
-                      orders.find(el => el.id == form.order_id)?.customer_name || 'Выберите заказ'
+                      orders.find(el => el.id == form.order_id)?.customer_name || 'Без заказа'
                     }
                   </span>
                   <ChevronDown size={16} color={tgTheme.textSecondary} />
@@ -196,6 +191,23 @@ export default function OperationEditPage() {
 
                 {orderOpen && (
                   <div className={styles.dropdown}>
+                    <button
+                      onClick={() => {
+                        setForm(prev => ({
+                          ...prev,
+                          order_id: null,
+                          car_number: '',
+                          customer_name: '',
+                          car_name: '',
+                        }));
+                        setOrderOpen(false);
+                      }}
+                    >
+                      <span className="font14w600">Без заказа</span>
+                      {null == form.order_id && (
+                        <Check color={tgTheme.accent} size={20} />
+                      )}
+                    </button>
                     {orders.map((opt) => (
                       <button
                         key={opt.id}
