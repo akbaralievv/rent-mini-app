@@ -1,0 +1,188 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fileCard,
+.filtersCard {
+  background: var(--tg-card-2);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.fileCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fileBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fileIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--tg-item-button-bg-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.fileInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.fileName {
+  color: var(--tg-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileMeta {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: var(--tg-text-secondary);
+  font-size: 12px;
+}
+
+.dot {
+  opacity: 0.6;
+}
+
+.helperText {
+  color: var(--tg-text-secondary);
+  line-height: 1.4;
+}
+
+.filtersCard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldHint {
+  color: var(--tg-text-secondary);
+  line-height: 1.4;
+}
+
+.selectWrapper {
+  position: relative;
+}
+
+.selectLike {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  background: var(--tg-item-button-bg-hover);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.selectValue {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selectValue span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.dropdown {
+  position: absolute;
+  top: 52px;
+  left: 0;
+  right: 0;
+  z-index: 12;
+  background: var(--tg-filter-bg);
+  border-radius: 10px;
+  border: 1px solid var(--tg-border);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    0 12px 28px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.dropdown button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown button:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.downloadBtn {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--tg-accent);
+  color: var(--tg-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.downloadBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.errorText {
+  color: var(--tg-danger);
+}
+
+.dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}

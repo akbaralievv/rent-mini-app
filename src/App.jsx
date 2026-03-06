@@ -33,6 +33,7 @@ import WaChatsPage from './pages/allChats/WaChatsPage/WaChatsPage';
 import SiteChatsPage from './pages/allChats/SiteChatsPage/SiteChatsPage';
 import TemplatesWAPage from './pages/allChats/TemplatesWAPage/TemplatesWAPage';
 import WAChatPage from './pages/allChats/WaChatsPage/WaChatPage/WAChatPage';
+import ExportFiltersPage from './pages/financialReport/exportFiltersPage/exportFiltersPage';
 
 function Router() {
   const { status } = useAuth();
@@ -64,6 +65,7 @@ function Router() {
       <Route path="/operations/:id/edit" element={<OperationEditPage />} />
       <Route path="/operations/create" element={<OperationEditPage />} />
       <Route path="/financial-main/reports" element={<ReportsPage />} />
+      <Route path="/financial-main/export-filters" element={<ExportFiltersPage />} />
       <Route path="/financial-main/statistics" element={<StatisticsPage />} />
       <Route path="/financial-main/details" element={<DetailsPage />} />
       <Route path="/financial-main/tags" element={<TagsPage />} />

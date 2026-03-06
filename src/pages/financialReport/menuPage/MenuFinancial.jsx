@@ -6,7 +6,9 @@ import ButtonSection from '../../../components/ButtonSection/ButtonSection'
 import DuoButtons from '../../../components/DuoButtons/DuoButtons'
 import { deposit, transactions } from '../../../common/mockData'
 import ReportCard from '../../../components/ReportCard/ReportCard'
-import { BadgeDollarSign, BadgeDollarSignIcon, BarChart3, FolderDown, Landmark, PiggyBank, Receipt, ShieldCheck, Tags, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
+import { BadgeDollarSign, BadgeDollarSignIcon, BarChart3, FolderDown, Landmark, 
+  ListFilter, PiggyBank, Receipt, ShieldCheck, Tags, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
+import { useGetFinanceSummaryQuery } from '../../../redux/services/financeApi'
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
 
@@ -26,6 +28,9 @@ const requestWithMinDelay = async (requestFn, minTime = 1000) => {
 export default function MenuFinancial() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const { data: financeSummary } = useGetFinanceSummaryQuery({
+    period: 'all_time',
+  })
 
   const handleClick = async (cb) => {
     if (loading) return
@@ -46,10 +51,15 @@ export default function MenuFinancial() {
   const [decrease, setDecrease] = useState(0);
   const [balance, setBalance] = useState(0);
   const [depositPlus, setDepositPlus] = useState(0);
+  const [totalDeposit, setTotalDeposit] = useState(0);
 
   const getData = () => {
     const increaseSum = transactions
       .filter((t) => t.increse === true)
+      .reduce((acc, t) => acc + Number(t.sum || 0), 0);
+
+    const depositReturnSum = deposit
+      .filter((t) => t.increse === false)
       .reduce((acc, t) => acc + Number(t.sum || 0), 0);
 
     const decreaseSum = transactions
@@ -61,6 +71,7 @@ export default function MenuFinancial() {
       .reduce((acc, t) => acc + Number(t.sum || 0), 0);
 
     setDepositPlus(depositSum)
+    setTotalDeposit(depositSum - depositReturnSum)
     // setIncrease(increaseSum);
     setDecrease(decreaseSum);
     setBalance(increaseSum - decreaseSum);
@@ -69,6 +80,15 @@ export default function MenuFinancial() {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    if (!financeSummary) return;
+
+    setDepositPlus(financeSummary.income ?? 0);
+    setDecrease(financeSummary.expense ?? 0);
+    setBalance(financeSummary.balance ?? 0);
+    setTotalDeposit(financeSummary.total_deposit ?? 0);
+  }, [financeSummary]);
 
   return (
     <AppLayout onBack={() => navigate(-1)}
@@ -83,6 +103,7 @@ export default function MenuFinancial() {
             balance={balance}
             income={depositPlus}
             expense={decrease}
+            totalDeposit={totalDeposit}
           />
           <div className={'miniBlock'}>
             <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
@@ -96,21 +117,28 @@ export default function MenuFinancial() {
               icon: <TrendingUp />,
               text: 'Доходы',
               onClick: () => navigate('/financial-main/operation', {
-                state: { key: "increase" },
+                state: { key: "income" },
               }),
             },
             {
               icon: <TrendingDown />,
               text: 'Расходы',
               onClick: () => navigate('/financial-main/operation', {
-                state: { key: "decrease" },
+                state: { key: "expense" },
               }),
             },
             {
               icon: <Wallet />,
               text: 'Депозиты',
               onClick: () => navigate('/financial-main/operation', {
-                state: { key: "deposit" },
+                state: { key: "deposit_add" },
+              }),
+            },
+            {
+              icon: <Wallet />,
+              text: 'Депозиты возврат',
+              onClick: () => navigate('/financial-main/operation', {
+                state: { key: "deposit_return" },
               }),
             },
           ]} />
@@ -131,6 +159,11 @@ export default function MenuFinancial() {
               icon: <FolderDown strokeWidth={1.5} />,
               text: 'Экспорт отчета',
               onClick: () => handleClick(navigate('/financial-main/reports'))
+            },
+            {
+              icon: <ListFilter strokeWidth={1.5} />,
+              text: 'Экспорт по фильтрам',
+              onClick: () => handleClick(() => navigate('/financial-main/export-filters')),
             },
           ]}
         />

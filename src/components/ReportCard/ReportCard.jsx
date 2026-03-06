@@ -7,6 +7,7 @@ export default function ReportCard({
   balance = 0,
   income = 0,
   expense = 0,
+  totalDeposit = 0,
   currency = "AED"
 }) {
 
@@ -23,6 +24,7 @@ export default function ReportCard({
   const balanceFormatted = formatSplit(balance);
   const incomeFormatted = formatSplit(income);
   const expenseFormatted = formatSplit(expense);
+  const totalDepositFormatted = formatSplit(totalDeposit);
 
   return (
     <div className={styles.card}>
@@ -92,6 +94,27 @@ export default function ReportCard({
 
               <span className="font12w500" style={{ opacity: 0.7 }}>
                 .{expenseFormatted.cents}
+              </span>
+
+              <span className="font12w500" style={{ opacity: 0.6, marginLeft: 2 }}>
+                {currency}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className={styles.statItem}>
+          <span className={`${styles.dot} ${styles.deposit}`} />
+          <div>
+            <div className="font14w500" style={{ color: "var(--tg-text-secondary)" }}>
+              Депозиты
+            </div>
+            <div className={styles.smallAmount}>
+              <span className="font14w600">
+                {totalDepositFormatted.main}
+              </span>
+
+              <span className="font12w500" style={{ opacity: 0.7 }}>
+                .{totalDepositFormatted.cents}
               </span>
 
               <span className="font12w500" style={{ opacity: 0.6, marginLeft: 2 }}>

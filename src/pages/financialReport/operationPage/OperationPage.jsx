@@ -3,7 +3,6 @@ import AppLayout from "../../../layouts/AppLayout";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./OperationPage.module.css";
 
-import { transactions, deposit } from "../../../common/mockData";
 import { ArrowDown, Calendar, CalendarCheck, Check, ChevronDown, ChevronLeft, ChevronRight, ClipboardEditIcon, Edit, Edit2, Eye, ListFilter, Plus, Trash2 } from "lucide-react";
 import { tgTheme } from "../../../common/commonStyle";
 import Tag from "../../../components/Tag/Tag";
@@ -12,16 +11,24 @@ import BackdropModal from "../../../components/BackdropModal/BackdropModal";
 import { useGetTransactionsQuery } from "../../../redux/services/financeApi";
 
 const type = [
-  { key: "increase", value: "Доходы" },
-  { key: "decrease", value: "Расходы" },
-  { key: "deposit", value: "Депозиты" },
+  { key: "expense", label: "Расходы" },
+  { key: "income", label: "Доходы" },
+  { key: "deposit_add", label: "Депозит +" },
+  { key: "deposit_return", label: "Депозит -" },
 ];
+
+const increasetArr = ['income', 'deposit_add']
 
 const PAGE_SIZE = 5;
 
 function formatDate(iso) {
-  const [y, m, d] = iso.split("-");
-  return `${d}/${m}/${y}`;
+  const date = new Date(iso);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
 }
 
 function formatMoney(num) {
@@ -35,16 +42,14 @@ export default function OperationPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data, isLoading } = useGetTransactionsQuery({
-    period: 'last_3_months',
-    type: 'expense',
-    page: 1,
-    per_page: 20
-  })
-
-  console.log(data, '0000')
-
   const [key, setKey] = useState(location.state?.key);
+
+  const { data: transactionsData = { data: [] } } = useGetTransactionsQuery({
+    period: 'last_3_months',
+    type: key,
+    page: 1,
+    per_page: 50
+  })
 
   const [title, setTitle] = useState(type.find((el) => el.key === key)?.value || "Операции");
 
@@ -53,22 +58,12 @@ export default function OperationPage() {
   const [dateFilter, setDateFilter] = useState(undefined);
 
   const list = useMemo(() => {
-    let data = [];
-
-    if (key === "deposit") {
-      data = deposit;
-    } else {
-      data = transactions.filter((t) =>
-        key === "increase" ? t.increse === true : t.increse === false
-      );
-    }
-
-    return [...data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  }, [key]);
+    return [...transactionsData.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }, [transactionsData]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTitle(type.find((el) => el.key === key)?.value || "Операции")
+    setTitle(type.find((el) => el.key === key)?.label || "Операции")
     setPage(1);
   }, [key]);
 
@@ -78,12 +73,6 @@ export default function OperationPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (page > totalPages) setPage(totalPages);
   }, [page, totalPages]);
-
-  const pageData = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    const end = start + PAGE_SIZE;
-    return list.slice(start, end);
-  }, [list, page]);
 
   const canPrev = page > 1;
   const canNext = page < totalPages;
@@ -119,28 +108,36 @@ export default function OperationPage() {
             filterVisible && <>
               <BackdropModal onClick={() => setFilterVisible(false)} />
               <div className={styles.filterBlock}>
-                <button onClick={() => chooseType('decrease')}>
+                <button onClick={() => chooseType('expense')}>
                   <span className="font14w600">
                     Расходы
                   </span>
                   {
-                    key == 'decrease' && <Check color={tgTheme.accent} size={20} />
+                    key == 'expense' && <Check color={tgTheme.accent} size={20} />
                   }
                 </button>
-                <button onClick={() => chooseType('increase')}>
+                <button onClick={() => chooseType('income')}>
                   <span className="font14w600">
                     Доходы
                   </span>
                   {
-                    key == 'increase' && <Check color={tgTheme.accent} size={20} />
+                    key == 'income' && <Check color={tgTheme.accent} size={20} />
                   }
                 </button>
-                <button onClick={() => chooseType('deposit')}>
+                <button onClick={() => chooseType('deposit_add')}>
                   <span className="font14w600">
                     Депозиты
                   </span>
                   {
-                    key == 'deposit' && <Check color={tgTheme.accent} size={20} />
+                    key == 'deposit_add' && <Check color={tgTheme.accent} size={20} />
+                  }
+                </button>
+                <button onClick={() => chooseType('deposit_return')}>
+                  <span className="font14w600">
+                    Депозиты возврат
+                  </span>
+                  {
+                    key == 'deposit_return' && <Check color={tgTheme.accent} size={20} />
                   }
                 </button>
               </div>
@@ -157,70 +154,79 @@ export default function OperationPage() {
       <div className={styles.headerFilter + ' miniBlock'}>
         <DateFilter date={dateFilter} setDate={setDateFilter} />
       </div>
-      <div className={styles.section}>
-        {pageData.map((item) => (
-          <div key={`${key}-${item.id}`} className={styles.row} >
-            <div className={styles.topLine}>
-              <div className={styles.left}>
-                <span className={'font16w500'}>#{item.id}</span>
-                <span className={'font16w500'}>{formatDate(item.created_at)}</span>
-              </div>
 
-              <div className={styles.sum + ' ' + (item.increse ? styles.colorIncrease : styles.colorDecrease) + ' font14w600'}>
-                {item.increse ? '+' : '-'}{formatMoney(item.sum)} <span className={styles.currency}>AED</span>
-              </div>
-            </div>
-
-            <Tag />
-
-            <div className={styles.cardFooter}>
-              <div className={styles.bottomLine}>
-                <div className={'font14w500'}>{item.car_name || "—"}</div>
-                <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{item.description || ""}</span>
-              </div>
-              <div className={styles.right}>
-                <button
-                  className={styles.btn}
-                  onClick={() => navigate(`/operations/${item.id}/edit`)}
-                >
-                  <ClipboardEditIcon size={16} color={tgTheme.text} strokeWidth={1.5} />
-                </button>
-                <button
-                  className={styles.btn}
-                  onClick={() => { }}
-                >
-                  <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        {/* пагинация */}
-        <div className={styles.pagination}>
-          <button
-            type="button"
-            className={styles.pageBtn}
-            onClick={handlePrev}
-            disabled={!canPrev}
-          >
-            <ChevronLeft color={tgTheme.btnActive} />
-          </button>
-
-          <div className={styles.pageInfo}>
-            {page} / {totalPages}
-          </div>
-
-          <button
-            type="button"
-            className={styles.pageBtn}
-            onClick={handleNext}
-            disabled={!canNext}
-          >
-            <ChevronRight color={tgTheme.btnActive} />
-          </button>
+      {
+        transactionsData?.data?.length == 0 ? <div className={'miniBlock'} style={{ textAlign: "center", paddingTop: 20 }}>
+          <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
+            Транзакции отсутствуют</span>
         </div>
-      </div>
+          : <div className={styles.section}>
+            {transactionsData?.data?.map((item) => (
+              <div key={`${key}-${item.id}`} className={styles.row} >
+                <div className={styles.topLine}>
+                  <div className={styles.left}>
+                    <span className={'font16w500'}>#{item.id}</span>
+                    <span className={'font16w500'}>{formatDate(item.created_at)}</span>
+                  </div>
+
+                  <div className={styles.sum + ' ' + (increasetArr.includes(item.type) ? styles.colorIncrease : styles.colorDecrease) + ' font14w600'}>
+                    {increasetArr.includes(item.type) ? '+' : '-'}{formatMoney(item.amount)} <span className={styles.currency}>AED</span>
+                  </div>
+                </div>
+                {console.log(item)}
+
+                <Tag tagId={item?.finance_tag?.id}/>
+
+                <div className={styles.cardFooter}>
+                  <div className={styles.bottomLine}>
+                    <div className={'font14w500'}>{item.car_name || "—"}</div>
+                    <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{item.description || ""}</span>
+                  </div>
+                  <div className={styles.right}>
+                    <button
+                      className={styles.btn}
+                      onClick={() => navigate(`/operations/${item.id}/edit`)}
+                    >
+                      <ClipboardEditIcon size={16} color={tgTheme.text} strokeWidth={1.5} />
+                    </button>
+                    <button
+                      className={styles.btn}
+                      onClick={() => { }}
+                    >
+                      <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* пагинация */}
+            <div className={styles.pagination}>
+              <button
+                type="button"
+                className={styles.pageBtn}
+                onClick={handlePrev}
+                disabled={!canPrev}
+              >
+                <ChevronLeft color={tgTheme.btnActive} />
+              </button>
+
+              <div className={styles.pageInfo}>
+                {page} / {totalPages}
+              </div>
+
+              <button
+                type="button"
+                className={styles.pageBtn}
+                onClick={handleNext}
+                disabled={!canNext}
+              >
+                <ChevronRight color={tgTheme.btnActive} />
+              </button>
+            </div>
+          </div>
+      }
+
 
     </AppLayout>
   );

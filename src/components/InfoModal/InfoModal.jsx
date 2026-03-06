@@ -4,7 +4,8 @@ import styles from './InfoModal.module.css'
 export default function InfoModal({
   visible = false,
   setVisible = () => {},
-  text = 'Раздел в разработке'
+  text = 'Раздел в разработке',
+  textButton = 'Закрыть'
 }) {
   if (!visible) return null
 
@@ -24,7 +25,7 @@ export default function InfoModal({
           className={styles.button}
           onClick={() => setVisible(false)}
         >
-          Закрыть
+          {textButton}
         </button>
       </div>
     </div>

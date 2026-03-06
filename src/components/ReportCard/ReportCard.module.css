@@ -37,18 +37,24 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .statItem {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 110px;
 }
 
 .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+}
+
+.deposit {
+  background: var(--tg-warning);
 }
 
 .income {

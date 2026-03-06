@@ -7,6 +7,7 @@ import { tgTheme } from "../../../../common/commonStyle";
 import { useGetTagsQuery } from "../../../../redux/services/tagsAction";
 import { useCreateTransactionMutation } from "../../../../redux/services/financeApi";
 import { useGetAllOrdersQuery } from "../../../../redux/services/orders";
+import InfoModal from "../../../../components/InfoModal/InfoModal";
 
 const TYPE_OPTIONS = [
   { key: "expense", label: "Расходы" },
@@ -21,7 +22,10 @@ export default function OperationEditPage() {
   const isEdit = Boolean(id);
   const { data: tags = [] } = useGetTagsQuery();
   const { data: orders = [] } = useGetAllOrdersQuery();
-  const [createTransaction, { isLoading }] = useCreateTransactionMutation();
+
+  const [createTransaction] = useCreateTransactionMutation();
+
+  const [error, setError] = useState('');
 
   const [form, setForm] = useState({
     type: 'expense',
@@ -46,12 +50,22 @@ export default function OperationEditPage() {
   };
 
   const onSave = async () => {
+
+    if (!form.amount) {
+      setError("Пожалуйста заполните сумму.");
+      return;
+    }
+
+    if (!form.order_id) {
+      setError("Пожалуйста выберите заказ.");
+      return;
+    }
+
     try {
       await createTransaction(form).unwrap();
       navigate(-1);
     } catch (error) {
       console.error(error);
-      alert("Ошибка при создании операции");
     }
   };
 
@@ -112,7 +126,7 @@ export default function OperationEditPage() {
                   onClick={() => setTagsOpen((p) => !p)}
                 >
                   <span className="font14w600">
-                    {tags.find(el => el.id == form.finance_tag_id)?.name || 'Выберите тег'} 
+                    {tags.find(el => el.id == form.finance_tag_id)?.name || 'Выберите тег'}
                   </span>
                   <ChevronDown size={16} color={tgTheme.textSecondary} />
                 </button>
@@ -161,13 +175,13 @@ export default function OperationEditPage() {
                       <button
                         key={opt.id}
                         onClick={() => {
-                          setForm(prev => ({ 
-                            ...prev, 
-                            order_id: opt.id, 
-                            car_number: opt.car.car_number, 
+                          setForm(prev => ({
+                            ...prev,
+                            order_id: opt.id,
+                            car_number: opt.car.car_number,
                             customer_name: opt.customer_name,
                             car_name: opt.car.car_name,
-                            }));
+                          }));
                           setOrderOpen(false);
                         }}
                       >
@@ -224,6 +238,7 @@ export default function OperationEditPage() {
           </div>
         </div>
       </div>
+      <InfoModal visible={error.trim()} setVisible={() => setError('')} text={error} textButton="Ок"/>
     </AppLayout>
   );
 }

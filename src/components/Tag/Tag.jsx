@@ -1,12 +1,13 @@
 import React from 'react'
 import styles from './Tag.module.css'
-import { tagsMinusData, tagsPlusData } from '../../common/tagsData';
 import { tgTheme } from '../../common/commonStyle';
+import { useGetTagsQuery } from '../../redux/services/tagsAction';
 
-export default function Tag({ tagId = 0, isIncome = false }) {
+export default function Tag({ tagId = 0 }) {
   if (tagId == null) return null;
-  const tagsData = isIncome ? tagsPlusData : tagsMinusData;
-  const text = tagsData.find(el => el.id == tagId)?.text;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { data: tags = [] } = useGetTagsQuery();
+  const text = tags.find(el => el.id == tagId)?.name;
 
   if (!text) return null;
   return (

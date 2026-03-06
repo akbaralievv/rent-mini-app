@@ -1,6 +1,24 @@
 import { createApi, } from '@reduxjs/toolkit/query/react'
 import { baseQuery } from './baseQuery';
 
+const FALLBACK_EXPORT_FILENAME = 'finance_transactions_export.xlsx';
+
+function getExportFileName(contentDisposition) {
+  if (!contentDisposition) return FALLBACK_EXPORT_FILENAME;
+
+  const utfMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+  if (utfMatch?.[1]) {
+    return decodeURIComponent(utfMatch[1]).replace(/["']/g, '');
+  }
+
+  const plainMatch = contentDisposition.match(/filename="?([^";]+)"?/i);
+  if (plainMatch?.[1]) {
+    return plainMatch[1];
+  }
+
+  return FALLBACK_EXPORT_FILENAME;
+}
+
 export const financeApi = createApi({
   reducerPath: 'financeApi',
   baseQuery,
@@ -84,6 +102,30 @@ export const financeApi = createApi({
       }),
       providesTags: ['Summary'],
     }),
+    exportTransactions: builder.mutation({
+      async queryFn(params, api, extraOptions, fetchWithBQ) {
+        const result = await fetchWithBQ({
+          url: 'finance/transactions/export',
+          params,
+          responseHandler: async (response) => response.blob(),
+        });
+
+        if (result.error) {
+          return { error: result.error };
+        }
+
+        const contentDisposition =
+          result.meta?.response?.headers.get('Content-Disposition') ||
+          result.meta?.response?.headers.get('content-disposition');
+
+        return {
+          data: {
+            blob: result.data,
+            fileName: getExportFileName(contentDisposition),
+          },
+        };
+      },
+    }),
   }),
 })
 
@@ -96,4 +138,5 @@ export const {
   useUploadTransactionAttachmentMutation,
   useDeleteTransactionAttachmentMutation,
   useGetFinanceSummaryQuery,
+  useExportTransactionsMutation,
 } = financeApi
