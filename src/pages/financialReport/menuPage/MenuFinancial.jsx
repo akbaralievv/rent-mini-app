@@ -3,11 +3,9 @@ import styles from './MenuFinancial.module.css'
 import AppLayout from '../../../layouts/AppLayout'
 import { useNavigate } from 'react-router-dom'
 import ButtonSection from '../../../components/ButtonSection/ButtonSection'
-import DuoButtons from '../../../components/DuoButtons/DuoButtons'
-import { deposit, transactions } from '../../../common/mockData'
 import ReportCard from '../../../components/ReportCard/ReportCard'
-import { BadgeDollarSign, BadgeDollarSignIcon, BarChart3, FolderDown, Landmark, 
-  ListFilter, PiggyBank, Receipt, ShieldCheck, Tags, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
+import { BarChart3, FolderDown, 
+  ListFilter, Tags, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
 import { useGetFinanceSummaryQuery } from '../../../redux/services/financeApi'
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
@@ -52,34 +50,6 @@ export default function MenuFinancial() {
   const [balance, setBalance] = useState(0);
   const [depositPlus, setDepositPlus] = useState(0);
   const [totalDeposit, setTotalDeposit] = useState(0);
-
-  const getData = () => {
-    const increaseSum = transactions
-      .filter((t) => t.increse === true)
-      .reduce((acc, t) => acc + Number(t.sum || 0), 0);
-
-    const depositReturnSum = deposit
-      .filter((t) => t.increse === false)
-      .reduce((acc, t) => acc + Number(t.sum || 0), 0);
-
-    const decreaseSum = transactions
-      .filter((t) => t.increse === false)
-      .reduce((acc, t) => acc + Number(t.sum || 0), 0);
-
-    const depositSum = deposit
-      .filter((t) => t.increse === true)
-      .reduce((acc, t) => acc + Number(t.sum || 0), 0);
-
-    setDepositPlus(depositSum)
-    setTotalDeposit(depositSum - depositReturnSum)
-    // setIncrease(increaseSum);
-    setDecrease(decreaseSum);
-    setBalance(increaseSum - decreaseSum);
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   useEffect(() => {
     if (!financeSummary) return;
