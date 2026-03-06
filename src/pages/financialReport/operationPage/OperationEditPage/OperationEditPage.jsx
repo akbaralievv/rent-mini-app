@@ -1,19 +1,18 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppLayout from "../../../../layouts/AppLayout";
 import styles from "./OperationEditPage.module.css";
 import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
-import { transactions, deposit } from "../../../../common/mockData";
 import { tgTheme } from "../../../../common/commonStyle";
 import { useGetTagsQuery } from "../../../../redux/services/tagsAction";
-import { formatDate } from "../../../../common/utils/helpers";
-import CalendarCustom from "../../../../components/CalendarCustom/CalendarCustom";
+import { useCreateTransactionMutation } from "../../../../redux/services/financeApi";
+import { useGetAllOrdersQuery } from "../../../../redux/services/orders";
 
 const TYPE_OPTIONS = [
-  { key: "decrease", label: "Расходы", increse: false, deposit: false },
-  { key: "increase", label: "Доходы", increse: true, deposit: false },
-  { key: "deposit_plus", label: "Депозит +", increse: true, deposit: true },
-  { key: "deposit_minus", label: "Депозит −", increse: false, deposit: true },
+  { key: "expense", label: "Расходы" },
+  { key: "income", label: "Доходы" },
+  { key: "deposit_add", label: "Депозит +" },
+  { key: "deposit_return", label: "Депозит -" },
 ];
 
 export default function OperationEditPage() {
@@ -21,58 +20,39 @@ export default function OperationEditPage() {
   const { id } = useParams() || {};
   const isEdit = Boolean(id);
   const { data: tags = [] } = useGetTagsQuery();
-
-  const current = useMemo(() => {
-    if (!isEdit) return null
-
-    const list = [
-      ...(transactions || []),
-      ...(deposit || []),
-    ].filter(Boolean)
-
-    return list.find(el => String(el.id) === String(id)) || null
-  }, [id, isEdit])
-
+  const { data: orders = [] } = useGetAllOrdersQuery();
+  const [createTransaction, { isLoading }] = useCreateTransactionMutation();
 
   const [form, setForm] = useState({
-    increse: false,
-    deposit: false,
-    sum: "",
-    created_at: "",
-    car_name: "",
+    type: 'expense',
+    amount: 0,
+    finance_tag_id: tags[0]?.id || null,
     description: "",
+    currency: "AED",
+    car_number: "",
+    customer_name: "",
+    order_id: null,
+    car_name: ''
   });
-  const [tag, setTag] = useState(tags[0]?.id);
+
+  console.log(form, 'form')
 
   const [typeOpen, setTypeOpen] = useState(false);
+  const [orderOpen, setOrderOpen] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
-  const [dateOpen, setDateOpen] = useState(false);
-
-  useEffect(() => {
-    if (current) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setForm({
-        increse: current.increse,
-        deposit: Boolean(current.deposit),
-        sum: current.sum,
-        created_at: current.created_at,
-        car_name: current.car_name || "",
-        description: current.description || "",
-      });
-    }
-  }, [current]);
 
   const onChange = (key, value) => {
     setForm((p) => ({ ...p, [key]: value }));
   };
 
-  const onSave = () => {
-    if (!form.sum || !form.created_at) {
-      alert("Заполните сумму и дату");
-      return;
+  const onSave = async () => {
+    try {
+      await createTransaction(form).unwrap();
+      navigate(-1);
+    } catch (error) {
+      console.error(error);
+      alert("Ошибка при создании операции");
     }
-
-    navigate(-1);
   };
 
   return (
@@ -94,7 +74,9 @@ export default function OperationEditPage() {
                   onClick={() => setTypeOpen((p) => !p)}
                 >
                   <span className="font14w600">
-                    {getTypeLabel(form)}
+                    {
+                      TYPE_OPTIONS.find(el => el.key == form.type).label
+                    }
                   </span>
                   <ChevronDown size={16} color={tgTheme.textSecondary} />
                 </button>
@@ -105,19 +87,14 @@ export default function OperationEditPage() {
                       <button
                         key={opt.key}
                         onClick={() => {
-                          setForm((p) => ({
-                            ...p,
-                            increse: opt.increse,
-                            deposit: opt.deposit,
-                          }));
+                          setForm(prev => ({ ...prev, type: opt.key }));
                           setTypeOpen(false);
                         }}
                       >
                         <span className="font14w600">{opt.label}</span>
-                        {form.increse === opt.increse &&
-                          form.deposit === opt.deposit && (
-                            <Check color={tgTheme.accent} size={20} />
-                          )}
+                        {opt.key == form.type && (
+                          <Check color={tgTheme.accent} size={20} />
+                        )}
                       </button>
                     ))}
                   </div>
@@ -135,7 +112,7 @@ export default function OperationEditPage() {
                   onClick={() => setTagsOpen((p) => !p)}
                 >
                   <span className="font14w600">
-                    {tags.find(el => el.id == tag)?.name}
+                    {tags.find(el => el.id == form.finance_tag_id)?.name || 'Выберите тег'} 
                   </span>
                   <ChevronDown size={16} color={tgTheme.textSecondary} />
                 </button>
@@ -146,12 +123,56 @@ export default function OperationEditPage() {
                       <button
                         key={opt.id}
                         onClick={() => {
-                          setTag(opt.id);
+                          setForm(prev => ({ ...prev, finance_tag_id: opt.id }));
                           setTagsOpen(false);
                         }}
                       >
                         <span className="font14w600">{opt.name}</span>
-                        {opt.id == tag && (
+                        {opt.id == form.finance_tag_id && (
+                          <Check color={tgTheme.accent} size={20} />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* OrderId */}
+            <div className={styles.field}>
+              <span className="font16w500">Заказ</span>
+
+              <div className={styles.selectWrapper}>
+                <button
+                  className={styles.selectLike}
+                  onClick={() => setOrderOpen((p) => !p)}
+                >
+                  <span className="font14w600">
+                    {
+                      orders.find(el => el.id == form.order_id)?.customer_name || 'Выберите заказ'
+                    }
+                  </span>
+                  <ChevronDown size={16} color={tgTheme.textSecondary} />
+                </button>
+
+                {orderOpen && (
+                  <div className={styles.dropdown}>
+                    {orders.map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => {
+                          setForm(prev => ({ 
+                            ...prev, 
+                            order_id: opt.id, 
+                            car_number: opt.car.car_number, 
+                            customer_name: opt.customer_name,
+                            car_name: opt.car.car_name,
+                            }));
+                          setOrderOpen(false);
+                        }}
+                      >
+                        <span className="font14w600">{opt.customer_name}</span>
+                        {opt.id == form.order_id && (
                           <Check color={tgTheme.accent} size={20} />
                         )}
                       </button>
@@ -167,50 +188,9 @@ export default function OperationEditPage() {
               <input
                 className={styles.input}
                 type="number"
-                value={form.sum}
-                onChange={(e) => onChange("sum", e.target.value)}
+                value={form.amount}
+                onChange={(e) => onChange("amount", e.target.value)}
                 placeholder="0.00"
-              />
-            </div>
-
-            {/* ДАТА */}
-            <div className={styles.field}>
-              <span className="font16w500">Дата</span>
-
-              <div className={styles.selectWrapper}>
-                <button
-                  className={styles.selectLike}
-                  onClick={() => setDateOpen((p) => !p)}
-                >
-                  <span className="font14w600">
-                    {form.created_at
-                      ? formatDate(form.created_at)
-                      : "Выберите дату"}
-                  </span>
-                  <ChevronDown size={16} color={tgTheme.textSecondary} />
-                </button>
-
-                <CalendarCustom
-                  date={form.created_at}
-                  setDate={(date) => {
-                    onChange("created_at", date);
-                  }}
-                  visible={dateOpen}
-                  mode="single"
-                  setVisible={setDateOpen}
-                />
-
-              </div>
-            </div>
-
-            {/* АВТО */}
-            <div className={styles.field}>
-              <span className="font16w500">Автомобиль</span>
-              <input
-                className={styles.input}
-                value={form.car_name}
-                onChange={(e) => onChange("car_name", e.target.value)}
-                placeholder="—"
               />
             </div>
 
@@ -246,12 +226,5 @@ export default function OperationEditPage() {
       </div>
     </AppLayout>
   );
-}
-
-function getTypeLabel(form) {
-  if (form.deposit && form.increse) return "Депозит +";
-  if (form.deposit && !form.increse) return "Депозит −";
-  if (form.increse) return "Доходы";
-  return "Расходы";
 }
 

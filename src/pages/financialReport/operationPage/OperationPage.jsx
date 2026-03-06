@@ -9,6 +9,7 @@ import { tgTheme } from "../../../common/commonStyle";
 import Tag from "../../../components/Tag/Tag";
 import DateFilter from "../../../components/DateFilter/DateFilter";
 import BackdropModal from "../../../components/BackdropModal/BackdropModal";
+import { useGetTransactionsQuery } from "../../../redux/services/financeApi";
 
 const type = [
   { key: "increase", value: "Доходы" },
@@ -33,6 +34,15 @@ function formatMoney(num) {
 export default function OperationPage() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { data, isLoading } = useGetTransactionsQuery({
+    period: 'last_3_months',
+    type: 'expense',
+    page: 1,
+    per_page: 20
+  })
+
+  console.log(data, '0000')
 
   const [key, setKey] = useState(location.state?.key);
 

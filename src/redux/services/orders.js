@@ -13,7 +13,17 @@ export const ordersApi = createApi({
         },
       }),
     }),
+
+    getAllOrders: builder.query({
+      query: () => ({
+        url: `/ordersDocs`,
+      }),
+    }),
+
   }),
 });
 
-export const { useGetOrdersByCarQuery } = ordersApi;
+export const { 
+  useGetOrdersByCarQuery,
+  useGetAllOrdersQuery
+} = ordersApi;
