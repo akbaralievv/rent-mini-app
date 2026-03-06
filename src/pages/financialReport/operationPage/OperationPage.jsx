@@ -75,6 +75,8 @@ export default function OperationPage() {
     return list.slice(start, end);
   }, [list, page]);
 
+  console.log(pageData)
+
   const canPrev = page > 1;
   const canNext = page < totalPages;
 
@@ -166,6 +168,7 @@ export default function OperationPage() {
             <div className={styles.cardFooter}>
               <div className={styles.bottomLine}>
                 <div className={'font14w500'}>{item.car_name || "—"}</div>
+                <span className="font13w400" style={{ color: "var(--tg-success)" }}>{item.payer || ""}</span>
                 <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{item.description || ""}</span>
               </div>
               <div className={styles.right}>
