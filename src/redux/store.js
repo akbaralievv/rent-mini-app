@@ -14,6 +14,7 @@ import { companySectionDocumentsApi } from './services/companySectionDocuments';
 import { carApi } from './services/carAction';
 import { waApi } from './services/waApi';
 import { waTemplatesApi } from './services/waTemplatesApi';
+import { financeApi } from './services/financeApi';
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ export const store = configureStore({
     [carApi.reducerPath]: carApi.reducer,
     [waApi.reducerPath]: waApi.reducer,
     [waTemplatesApi.reducerPath]: waTemplatesApi.reducer,
+    [financeApi.reducerPath]: financeApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -48,7 +50,8 @@ export const store = configureStore({
       companySectionDocumentsApi.middleware,
       carApi.middleware,
       waApi.middleware,
-      waTemplatesApi.middleware
+      waTemplatesApi.middleware,
+      financeApi.middleware
     ),
 });
 
