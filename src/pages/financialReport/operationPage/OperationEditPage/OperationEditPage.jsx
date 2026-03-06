@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppLayout from "../../../../layouts/AppLayout";
 import styles from "./OperationEditPage.module.css";
 import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { tgTheme } from "../../../../common/commonStyle";
 import { useGetTagsQuery } from "../../../../redux/services/tagsAction";
-import { useCreateTransactionMutation } from "../../../../redux/services/financeApi";
+import { useCreateTransactionMutation, useGetTransactionByIdQuery, useUpdateTransactionMutation } from "../../../../redux/services/financeApi";
 import { useGetAllOrdersQuery } from "../../../../redux/services/orders";
 import InfoModal from "../../../../components/InfoModal/InfoModal";
 
@@ -19,11 +19,15 @@ const TYPE_OPTIONS = [
 export default function OperationEditPage() {
   const navigate = useNavigate();
   const { id } = useParams() || {};
+
+  const { data = {} } = useGetTransactionByIdQuery(id);
+
   const isEdit = Boolean(id);
   const { data: tags = [] } = useGetTagsQuery();
   const { data: orders = [] } = useGetAllOrdersQuery();
 
   const [createTransaction] = useCreateTransactionMutation();
+  const [updateTransaction] = useUpdateTransactionMutation();
 
   const [error, setError] = useState('');
 
@@ -39,7 +43,23 @@ export default function OperationEditPage() {
     car_name: ''
   });
 
-  console.log(form, 'form')
+  useEffect(() => {
+    if (!id || !data?.id) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setForm({
+      type: data.type ?? 'expense',
+      amount: Number(data.amount) || 0,
+      finance_tag_id: data.finance_tag_id ?? null,
+      description: data.description ?? "",
+      currency: data.currency ?? "AED",
+      car_number: data.car_number ?? "",
+      customer_name: data.customer_name ?? "",
+      order_id: data.order_id ?? null,
+      car_name: data.car_name ?? ""
+    });
+
+  }, [id, data?.id]);
 
   const [typeOpen, setTypeOpen] = useState(false);
   const [orderOpen, setOrderOpen] = useState(false);
@@ -62,7 +82,11 @@ export default function OperationEditPage() {
     }
 
     try {
-      await createTransaction(form).unwrap();
+      if (id) {
+        await updateTransaction({ id: id, body: form }).unwrap();
+      } else {
+        await createTransaction(form).unwrap();
+      }
       navigate(-1);
     } catch (error) {
       console.error(error);
@@ -85,6 +109,7 @@ export default function OperationEditPage() {
               <div className={styles.selectWrapper}>
                 <button
                   className={styles.selectLike}
+                  disabled={id}
                   onClick={() => setTypeOpen((p) => !p)}
                 >
                   <span className="font14w600">
@@ -238,7 +263,7 @@ export default function OperationEditPage() {
           </div>
         </div>
       </div>
-      <InfoModal visible={error.trim()} setVisible={() => setError('')} text={error} textButton="Ок"/>
+      <InfoModal visible={error.trim()} setVisible={() => setError('')} text={error} textButton="Ок" />
     </AppLayout>
   );
 }

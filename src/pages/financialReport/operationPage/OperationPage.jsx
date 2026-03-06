@@ -10,6 +10,8 @@ import DateFilter from "../../../components/DateFilter/DateFilter";
 import BackdropModal from "../../../components/BackdropModal/BackdropModal";
 import { useDeleteTransactionMutation, useGetTransactionsQuery } from "../../../redux/services/financeApi";
 import ModalComponent from "../../../components/ModalComponent/ModalComponent";
+import { useGetTagsQuery } from "../../../redux/services/tagsAction";
+import { parseUiDateRange } from "../../../common/utils/helpers";
 
 const type = [
   { key: "expense", label: "Расходы" },
@@ -47,20 +49,50 @@ export default function OperationPage() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteTransactionId, setDeleteTransactionId] = useState(0);
 
-  const { data: transactionsData = { data: [] } } = useGetTransactionsQuery({
-    period: 'last_3_months',
-    type: key,
-    page: 1,
-    per_page: 50
-  })
+  const [page, setPage] = useState(1);
+  const [filterVisible, setFilterVisible] = useState(false);
+  const [tagFilterVisible, setTagFilterVisible] = useState(false);
+  const [dateFilter, setDateFilter] = useState(undefined);
+  const [selectedTagId, setSelectedTagId] = useState(null);
+
+  const dateParams = useMemo(() => parseUiDateRange(dateFilter), [dateFilter]);
+  const financeTagType = increasetArr.includes(key) ? 'income' : 'expense';
+  const { data: tags = [] } = useGetTagsQuery();
+
+  const filteredTags = useMemo(() => {
+    return tags
+  }, [financeTagType, tags]);
+
+  const selectedTag = useMemo(() => {
+    return filteredTags.find((tag) => String(tag.id) === String(selectedTagId)) || null;
+  }, [filteredTags, selectedTagId]);
+
+  const transactionParams = useMemo(() => {
+    const params = {
+      type: key,
+      page: 1,
+      per_page: 50,
+    };
+
+    if (dateParams.from) {
+      params.start_date = dateParams.from;
+      params.end_date = dateParams.to;
+    } else {
+      params.period = 'last_3_months';
+    }
+
+    if (selectedTagId != null) {
+      params.finance_tag_id = selectedTagId;
+    }
+
+    return params;
+  }, [dateParams.from, dateParams.to, key, selectedTagId]);
+
+  const { data: transactionsData = { data: [] } } = useGetTransactionsQuery(transactionParams)
 
   const [deleteTransactionAction] = useDeleteTransactionMutation();
 
   const [title, setTitle] = useState(type.find((el) => el.key === key)?.value || "Операции");
-
-  const [page, setPage] = useState(1);
-  const [filterVisible, setFilterVisible] = useState(false);
-  const [dateFilter, setDateFilter] = useState(undefined);
 
   const list = useMemo(() => {
     return [...transactionsData.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -70,6 +102,8 @@ export default function OperationPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTitle(type.find((el) => el.key === key)?.label || "Операции")
     setPage(1);
+    setSelectedTagId(null);
+    setTagFilterVisible(false);
   }, [key]);
 
   const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
@@ -95,7 +129,7 @@ export default function OperationPage() {
     setKey(key);
   }
 
-  const deleteOperationById = () =>{
+  const deleteOperationById = () => {
     try {
       deleteTransactionAction(deleteTransactionId);
       setDeleteTransactionId(null);
@@ -115,7 +149,10 @@ export default function OperationPage() {
       <div className={styles.header}>
         <div className={styles.headerFilter + ' miniBlock'}>
           <span className="font16w600">Тип</span>
-          <button onClick={() => setFilterVisible(true)} className={styles.filterBtn}>
+          <button onClick={() => {
+            setTagFilterVisible(false);
+            setFilterVisible(true);
+          }} className={styles.filterBtn}>
             <ListFilter color={tgTheme.textSecondary} size={16} />
             <span className={'font13w500'}>{title}</span>
             <ChevronDown color={tgTheme.textSecondary} size={16} />
@@ -167,8 +204,52 @@ export default function OperationPage() {
           </button>
         </div>
       </div>
-      <div className={styles.headerFilter + ' miniBlock'}>
-        <DateFilter date={dateFilter} setDate={setDateFilter} />
+      <div className={styles.header}>
+        <div className={styles.headerFilter + ' miniBlock'}>
+          <DateFilter date={dateFilter} setDate={setDateFilter} />
+        </div>
+        <div className={styles.headerFilter + ' miniBlock'}>
+          <button onClick={() => {
+            setFilterVisible(false);
+            setTagFilterVisible((prev) => !prev);
+          }} className={styles.filterBtn}>
+            <span className={'font13w500'}>{selectedTag?.name || 'Все теги'}</span>
+            <ChevronDown color={tgTheme.textSecondary} size={16} />
+          </button>
+          {
+            tagFilterVisible && <>
+              <BackdropModal onClick={() => setTagFilterVisible(false)} />
+              <div className={styles.filterBlock} style={{right: 0}}>
+                <button onClick={() => {
+                  setSelectedTagId(null);
+                  setTagFilterVisible(false);
+                }}>
+                  <span className="font14w600">
+                    Все теги
+                  </span>
+                  {
+                    selectedTagId == null && <Check color={tgTheme.accent} size={20} />
+                  }
+                </button>
+                {
+                  filteredTags.map((tag) => (
+                    <button key={tag.id} onClick={() => {
+                      setSelectedTagId(tag.id);
+                      setTagFilterVisible(false);
+                    }}>
+                      <span className="font14w600">
+                        {tag.name}
+                      </span>
+                      {
+                        String(tag.id) === String(selectedTagId) && <Check color={tgTheme.accent} size={20} />
+                      }
+                    </button>
+                  ))
+                }
+              </div>
+            </>
+          }
+        </div>
       </div>
 
       {
@@ -247,7 +328,7 @@ export default function OperationPage() {
       }
 
       <ModalComponent visible={deleteModal} setVisible={setDeleteModal} onSave={deleteOperationById}
-      textButton="Удалить" title={`Удалить транзакцию #${deleteTransactionId}?`}>
+        textButton="Удалить" title={`Удалить транзакцию #${deleteTransactionId}?`}>
         <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{'После удаления её нельзя будет восстановить.'}</span>
       </ModalComponent>
     </AppLayout>

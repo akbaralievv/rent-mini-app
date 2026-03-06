@@ -33,7 +33,7 @@ import WaChatsPage from './pages/allChats/WaChatsPage/WaChatsPage';
 import SiteChatsPage from './pages/allChats/SiteChatsPage/SiteChatsPage';
 import TemplatesWAPage from './pages/allChats/TemplatesWAPage/TemplatesWAPage';
 import WAChatPage from './pages/allChats/WaChatsPage/WaChatPage/WAChatPage';
-import ExportFiltersPage from './pages/financialReport/exportFiltersPage/exportFiltersPage';
+import ExportFiltersPage from './pages/financialReport/exportFiltersPage/ExportFiltersPage';
 
 function Router() {
   const { status } = useAuth();

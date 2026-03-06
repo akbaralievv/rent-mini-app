@@ -37,7 +37,7 @@ export const financeApi = createApi({
 
     // транзакция по id
     getTransactionById: builder.query({
-      query: (id) => `transactions/${id}`,
+      query: (id) => `finance/transactions/${id}`,
       providesTags: (result, error, id) => [{ type: 'Transaction', id }],
     }),
 
@@ -53,9 +53,9 @@ export const financeApi = createApi({
 
     // обновление
     updateTransaction: builder.mutation({
-      query: ({ id, ...body }) => ({
+      query: ({ id, body }) => ({
         url: `finance/transactions/${id}`,
-        method: 'PATCH',
+        method: 'PUT',
         body,
       }),
       invalidatesTags: ['Transactions', 'Transaction', 'Summary'],
