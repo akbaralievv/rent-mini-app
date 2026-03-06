@@ -9,6 +9,7 @@ import Tag from "../../../components/Tag/Tag";
 import DateFilter from "../../../components/DateFilter/DateFilter";
 import BackdropModal from "../../../components/BackdropModal/BackdropModal";
 import { useGetTransactionsQuery } from "../../../redux/services/financeApi";
+import ModalComponent from "../../../components/ModalComponent/ModalComponent";
 
 const type = [
   { key: "expense", label: "Расходы" },
@@ -43,6 +44,8 @@ export default function OperationPage() {
   const location = useLocation();
 
   const [key, setKey] = useState(location.state?.key);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteTransactionId, setDeleteTransactionId] = useState(0);
 
   const { data: transactionsData = { data: [] } } = useGetTransactionsQuery({
     period: 'last_3_months',
@@ -175,7 +178,7 @@ export default function OperationPage() {
                 </div>
                 {console.log(item)}
 
-                <Tag tagId={item?.finance_tag?.id}/>
+                <Tag tagId={item?.finance_tag?.id} />
 
                 <div className={styles.cardFooter}>
                   <div className={styles.bottomLine}>
@@ -191,7 +194,10 @@ export default function OperationPage() {
                     </button>
                     <button
                       className={styles.btn}
-                      onClick={() => { }}
+                      onClick={() => {
+                        setDeleteTransactionId(item.id)
+                        setDeleteModal(true)
+                      }}
                     >
                       <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
                     </button>
@@ -227,7 +233,9 @@ export default function OperationPage() {
           </div>
       }
 
-
+      <ModalComponent visible={deleteModal} setVisible={setDeleteModal} textButton="Удалить" title={`Удалить транзакцию #${deleteTransactionId}?`}>
+        <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{'После удаления её нельзя будет восстановить.'}</span>
+      </ModalComponent>
     </AppLayout>
   );
 }
