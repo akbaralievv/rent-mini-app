@@ -8,7 +8,7 @@ import { tgTheme } from "../../../common/commonStyle";
 import Tag from "../../../components/Tag/Tag";
 import DateFilter from "../../../components/DateFilter/DateFilter";
 import BackdropModal from "../../../components/BackdropModal/BackdropModal";
-import { useGetTransactionsQuery } from "../../../redux/services/financeApi";
+import { useDeleteTransactionMutation, useGetTransactionsQuery } from "../../../redux/services/financeApi";
 import ModalComponent from "../../../components/ModalComponent/ModalComponent";
 
 const type = [
@@ -54,6 +54,8 @@ export default function OperationPage() {
     per_page: 50
   })
 
+  const [deleteTransactionAction] = useDeleteTransactionMutation();
+
   const [title, setTitle] = useState(type.find((el) => el.key === key)?.value || "Операции");
 
   const [page, setPage] = useState(1);
@@ -91,6 +93,17 @@ export default function OperationPage() {
   const chooseType = (key) => {
     setFilterVisible(false);
     setKey(key);
+  }
+
+  const deleteOperationById = () =>{
+    try {
+      deleteTransactionAction(deleteTransactionId);
+      setDeleteTransactionId(null);
+      setDeleteModal(false)
+    } catch (err) {
+      alert('Не удалось удалить тег');
+      console.log(err)
+    }
   }
 
   return (
@@ -233,7 +246,8 @@ export default function OperationPage() {
           </div>
       }
 
-      <ModalComponent visible={deleteModal} setVisible={setDeleteModal} textButton="Удалить" title={`Удалить транзакцию #${deleteTransactionId}?`}>
+      <ModalComponent visible={deleteModal} setVisible={setDeleteModal} onSave={deleteOperationById}
+      textButton="Удалить" title={`Удалить транзакцию #${deleteTransactionId}?`}>
         <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{'После удаления её нельзя будет восстановить.'}</span>
       </ModalComponent>
     </AppLayout>
