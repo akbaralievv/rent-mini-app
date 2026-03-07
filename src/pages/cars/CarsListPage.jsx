@@ -14,6 +14,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Tag,
 } from 'lucide-react'
 import { STATUS_MAPPING, tgTheme } from '../../common/commonStyle'
 import BackdropModal from '../../components/BackdropModal/BackdropModal'
@@ -34,11 +35,22 @@ const cars_class = [
 
 export default function CarsListPage() {
   const navigate = useNavigate()
-  const { data: cars = { cars: [] }, isLoading, isError } = useGetCarsQuery()
 
-  const [filterVisible, setFilterVisible] = useState(false)
+  const [filterVisible, setFilterVisible] = useState(false);
+  const [statusFilterVisible, setStatusFilterVisible] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(null);
   const [key, setKey] = useState('all')
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1);
+  const queryParams = useMemo(() => {
+    if (!currentStatus) return {};
+
+    return {
+      status: currentStatus.toLowerCase(),
+    };
+  }, [currentStatus]);
+
+  const { data: cars = { cars: [] }, isLoading, isError } = useGetCarsQuery(queryParams);
+
 
   const filteredCars = useMemo(() => {
     if (key === 'all') return cars.cars
@@ -76,36 +88,82 @@ export default function CarsListPage() {
         {isLoading && <div className={styles.status}>Загрузка...</div>}
         {isError && <div className={styles.status}>Ошибка загрузки</div>}
 
-        <div className={styles.headerFilter}>
-          <div className={styles.headerFilter + ' miniBlock'}>
-            <span className="font16w600">Класс</span>
-            <button onClick={() => setFilterVisible(true)} className={styles.filterBtn}>
-              <ListFilter color={tgTheme.textSecondary} size={16} />
+        <div>
+          <div className={styles.headerFilter}>
+            <div className={styles.headerFilter + ' miniBlock'}>
+              <span className="font16w600">Класс</span>
+              <button onClick={() => setFilterVisible(true)} className={styles.filterBtn}>
+                <ListFilter color={tgTheme.textSecondary} size={16} />
+                <span className="font13w500">
+                  {cars_class.find((el) => el.key === key)?.name}
+                </span>
+                <ChevronDown color={tgTheme.textSecondary} size={16} />
+              </button>
+
+              {filterVisible && (
+                <>
+                  <BackdropModal onClick={() => setFilterVisible(false)} />
+                  <div className={styles.filterBlock}>
+                    {cars_class.map((el) => (
+                      <button key={el.id} onClick={() => changeClass(el)}>
+                        <span className="font14w600">{el.name}</span>
+                        {key === el.key && <Check color={tgTheme.accent} size={18} />}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className={styles.headerFilter + ' miniBlock'}>
+              <CustomButton
+                icon={<Plus color={tgTheme.textSecondary} size={16} />}
+                text='Добавить' onClick={() => navigate('/car/create')} />
+            </div>
+          </div>
+          <div className={styles.statusFilter + ' miniBlock'}>
+            <button onClick={() => setStatusFilterVisible(true)} className={styles.filterBtn}>
+              <Tag size={16} color={tgTheme.textSecondary} />
               <span className="font13w500">
-                {cars_class.find((el) => el.key === key)?.name}
+                {STATUS_MAPPING[currentStatus] || 'Все статусы'}
               </span>
               <ChevronDown color={tgTheme.textSecondary} size={16} />
             </button>
 
-            {filterVisible && (
+            {statusFilterVisible && (
               <>
-                <BackdropModal onClick={() => setFilterVisible(false)} />
+                <BackdropModal onClick={() => setStatusFilterVisible(false)} />
+
                 <div className={styles.filterBlock}>
-                  {cars_class.map((el) => (
-                    <button key={el.id} onClick={() => changeClass(el)}>
-                      <span className="font14w600">{el.name}</span>
-                      {key === el.key && <Check color={tgTheme.accent} size={18} />}
+
+                  <button
+                    onClick={() => {
+                      setCurrentStatus(null);
+                      setStatusFilterVisible(false);
+                    }}
+                  >
+                    <span className="font14w600">Все</span>
+                    {currentStatus === null && <Check color={tgTheme.accent} size={18} />}
+                  </button>
+
+                  {Object.entries(STATUS_MAPPING).map(([key, value]) => (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        setCurrentStatus(key);
+                        setStatusFilterVisible(false);
+                      }}
+                    >
+                      <span className="font14w600">{value}</span>
+                      {key === currentStatus && (
+                        <Check color={tgTheme.accent} size={18} />
+                      )}
                     </button>
                   ))}
+
                 </div>
               </>
             )}
-          </div>
-
-          <div className={styles.headerFilter + ' miniBlock'}>
-            <CustomButton
-              icon={<Plus color={tgTheme.textSecondary} size={16} />}
-              text='Добавить' onClick={() => navigate('/car/create')} />
           </div>
         </div>
 
