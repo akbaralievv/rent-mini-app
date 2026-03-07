@@ -7,13 +7,21 @@ export const carApi = createApi({
   tagTypes: ['Cars', 'Car', 'Orders', 'Images', 'Stats', 'Brands', 'Models'],
   endpoints: (builder) => ({
 
-    // cars
-
     getCars: builder.query({
-      query: (params) => ({
-        url: '/cars/excel',
-        params,
-      }),
+      query: (params = {}) => {
+        const queryParams = { ...params };
+
+        if (queryParams.status) {
+          queryParams.status = queryParams.status.toLowerCase();
+        } else {
+          delete queryParams.status;
+        }
+
+        return {
+          url: '/cars/excel',
+          params: queryParams,
+        };
+      },
       providesTags: ['Cars'],
     }),
 
