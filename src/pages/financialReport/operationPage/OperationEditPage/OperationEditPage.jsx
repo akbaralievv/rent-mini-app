@@ -8,6 +8,7 @@ import { useGetTagsQuery } from "../../../../redux/services/tagsAction";
 import { useCreateTransactionMutation, useGetTransactionByIdQuery, useUpdateTransactionMutation } from "../../../../redux/services/financeApi";
 import { useGetAllOrdersQuery } from "../../../../redux/services/orders";
 import InfoModal from "../../../../components/InfoModal/InfoModal";
+import { useGetCarsQuery } from "../../../../redux/services/carAction";
 
 const TYPE_OPTIONS = [
   { key: "expense", label: "Расходы" },
@@ -25,6 +26,7 @@ export default function OperationEditPage() {
   const isEdit = Boolean(id);
   const { data: tags = [] } = useGetTagsQuery();
   const { data: orders = [] } = useGetAllOrdersQuery();
+  const { data: cars = { cars: [] } } = useGetCarsQuery();
 
   const [createTransaction] = useCreateTransactionMutation();
   const [updateTransaction] = useUpdateTransactionMutation();
@@ -37,10 +39,11 @@ export default function OperationEditPage() {
     finance_tag_id: tags[0]?.id || null,
     description: "",
     currency: "AED",
-    car_number: "",
-    customer_name: "",
     order_id: null,
-    car_name: ''
+
+    // car_number: "",
+    // customer_name: "",
+    // car_name: ''
   });
 
   useEffect(() => {
@@ -53,9 +56,10 @@ export default function OperationEditPage() {
       finance_tag_id: data.finance_tag_id ?? null,
       description: data.description ?? "",
       currency: data.currency ?? "AED",
+      order_id: data.order_id ?? null,
+
       car_number: data.car_number ?? "",
       customer_name: data.customer_name ?? "",
-      order_id: data.order_id ?? null,
       car_name: data.car_name ?? ""
     });
 
@@ -64,6 +68,7 @@ export default function OperationEditPage() {
   const [typeOpen, setTypeOpen] = useState(false);
   const [orderOpen, setOrderOpen] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
+  const [carsOpen, setCarsOpen] = useState(false);
 
   const onChange = (key, value) => {
     setForm((p) => ({ ...p, [key]: value }));
@@ -196,9 +201,10 @@ export default function OperationEditPage() {
                         setForm(prev => ({
                           ...prev,
                           order_id: null,
-                          car_number: '',
-                          customer_name: '',
-                          car_name: '',
+
+                          // car_number: '',
+                          // customer_name: '',
+                          // car_name: '',
                         }));
                         setOrderOpen(false);
                       }}
@@ -215,9 +221,9 @@ export default function OperationEditPage() {
                           setForm(prev => ({
                             ...prev,
                             order_id: opt.id,
-                            car_number: opt.car.car_number,
-                            customer_name: opt.customer_name,
-                            car_name: opt.car.car_name,
+                            // car_number: opt.car.car_number,
+                            // customer_name: opt.customer_name,
+                            // car_name: opt.car.car_name,
                           }));
                           setOrderOpen(false);
                         }}
@@ -232,6 +238,66 @@ export default function OperationEditPage() {
                 )}
               </div>
             </div>
+
+            {
+              id &&  <div className={styles.field}>
+              <span className="font16w500">Авто</span>
+
+              <div className={styles.selectWrapper}>
+                <button
+                  className={styles.selectLike}
+                  onClick={() => setCarsOpen((p) => !p)}
+                >
+                  <span className="font14w600">
+                    {
+                      cars.cars.find(el => el.car_number == form.car_number)?.car_name || 'Без авто'
+                    }
+                  </span>
+                  <ChevronDown size={16} color={tgTheme.textSecondary} />
+                </button>
+
+                {carsOpen && (
+                  <div className={styles.dropdown}>
+                    <button
+                      onClick={() => {
+                        setForm(prev => ({
+                          ...prev,
+                          car_number: '',
+                          // customer_name: '',
+                          car_name: '',
+                        }));
+                        setCarsOpen(false);
+                      }}
+                    >
+                      <span className="font14w600">Без авто</span>
+                      {null == form.order_id && (
+                        <Check color={tgTheme.accent} size={20} />
+                      )}
+                    </button>
+                    {cars.cars.map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => {
+                          setForm(prev => ({
+                            ...prev,
+                            car_number: opt.car_number,
+                            // customer_name: opt.customer_name,
+                            car_name: opt.car_name,
+                          }));
+                          setCarsOpen(false);
+                        }}
+                      >
+                        <span className="font14w600">{opt.car_name}</span>
+                        {opt.id == form.order_id && (
+                          <Check color={tgTheme.accent} size={20} />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            }
 
             {/* СУММА */}
             <div className={styles.field}>
