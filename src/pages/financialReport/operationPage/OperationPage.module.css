@@ -220,3 +220,12 @@
 .btn:hover {
   background-color: var(--tg-filter-bg);
 }
+
+.totalAmountBLock {
+  padding: 10px 16px 5px 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--tg-border);
+}

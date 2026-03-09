@@ -78,3 +78,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.textBlock{
+  display: flex;
+  flex-direction: column;
+}

@@ -20,10 +20,16 @@ export default function ButtonSection({ buttons = [], title = '' }) {
                 <div>
                   {el.icon}
                 </div>
-                <span className={`font14w500 ${styles.textEllipsis}`}
-                  style={{ color: el.disabled ? tgTheme.muted2 : el.color ?? tgTheme.white }}>
-                  {el.text}
-                </span>
+                <div className={styles.textBlock}>
+                  <span className={`font14w500 ${styles.textEllipsis}`}
+                    style={{ color: el.disabled ? tgTheme.muted2 : el.color ?? tgTheme.white }}>
+                    {el.text}
+                  </span>
+                  <span className={`font10w400 ${styles.textEllipsis}`}
+                    style={{ color: tgTheme.textSecondary }}>
+                    {el.text2}
+                  </span>
+                </div>
               </div>
               <div className={styles.itemRight}>
                 {Array.isArray(el.actions) && el.actions.length > 0 && (

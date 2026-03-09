@@ -1,6 +1,34 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styles from "./ReportCard.module.css";
 import { Wallet } from "lucide-react";
+import { useGetTransactionsQuery } from "../../redux/services/financeApi";
+import Tag from "../Tag/Tag";
+
+const increasetArr = ['income', 'deposit_add']
+
+const type = [
+  { key: "expense", label: "Расходы" },
+  { key: "income", label: "Доходы" },
+  { key: "deposit_add", label: "Депозит +" },
+  { key: "deposit_return", label: "Депозит -" },
+];
+
+function formatDate(iso) {
+  const date = new Date(iso);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}.${month}.${year}`;
+}
+
+function formatMoney(num) {
+  return Number(num || 0).toLocaleString("ru-RU", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 
 export default function ReportCard({
   title,
@@ -25,6 +53,30 @@ export default function ReportCard({
   const incomeFormatted = formatSplit(income);
   const expenseFormatted = formatSplit(expense);
   const totalDepositFormatted = formatSplit(totalDeposit);
+
+  const transactionParams = useMemo(() => {
+    const today = new Date();
+    const weekAgo = new Date();
+    weekAgo.setDate(today.getDate() - 7);
+    const format = (d) => d.toISOString().slice(0, 10);
+    return {
+      start_date: format(weekAgo),
+      end_date: format(today),
+      page: 1,
+      per_page: 50,
+    };
+  }, []);
+
+  const { data: transactionsData = { data: [] } } = useGetTransactionsQuery(transactionParams);
+
+  const groupedTransactions = transactionsData.data.reduce((acc, item) => {
+    const date = new Date(item.created_at).toISOString().slice(0, 10);
+
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(item);
+
+    return acc;
+  }, {});
 
   return (
     <div className={styles.card}>
@@ -124,6 +176,51 @@ export default function ReportCard({
           </div>
         </div>
       </div>
+      {
+        transactionsData?.data?.length > 0 && <div className={styles.historyContent}>
+          {Object.entries(groupedTransactions).map(([date, items]) => (
+            <div key={date} className={styles.historyGroup}>
+
+              <div className={styles.historyDate}>
+                {formatDate(date)}
+              </div>
+
+              <div className={styles.historyCard}>
+                {items.map((el) => (
+                  <div key={el.id} className={styles.historyRow}>
+
+                    <div className={styles.historyLeft}>
+
+                        <div className={styles.historyTitle}>
+                          {el.finance_tag?.name || "Транзакция"}
+                        </div>
+
+                        <div className={styles.historySubtitle}>
+                          {el.car_name || "—"}
+                        </div>
+                    </div>
+
+                    <div className={styles.rowRightBlock}>
+                      <p className="font12w400">{type.find((item)=>item.key == el.type)?.label}</p>
+                      <div
+                        className={
+                          (increasetArr.includes(el.type)
+                            ? styles.amountIncome
+                            : styles.amountExpense) + ' font12w400'
+                        }
+                      >
+                        {formatMoney(el.amount)} {el.currency}
+                      </div>
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          ))}
+        </div>
+      }
     </div>
   );
 }
