@@ -139,3 +139,30 @@
   background: rgba(255, 255, 255, 0.28);
   background-clip: padding-box;
 }
+
+.addTagsBtn{
+  padding: 4px;
+  background-color: var(--tg-item-button-bg-hover);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 10px;
+  padding: 6px 10px;
+  padding-right: 6px;
+}
+
+.tagsArr {
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  position: relative;
+}
+
+.emptyTags{
+  padding: 8px 15px;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  gap: 10px;
+}

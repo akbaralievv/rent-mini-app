@@ -56,7 +56,7 @@ export default function OperationPage() {
   const [selectedTagId, setSelectedTagId] = useState(null);
 
   const dateParams = useMemo(() => parseUiDateRange(dateFilter), [dateFilter]);
-  const financeTagType = increasetArr.includes(key) ? 'income' : 'expense';
+  const financeTagType = increasetArr.includes(key);
   const { data: tags = [] } = useGetTagsQuery();
 
   const filteredTags = useMemo(() => {
@@ -88,7 +88,12 @@ export default function OperationPage() {
     return params;
   }, [dateParams.from, dateParams.to, key, selectedTagId]);
 
-  const { data: transactionsData = { data: [] } } = useGetTransactionsQuery(transactionParams)
+  const { data: transactionsData = { data: [] } } = useGetTransactionsQuery(transactionParams);
+  const totalAmount = useMemo(() => {
+    return transactionsData.data.reduce((sum, item) => {
+      return sum + Number(item.amount || 0);
+    }, 0);
+  }, [transactionsData.data]);
 
   const [deleteTransactionAction] = useDeleteTransactionMutation();
 
@@ -219,7 +224,7 @@ export default function OperationPage() {
           {
             tagFilterVisible && <>
               <BackdropModal onClick={() => setTagFilterVisible(false)} />
-              <div className={styles.filterBlock} style={{right: 0}}>
+              <div className={styles.filterBlock} style={{ right: 0 }}>
                 <button onClick={() => {
                   setSelectedTagId(null);
                   setTagFilterVisible(false);
@@ -258,6 +263,10 @@ export default function OperationPage() {
             Транзакции отсутствуют</span>
         </div>
           : <div className={styles.section}>
+            <div className={styles.totalAmountBLock}>
+              <p className={'font13w400'}>Итого:</p>
+              <p className={'font14w500'}>{formatMoney(totalAmount)} AED</p>
+            </div>
             {transactionsData?.data?.map((item) => (
               <div key={`${key}-${item.id}`} className={styles.row} >
                 <div className={styles.topLine}>

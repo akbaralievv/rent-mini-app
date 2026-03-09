@@ -17,9 +17,18 @@ import {
   X,
   ChevronUp,
   ChevronDown,
+  Check,
 } from 'lucide-react'
 import styles from './TagsPage.module.css'
 import { getErrorMessage } from '../../../utils'
+import BackdropModal from '../../../components/BackdropModal/BackdropModal'
+
+const TYPE_OPTIONS = [
+  { key: "expense", label: "Расходы" },
+  { key: "income", label: "Доходы" },
+  { key: "deposit_add", label: "Депозит +" },
+  { key: "deposit_return", label: "Депозит -" },
+];
 
 export default function TagsPage() {
   const navigate = useNavigate()
@@ -36,6 +45,8 @@ export default function TagsPage() {
   const [tagType, setTagType] = useState('expense') // expense | income
   const [editingTag, setEditingTag] = useState(null)
   const [deletingTag, setDeletingTag] = useState(null)
+
+  const [tagsOpen, setTagsOpen] = useState(false);
 
   /* ---------- helpers ---------- */
 
@@ -99,10 +110,6 @@ export default function TagsPage() {
     }
   }
 
-  const toggleType = () => {
-    setTagType(prev => (prev === 'expense' ? 'income' : 'expense'))
-  }
-
   return (
     <AppLayout title={'Теги'} onBack={() => navigate(-1)}>
       <ButtonSection
@@ -113,6 +120,7 @@ export default function TagsPage() {
             arrowHide: true,
             icon: <Tag size={18} />,
             text: tag.name,
+            text2: TYPE_OPTIONS.find((el) => el.key == tag.type).label,
             actions: [
               {
                 icon: <Trash size={16} color={tgTheme.btnActive} />,
@@ -174,18 +182,43 @@ export default function TagsPage() {
 
                 <button
                   className={styles.typeInput}
-                  onClick={toggleType}
+                  onClick={() => setTagsOpen(true)}
                 >
                   <span className="font14w500">
-                    {tagType === 'expense' ? 'Расход' : 'Доход'}
+                    {TYPE_OPTIONS.find((el) => el.key == tagType).label}
                   </span>
 
-                  {tagType === 'income' ? (
+                  {!tagsOpen ? (
                     <ChevronDown size={18} />
                   ) : (
                     <ChevronUp size={18} />
                   )}
                 </button>
+                <div className={styles.tagsArr}>
+                  {tagsOpen && (
+                    <>
+                      <BackdropModal onClick={() => setTagsOpen(false)} />
+                      <div className={styles.dropdown}>
+                        {TYPE_OPTIONS.map((opt) =>
+                        (
+                          <button
+                            key={opt.key}
+                            onClick={() => {
+                              setTagType(opt.key)
+                              setTagsOpen(false)
+                              }}
+                          >
+                            <span className="font14w600">{opt.label}</span>
+                            {opt.key == tagType && (
+                              <Check color={tgTheme.accent} size={20} />
+                            )}
+                          </button>
+                        )
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
