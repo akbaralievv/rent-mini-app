@@ -21,21 +21,6 @@ export default function Menu() {
           title="Разделы"
           buttons={[
             {
-              icon: <Newspaper strokeWidth={1.5} />,
-              text: 'Статьи',
-              onClick: () => navigate('/news')
-            },
-            {
-              icon: <FileSignature strokeWidth={1.5} />,
-              text: 'Договоры',
-              onClick: () => navigate('/contracts')
-            },
-            {
-              icon: <Palette strokeWidth={1.5} />,
-              text: 'Шаблоны договоров',
-              onClick: () => navigate('/contracts/templates')
-            },
-            {
               icon: <BarChart3 strokeWidth={1.5} />,
               text: 'Фин. отчет',
               onClick: () => navigate('/financial-main')
@@ -49,6 +34,21 @@ export default function Menu() {
               icon: <MessageSquareMore strokeWidth={1.5} />,
               text: 'Все чаты',
               onClick: () => navigate('/all-chats')
+            },
+            {
+              icon: <Newspaper strokeWidth={1.5} />,
+              text: 'Статьи',
+              onClick: () => navigate('/news')
+            },
+            {
+              icon: <FileSignature strokeWidth={1.5} />,
+              text: 'Договоры',
+              onClick: () => navigate('/contracts')
+            },
+            {
+              icon: <Palette strokeWidth={1.5} />,
+              text: 'Шаблоны договоров',
+              onClick: () => navigate('/contracts/templates')
             },
           ]}
         />

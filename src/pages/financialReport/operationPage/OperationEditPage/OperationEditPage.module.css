@@ -1,5 +1,7 @@
 .pageWrapper {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .modalLike {
@@ -140,7 +142,7 @@
   background-clip: padding-box;
 }
 
-.addTagsBtn{
+.addTagsBtn {
   padding: 4px;
   background-color: var(--tg-item-button-bg-hover);
   display: flex;
@@ -159,10 +161,55 @@
   position: relative;
 }
 
-.emptyTags{
+.emptyTags {
   padding: 8px 15px;
   display: flex;
   text-align: center;
   flex-direction: column;
   gap: 10px;
+}
+
+.transactionView {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.amountBlock {
+  text-align: left;
+}
+
+.amountIncome {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--tg-success);
+}
+
+.amountExpense {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--tg-danger);
+}
+
+.infoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 13px;
+  color: var(--tg-text-secondary);
+}
+
+.value {
+  font-size: 15px;
+  font-weight: 500;
 }
