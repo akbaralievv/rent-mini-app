@@ -158,7 +158,7 @@ export default function OperationEditPage() {
             {data.finance_tags?.length > 0 && (
               <div className={styles.row}>
                 <span className={styles.label}>Теги:</span>
-                <span className={'font14w500'}>
+                <span className={'font14w500'} style={{ textAlign: 'right'}}>
                   {data.finance_tags.map(el => el.name).join(", ")}
                 </span>
               </div>
@@ -167,7 +167,7 @@ export default function OperationEditPage() {
             {data.created_at && (
               <div className={styles.row}>
                 <span className={styles.label}>Дата:</span>
-                <span className={'font14w500'}>
+                <span className={'font14w500'} style={{ textAlign: 'right'}}>
                   {formatDate(data.created_at)}
                 </span>
               </div>
@@ -176,35 +176,35 @@ export default function OperationEditPage() {
             {data.car_name && (
               <div className={styles.row}>
                 <span className={styles.label}>Автомобиль:</span>
-                <span className={'font14w500'}>{data.car_name}</span>
+                <span className={'font14w500'} style={{ textAlign: 'right'}}>{data.car_name}</span>
               </div>
             )}
 
             {data.car_number && (
               <div className={styles.row}>
                 <span className={styles.label}>Номер авто:</span>
-                <span className={'font14w500'}>{data.car_number}</span>
+                <span className={'font14w500'} style={{ textAlign: 'right'}}>{data.car_number}</span>
               </div>
             )}
 
             {data.customer_name && (
               <div className={styles.row}>
                 <span className={styles.label}>Клиент:</span>
-                <span className={'font14w500'}>{data.customer_name}</span>
+                <span className={'font14w500'} style={{ textAlign: 'right'}}>{data.customer_name}</span>
               </div>
             )}
 
             {data.order_id && (
               <div className={styles.row}>
                 <span className={styles.label}>Заказ:</span>
-                <span className={'font14w500'}>#{data.order_id}</span>
+                <span className={'font14w500'}  style={{ textAlign: 'right'}}>#{data.order_id}</span>
               </div>
             )}
 
             {data.description && (
               <div className={styles.row}>
                 <span className={styles.label}>Комментарий:</span>
-                <span className={'font14w500'}>{data.description}</span>
+                <span className={'font14w500'} style={{ textAlign: 'right'}}>{data.description}</span>
               </div>
             )}
 
