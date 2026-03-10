@@ -32,6 +32,25 @@ const TYPE_OPTIONS = [
   { key: "deposit_return", label: "Депозит -" },
 ];
 
+const increasetArr = ['income', 'deposit_add']
+
+function formatDate(iso) {
+  const date = new Date(iso);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
+function formatMoney(num) {
+  return Number(num || 0).toLocaleString("ru-RU", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
 export default function OperationEditPage() {
   const navigate = useNavigate();
   const { id } = useParams() || {};
@@ -111,12 +130,87 @@ export default function OperationEditPage() {
     }
   };
 
+  console.log(data)
+
   return (
     <AppLayout
       title={isEdit ? "Редактирование операции" : "Новая операция"}
       onBack={() => navigate(-1)}
     >
       <div className={styles.pageWrapper}>
+        <div className={styles.transactionView}>
+
+          <div className={styles.amountBlock}>
+            <span
+              className={
+                increasetArr.includes(data.type)
+                  ? styles.amountIncome
+                  : styles.amountExpense
+              }
+            >
+              {increasetArr.includes(data.type) ? "+" : "-"}
+              {formatMoney(data.amount)} {data.currency}
+            </span>
+          </div>
+
+          <div className={styles.infoBlock}>
+
+            {data.finance_tags?.length > 0 && (
+              <div className={styles.row}>
+                <span className={styles.label}>Теги:</span>
+                <span className={'font14w500'}>
+                  {data.finance_tags.map(el => el.name).join(", ")}
+                </span>
+              </div>
+            )}
+
+            {data.created_at && (
+              <div className={styles.row}>
+                <span className={styles.label}>Дата:</span>
+                <span className={'font14w500'}>
+                  {formatDate(data.created_at)}
+                </span>
+              </div>
+            )}
+
+            {data.car_name && (
+              <div className={styles.row}>
+                <span className={styles.label}>Автомобиль:</span>
+                <span className={'font14w500'}>{data.car_name}</span>
+              </div>
+            )}
+
+            {data.car_number && (
+              <div className={styles.row}>
+                <span className={styles.label}>Номер авто:</span>
+                <span className={'font14w500'}>{data.car_number}</span>
+              </div>
+            )}
+
+            {data.customer_name && (
+              <div className={styles.row}>
+                <span className={styles.label}>Клиент:</span>
+                <span className={'font14w500'}>{data.customer_name}</span>
+              </div>
+            )}
+
+            {data.order_id && (
+              <div className={styles.row}>
+                <span className={styles.label}>Заказ:</span>
+                <span className={'font14w500'}>#{data.order_id}</span>
+              </div>
+            )}
+
+            {data.description && (
+              <div className={styles.row}>
+                <span className={styles.label}>Комментарий:</span>
+                <span className={'font14w500'}>{data.description}</span>
+              </div>
+            )}
+
+          </div>
+
+        </div>
         <div className={styles.modalLike}>
           <div className={styles.modalBody}>
 

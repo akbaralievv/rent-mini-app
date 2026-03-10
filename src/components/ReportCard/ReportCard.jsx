@@ -3,6 +3,7 @@ import styles from "./ReportCard.module.css";
 import { Wallet } from "lucide-react";
 import { useGetTransactionsQuery } from "../../redux/services/financeApi";
 import Tag from "../Tag/Tag";
+import { useNavigate } from "react-router-dom";
 
 const increasetArr = ['income', 'deposit_add']
 
@@ -38,6 +39,7 @@ export default function ReportCard({
   totalDeposit = 0,
   currency = "AED"
 }) {
+  const navigate = useNavigate();
 
   const formatSplit = (value) => {
     const formatted = new Intl.NumberFormat('en-US', {
@@ -187,21 +189,21 @@ export default function ReportCard({
 
               <div className={styles.historyCard}>
                 {items.map((el) => (
-                  <div key={el.id} className={styles.historyRow}>
+                  <div key={el.id} className={styles.historyRow} onClick={() => navigate(`/operations/${el.id}/edit`)}>
 
                     <div className={styles.historyLeft}>
 
-                        <div className={styles.historyTitle}>
-                          {el.finance_tag?.name || "Транзакция"}
-                        </div>
+                      <div className={styles.historyTitle}>
+                        {el.finance_tag?.name || "Транзакция"}
+                      </div>
 
-                        <div className={styles.historySubtitle}>
-                          {el.car_name || "—"}
-                        </div>
+                      <div className={styles.historySubtitle}>
+                        {el.car_name || "—"}
+                      </div>
                     </div>
 
                     <div className={styles.rowRightBlock}>
-                      <p className="font12w400">{type.find((item)=>item.key == el.type)?.label}</p>
+                      <p className="font12w400">{type.find((item) => item.key == el.type)?.label}</p>
                       <div
                         className={
                           (increasetArr.includes(el.type)
