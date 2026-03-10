@@ -1,7 +1,7 @@
 .card {
   background: var(--tg-card-2);
   border-radius: 14px;
-  padding: 18px 0;
+  padding-top: 18px;
   color: white;
 }
 
