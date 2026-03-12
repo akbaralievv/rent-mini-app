@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppLayout from "../../../../layouts/AppLayout";
 import styles from "./OperationEditPage.module.css";
-import { Check, ChevronDown, ChevronLeft, ChevronRight, Plus, Trash, Trash2 } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronRight, Images, Maximize2, Plus, Trash, Trash2 } from "lucide-react";
 import { tgTheme } from "../../../../common/commonStyle";
 import { useGetTagsQuery } from "../../../../redux/services/tagsAction";
-import { useCreateTransactionMutation, useGetTransactionByIdQuery, useUpdateTransactionMutation } from "../../../../redux/services/financeApi";
+import { useCreateTransactionMutation, useDeleteTransactionAttachmentMutation, useGetTransactionByIdQuery, useUpdateTransactionMutation, useUploadTransactionAttachmentMutation } from "../../../../redux/services/financeApi";
 import { useGetAllOrdersQuery } from "../../../../redux/services/orders";
 import InfoModal from "../../../../components/InfoModal/InfoModal";
 import { useGetCarsQuery } from "../../../../redux/services/carAction";
 import BackdropModal from "../../../../components/BackdropModal/BackdropModal";
 import CustomButton from "../../../../components/CustomButton/CustomButton";
+import ImageModal from "./ImageModal/ImageModal";
 
 const addUnique = (array, item, onDuplicate) => {
   if (array.includes(item)) {
@@ -64,6 +65,8 @@ export default function OperationEditPage() {
 
   const [createTransaction] = useCreateTransactionMutation();
   const [updateTransaction] = useUpdateTransactionMutation();
+  const [uploadAttachment] = useUploadTransactionAttachmentMutation();
+  const [deleteAttachment] = useDeleteTransactionAttachmentMutation();
 
   const [error, setError] = useState('');
 
@@ -81,7 +84,17 @@ export default function OperationEditPage() {
     // car_name: ''
   });
 
-  useEffect(() => {
+  const [typeOpen, setTypeOpen] = useState(false);
+  const [orderOpen, setOrderOpen] = useState(false);
+  const [tagsOpen, setTagsOpen] = useState(false);
+  const [carsOpen, setCarsOpen] = useState(false);
+  const [imgFullModal, setImgFullModal] = useState(false);
+
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(data?.attachment?.url || null);
+  const fileInputRef = useRef(null);
+
+   useEffect(() => {
     if (!id || !data?.id) return;
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -98,12 +111,20 @@ export default function OperationEditPage() {
       car_name: data.car_name ?? ""
     });
 
-  }, [id, data?.id]);
+    setPhotoPreview(data?.attachment?.url || null);
 
-  const [typeOpen, setTypeOpen] = useState(false);
-  const [orderOpen, setOrderOpen] = useState(false);
-  const [tagsOpen, setTagsOpen] = useState(false);
-  const [carsOpen, setCarsOpen] = useState(false);
+  }, [id, data?.id, data.type, data.amount, data.finance_tag_ids, data.description, data.currency, data.order_id, data.car_number, data.customer_name, data.car_name, data?.attachment]);
+
+  const handlePhotoSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSelectedPhoto(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
+
+  const openFilePicker = () => {
+    fileInputRef.current?.click();
+  };
 
   const filteredTags = tags.filter(el => el.type == form.type);
 
@@ -119,6 +140,20 @@ export default function OperationEditPage() {
     }
 
     try {
+      if (selectedPhoto) {
+        await uploadAttachment({
+          id: data.id,
+          file: selectedPhoto,
+        }).unwrap();
+
+        setSelectedPhoto(null);
+      }
+      if (data.attachment && !photoPreview) {
+        await deleteAttachment(data.id).unwrap();
+
+        setPhotoPreview(null);
+        setSelectedPhoto(null);
+      }
       if (id) {
         await updateTransaction({ id: id, body: form }).unwrap();
       } else {
@@ -130,87 +165,86 @@ export default function OperationEditPage() {
     }
   };
 
-  console.log(data)
-
   return (
     <AppLayout
       title={isEdit ? "Редактирование операции" : "Новая операция"}
       onBack={() => navigate(-1)}
     >
       <div className={styles.pageWrapper}>
-        <div className={styles.transactionView}>
 
-          <div className={styles.amountBlock}>
-            <span
-              className={
-                increasetArr.includes(data.type)
-                  ? styles.amountIncome
-                  : styles.amountExpense
-              }
-            >
-              {increasetArr.includes(data.type) ? "+" : "-"}
-              {formatMoney(data.amount)} {data.currency}
-            </span>
+        {
+          id && <div className={styles.transactionView}>
+            <div className={styles.amountBlock}>
+              <span
+                className={
+                  increasetArr.includes(data.type)
+                    ? styles.amountIncome
+                    : styles.amountExpense
+                }
+              >
+                {increasetArr.includes(data.type) ? "+" : "-"}
+                {formatMoney(data.amount)} {data.currency}
+              </span>
+            </div>
+            <div className={styles.infoBlock}>
+
+              {data.finance_tags?.length > 0 && (
+                <div className={styles.row}>
+                  <span className={styles.label}>Теги:</span>
+                  <span className={'font14w500'} style={{ textAlign: 'right' }}>
+                    {data.finance_tags.map(el => el.name).join(", ")}
+                  </span>
+                </div>
+              )}
+
+              {data.created_at && (
+                <div className={styles.row}>
+                  <span className={styles.label}>Дата:</span>
+                  <span className={'font14w500'} style={{ textAlign: 'right' }}>
+                    {formatDate(data.created_at)}
+                  </span>
+                </div>
+              )}
+
+              {data.car_name && (
+                <div className={styles.row}>
+                  <span className={styles.label}>Автомобиль:</span>
+                  <span className={'font14w500'} style={{ textAlign: 'right' }}>{data.car_name}</span>
+                </div>
+              )}
+
+              {data.car_number && (
+                <div className={styles.row}>
+                  <span className={styles.label}>Номер авто:</span>
+                  <span className={'font14w500'} style={{ textAlign: 'right' }}>{data.car_number}</span>
+                </div>
+              )}
+
+              {data.customer_name && (
+                <div className={styles.row}>
+                  <span className={styles.label}>Клиент:</span>
+                  <span className={'font14w500'} style={{ textAlign: 'right' }}>{data.customer_name}</span>
+                </div>
+              )}
+
+              {data.order_id && (
+                <div className={styles.row}>
+                  <span className={styles.label}>Заказ:</span>
+                  <span className={'font14w500'} style={{ textAlign: 'right' }}>#{data.order_id}</span>
+                </div>
+              )}
+
+              {data.description && (
+                <div className={styles.row}>
+                  <span className={styles.label}>Комментарий:</span>
+                  <span className={'font14w500'} style={{ textAlign: 'right' }}>{data.description}</span>
+                </div>
+              )}
+
+            </div>
           </div>
+        }
 
-          <div className={styles.infoBlock}>
-
-            {data.finance_tags?.length > 0 && (
-              <div className={styles.row}>
-                <span className={styles.label}>Теги:</span>
-                <span className={'font14w500'} style={{ textAlign: 'right'}}>
-                  {data.finance_tags.map(el => el.name).join(", ")}
-                </span>
-              </div>
-            )}
-
-            {data.created_at && (
-              <div className={styles.row}>
-                <span className={styles.label}>Дата:</span>
-                <span className={'font14w500'} style={{ textAlign: 'right'}}>
-                  {formatDate(data.created_at)}
-                </span>
-              </div>
-            )}
-
-            {data.car_name && (
-              <div className={styles.row}>
-                <span className={styles.label}>Автомобиль:</span>
-                <span className={'font14w500'} style={{ textAlign: 'right'}}>{data.car_name}</span>
-              </div>
-            )}
-
-            {data.car_number && (
-              <div className={styles.row}>
-                <span className={styles.label}>Номер авто:</span>
-                <span className={'font14w500'} style={{ textAlign: 'right'}}>{data.car_number}</span>
-              </div>
-            )}
-
-            {data.customer_name && (
-              <div className={styles.row}>
-                <span className={styles.label}>Клиент:</span>
-                <span className={'font14w500'} style={{ textAlign: 'right'}}>{data.customer_name}</span>
-              </div>
-            )}
-
-            {data.order_id && (
-              <div className={styles.row}>
-                <span className={styles.label}>Заказ:</span>
-                <span className={'font14w500'}  style={{ textAlign: 'right'}}>#{data.order_id}</span>
-              </div>
-            )}
-
-            {data.description && (
-              <div className={styles.row}>
-                <span className={styles.label}>Комментарий:</span>
-                <span className={'font14w500'} style={{ textAlign: 'right'}}>{data.description}</span>
-              </div>
-            )}
-
-          </div>
-
-        </div>
         <div className={styles.modalLike}>
           <div className={styles.modalBody}>
 
@@ -456,6 +490,52 @@ export default function OperationEditPage() {
               />
             </div>
 
+            {/* ФОТО */}
+            <div className={styles.field}>
+              <span className="font16w500">Фото</span>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handlePhotoSelect}
+              />
+
+              <div>
+                {
+                  photoPreview ? <div className={styles.displayPhoto}>
+                    <img
+                      src={photoPreview}
+                      alt="photo"
+                      className={styles.img}
+                      style={{ width: 200, height: 100, objectFit: "contain", borderRadius: 8 }}
+                    />
+                    <div className={styles.imageBtnsBlock}>
+                      <button className={styles.imageMaximizeBtn} type="button" onClick={() => {
+                        setImgFullModal(true)
+                      }}><Maximize2 color={tgTheme.white} size={20} /></button>
+                      <button className={styles.imageChangeBtn} onClick={() => openFilePicker((p) => !p)}><Images color={tgTheme.white} size={20} /></button>
+                      <button className={styles.imageTrashBtn} onClick={() => {
+                        setSelectedPhoto(null);
+                        setPhotoPreview(null);
+                      }}><Trash2 color={tgTheme.white} size={20} /></button>
+                    </div>
+                  </div>
+                    :
+                    <button
+                      className={styles.addTagsBtn}
+                      onClick={() => openFilePicker((p) => !p)}
+                    >
+                      <span className="font12w400">
+                        добавить фото
+                      </span>
+                      <Plus size={16} color={tgTheme.textSecondary} />
+                    </button>
+                }
+              </div>
+            </div>
+
             {/* КОММЕНТАРИЙ */}
             <div className={styles.field}>
               <span className="font16w500">Комментарий</span>
@@ -486,6 +566,11 @@ export default function OperationEditPage() {
           </div>
         </div>
       </div>
+      <ImageModal
+        visible={imgFullModal}
+        image={photoPreview}
+        onClose={() => setImgFullModal(false)}
+      />
       <InfoModal visible={error.trim()} setVisible={() => setError('')} text={error} textButton="Ок" />
     </AppLayout>
   );
