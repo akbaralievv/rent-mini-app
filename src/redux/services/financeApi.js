@@ -82,7 +82,7 @@ export const financeApi = createApi({
           body: formData,
         }
       },
-      invalidatesTags: ['Transactions', 'Transaction'],
+      invalidatesTags: ['Transaction'],
     }),
 
     // удаление attachment
@@ -91,7 +91,7 @@ export const financeApi = createApi({
         url: `finance/transactions/${id}/attachment`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Transactions', 'Transaction'],
+      invalidatesTags: ['Transaction'],
     }),
 
     // summary
