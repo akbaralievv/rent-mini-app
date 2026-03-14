@@ -179,7 +179,7 @@ export default function ReportCard({
         </div>
       </div>
       {
-        transactionsData?.data?.length > 0 && <div className={styles.historyContent}>
+        transactionsData?.data?.length > 0 ? <div className={styles.historyContent}>
           {Object.entries(groupedTransactions).map(([date, items]) => (
             <div key={date} className={styles.historyGroup}>
 
@@ -221,6 +221,11 @@ export default function ReportCard({
 
             </div>
           ))}
+        </div>
+        : <div className={styles.emptyState}>
+          <p className="font14w500" style={{ color: "var(--tg-text-secondary)" }}>
+            Нет транзакций за последние 7 дней
+          </p>
         </div>
       }
     </div>

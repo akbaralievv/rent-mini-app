@@ -17,6 +17,7 @@ import {
 } from '../../../redux/services/companySectionDocuments'
 import DateFilter from '../../../components/DateFilter/DateFilter'
 import { parseUiDateRange } from '../../../common/utils/helpers'
+import FileViewerModal from '../../../components/FileViewerModal/FileViewerModal'
 
 export default function CompanyDocumentDetailPage() {
   const navigate = useNavigate();
@@ -184,6 +185,14 @@ export default function CompanyDocumentDetailPage() {
     }
   }
 
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [urlForView, setUrlForView] = useState('');
+
+  const openFilePreview = (url) => {
+    setUrlForView(url)
+    setViewerOpen(true)
+  }
+
   return (
     <AppLayout title={sections.find(el => el.id == params.id)?.name || 'Не найдено'} onBack={() => navigate(-1)}>
       <div>
@@ -262,17 +271,17 @@ export default function CompanyDocumentDetailPage() {
                 <div className={styles.right}>
                   <button
                     className={styles.btn}
-                    onClick={() => window.open(docUrl, '_blank')}
+                    onClick={() => openFilePreview(docUrl)}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
-                    <Eye size={16} color={tgTheme.text} strokeWidth={1.5} />
+                    <Eye size={20} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
                   <button
                     className={styles.btn}
                     onClick={() => download(docUrl)}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
-                    <ArrowDown size={16} color={tgTheme.text} strokeWidth={1.5} />
+                    <ArrowDown size={20} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
                   <button
                     className={styles.btn}
@@ -280,7 +289,7 @@ export default function CompanyDocumentDetailPage() {
                     disabled={isDeleting}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
-                    <Trash2 size={16} color={tgTheme.text} strokeWidth={1.5} />
+                    <Trash2 size={18} color={tgTheme.text} strokeWidth={1.5} />
                   </button>
                 </div>
               </div>
@@ -367,6 +376,11 @@ export default function CompanyDocumentDetailPage() {
           </span>
         </button>
       </div>
+      <FileViewerModal
+        url={urlForView}
+        visible={viewerOpen}
+        onClose={() => setViewerOpen(false)}
+      />
     </AppLayout>
   )
 }

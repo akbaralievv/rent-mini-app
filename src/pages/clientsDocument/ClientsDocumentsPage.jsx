@@ -13,6 +13,7 @@ import {
 } from '../../redux/services/getClientsDocumentsAction'
 import DateFilter from '../../components/DateFilter/DateFilter'
 import { parseUiDateRange } from '../../common/utils/helpers'
+import FileViewerModal from '../../components/FileViewerModal/FileViewerModal'
 
 export default function ClientsDocumentsPage() {
   const navigate = useNavigate()
@@ -161,6 +162,14 @@ export default function ClientsDocumentsPage() {
     }
   }
 
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [urlForView, setUrlForView] = useState('');
+
+  const openFilePreview = (url) => {
+    setUrlForView(url)
+    setViewerOpen(true)
+  }
+
   return (
     <AppLayout title={'Документы клиентов'} onBack={() => navigate(-1)}>
       <div>
@@ -237,7 +246,7 @@ export default function ClientsDocumentsPage() {
                 <div className={styles.right}>
                   <button
                     className={styles.btn}
-                    onClick={() => window.open(docUrl, '_blank')}
+                    onClick={() => openFilePreview(docUrl)}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
                     <Eye size={16} color={tgTheme.text} strokeWidth={1.5} />
@@ -336,6 +345,11 @@ export default function ClientsDocumentsPage() {
           </div>
         </div>
       )}
+      <FileViewerModal
+        url={urlForView}
+        visible={viewerOpen}
+        onClose={() => setViewerOpen(false)}
+      />
     </AppLayout>
   )
 }
