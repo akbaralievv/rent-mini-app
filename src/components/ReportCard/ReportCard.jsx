@@ -198,7 +198,7 @@ export default function ReportCard({
                       </div>
 
                       <div className={styles.historySubtitle}>
-                        {el.car_name || "—"}
+                        {el.car_name ? `${el.car_name} (${el.car_number})` : "—"}
                       </div>
                     </div>
 
