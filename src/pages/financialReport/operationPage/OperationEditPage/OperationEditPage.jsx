@@ -209,7 +209,7 @@ export default function OperationEditPage() {
               {data.car_name && (
                 <div className={styles.row}>
                   <span className={styles.label}>Автомобиль:</span>
-                  <span className={'font14w500'} style={{ textAlign: 'right' }}>{data.car_name}</span>
+                  <span className={'font14w500'} style={{ textAlign: 'right' }}>{data.car_name} ({data.car_number})</span>
                 </div>
               )}
 
@@ -429,7 +429,7 @@ export default function OperationEditPage() {
                   >
                     <span className="font14w600">
                       {
-                        cars.cars.find(el => el.car_number == form.car_number)?.car_name || 'Без авто'
+                        cars.cars.find(el => el.car_number == form.car_number)?.car_name + ' (' + cars.cars.find(el => el.car_number == form.car_number)?.car_number + ')' || 'Без авто'
                       }
                     </span>
                     <ChevronDown size={16} color={tgTheme.textSecondary} />
@@ -466,7 +466,7 @@ export default function OperationEditPage() {
                             setCarsOpen(false);
                           }}
                         >
-                          <span className="font14w600">{opt.car_name}</span>
+                          <span className="font14w600">{opt.car_name} ({opt.car_number})</span>
                           {opt.id == form.order_id && (
                             <Check color={tgTheme.accent} size={20} />
                           )}
