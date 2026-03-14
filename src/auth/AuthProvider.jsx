@@ -3,7 +3,7 @@ import { useCheckAuthQuery } from '../redux/services/auth';
 import { AuthContext } from './AuthContext';
 
 export const AuthProvider = ({ children }) => {
-  const tgUserId = '6093448250';
+  const tgUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id ?? null;
 
   const [userId] = useState(tgUserId);
 
