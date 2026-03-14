@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppLayout from "../../../../layouts/AppLayout";
 import styles from "./OperationEditPage.module.css";
@@ -12,6 +12,7 @@ import { useGetCarsQuery } from "../../../../redux/services/carAction";
 import BackdropModal from "../../../../components/BackdropModal/BackdropModal";
 import CustomButton from "../../../../components/CustomButton/CustomButton";
 import ImageModal from "./ImageModal/ImageModal";
+import SearchSelect from "../../../../components/SearchSelect/SearchSelect";
 
 const addUnique = (array, item, onDuplicate) => {
   if (array.includes(item)) {
@@ -85,16 +86,32 @@ export default function OperationEditPage() {
   });
 
   const [typeOpen, setTypeOpen] = useState(false);
-  const [orderOpen, setOrderOpen] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
-  const [carsOpen, setCarsOpen] = useState(false);
   const [imgFullModal, setImgFullModal] = useState(false);
+
+  const orderOptions = useMemo(() =>
+    orders.map(o => ({
+      id: o.id,
+      label: o.customer_name || `Заказ #${o.id}`,
+      sub: o.car ? `${o.car.car_name} (${o.car.car_number})` : null,
+    })),
+    [orders]
+  );
+
+  const carOptions = useMemo(() =>
+    (cars.cars || []).map(c => ({
+      id: c.car_number,
+      label: `${c.car_name} (${c.car_number})`,
+      sub: c.car_class || null,
+    })),
+    [cars.cars]
+  );
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(data?.attachment?.url || null);
   const fileInputRef = useRef(null);
 
-   useEffect(() => {
+  useEffect(() => {
     if (!id || !data?.id) return;
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -359,122 +376,32 @@ export default function OperationEditPage() {
             {/* OrderId */}
             <div className={styles.field}>
               <span className="font16w500">Заказ</span>
-
-              <div className={styles.selectWrapper}>
-                <button
-                  className={styles.selectLike}
-                  onClick={() => setOrderOpen((p) => !p)}
-                >
-                  <span className="font14w600">
-                    {
-                      orders.find(el => el.id == form.order_id)?.customer_name || 'Без заказа'
-                    }
-                  </span>
-                  <ChevronDown size={16} color={tgTheme.textSecondary} />
-                </button>
-
-                {orderOpen && (
-                  <div className={styles.dropdown}>
-                    <button
-                      onClick={() => {
-                        setForm(prev => ({
-                          ...prev,
-                          order_id: null,
-
-                          // car_number: '',
-                          // customer_name: '',
-                          // car_name: '',
-                        }));
-                        setOrderOpen(false);
-                      }}
-                    >
-                      <span className="font14w600">Без заказа</span>
-                      {null == form.order_id && (
-                        <Check color={tgTheme.accent} size={20} />
-                      )}
-                    </button>
-                    {orders.map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => {
-                          setForm(prev => ({
-                            ...prev,
-                            order_id: opt.id,
-                            // car_number: opt.car.car_number,
-                            // customer_name: opt.customer_name,
-                            // car_name: opt.car.car_name,
-                          }));
-                          setOrderOpen(false);
-                        }}
-                      >
-                        <span className="font14w600">{opt.customer_name}</span>
-                        {opt.id == form.order_id && (
-                          <Check color={tgTheme.accent} size={20} />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <SearchSelect
+                options={orderOptions}
+                value={form.order_id}
+                onChange={(id) => onChange('order_id', id)}
+                placeholder="Поиск заказа..."
+                emptyLabel="Без заказа"
+              />
             </div>
 
             {
               id && <div className={styles.field}>
                 <span className="font16w500">Авто</span>
-
-                <div className={styles.selectWrapper}>
-                  <button
-                    className={styles.selectLike}
-                    onClick={() => setCarsOpen((p) => !p)}
-                  >
-                    <span className="font14w600">
-                      {
-                        cars.cars.find(el => el.car_number == form.car_number)?.car_name + ' (' + cars.cars.find(el => el.car_number == form.car_number)?.car_number + ')' || 'Без авто'
-                      }
-                    </span>
-                    <ChevronDown size={16} color={tgTheme.textSecondary} />
-                  </button>
-
-                  {carsOpen && (
-                    <div className={styles.dropdown}>
-                      <button
-                        onClick={() => {
-                          setForm(prev => ({
-                            ...prev,
-                            car_number: '',
-                            // customer_name: '',
-                            car_name: '',
-                          }));
-                          setCarsOpen(false);
-                        }}
-                      >
-                        <span className="font14w600">Без авто</span>
-                        {null == form.order_id && (
-                          <Check color={tgTheme.accent} size={20} />
-                        )}
-                      </button>
-                      {cars.cars.map((opt) => (
-                        <button
-                          key={opt.id}
-                          onClick={() => {
-                            setForm(prev => ({
-                              ...prev,
-                              car_number: opt.car_number,
-                              // customer_name: opt.customer_name,
-                              car_name: opt.car_name,
-                            }));
-                            setCarsOpen(false);
-                          }}
-                        >
-                          <span className="font14w600">{opt.car_name} ({opt.car_number})</span>
-                          {opt.id == form.order_id && (
-                            <Check color={tgTheme.accent} size={20} />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <SearchSelect
+                  options={carOptions}
+                  value={form.car_number || null}
+                  onChange={(carNumber) => {
+                    const car = (cars.cars || []).find(c => c.car_number === carNumber);
+                    setForm(prev => ({
+                      ...prev,
+                      car_number: carNumber || '',
+                      car_name: car?.car_name || '',
+                    }));
+                  }}
+                  placeholder="Поиск авто..."
+                  emptyLabel="Без авто"
+                />
               </div>
             }
 
