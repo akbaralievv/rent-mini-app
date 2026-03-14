@@ -1,0 +1,171 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== Finance Card ===== */
+.financeCard {
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 18px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.financeCard:active {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chartRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.chartWrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.chartCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.chartCenterLabel {
+  font-size: 10px;
+  color: var(--tg-text-secondary);
+  margin-bottom: 2px;
+}
+
+.financeInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.balanceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.balanceLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tg-text-secondary);
+}
+
+.balanceAmount {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.legendList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dotIncome {
+  background: var(--tg-success);
+}
+
+.dotExpense {
+  background: var(--tg-danger);
+}
+
+.dotDeposit {
+  background: var(--tg-warning);
+}
+
+.legendValue {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+/* ===== Cars Card ===== */
+.carsCard {
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 18px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.carsCard:active {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.carsStats {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.carsStat {
+  flex: 1;
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.carsStatNumber {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.statusRented {
+  background: var(--tg-accent);
+}
+
+.statusFree {
+  background: var(--tg-success);
+}

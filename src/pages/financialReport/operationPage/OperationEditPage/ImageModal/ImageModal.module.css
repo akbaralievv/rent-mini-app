@@ -11,7 +11,7 @@
 
 .modal {
   position: relative;
-  max-width: 95vw;
+  width: 95vw;
   max-height: 80vh;
   display: flex;
 }
