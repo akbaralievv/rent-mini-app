@@ -84,10 +84,15 @@
 .historyContent {
   margin-top: 10px;
   background-color: var(--tg-card);
-  overflow-x: scroll;
-  max-height: 300px;
   border-radius: 6px;
   padding: 10px;
+  overflow-y: auto;
+  max-height: 300px;
+  scrollbar-width: none;
+}
+
+.historyContent::-webkit-scrollbar {
+  display: none;
 }
 
 .historyGroup {
