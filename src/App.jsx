@@ -34,6 +34,8 @@ import SiteChatsPage from './pages/allChats/SiteChatsPage/SiteChatsPage';
 import TemplatesWAPage from './pages/allChats/TemplatesWAPage/TemplatesWAPage';
 import WAChatPage from './pages/allChats/WaChatsPage/WaChatPage/WAChatPage';
 import ExportFiltersPage from './pages/financialReport/exportFiltersPage/ExportFiltersPage';
+import NotesPage from './pages/notes/NotesPage';
+import NoteEditPage from './pages/notes/NoteEditPage';
 
 function Router() {
   const { status } = useAuth();
@@ -83,6 +85,10 @@ function Router() {
       <Route path="/clients-document" element={<ClientsDocumentsPage />} />
       <Route path="/company-document" element={<CompanyDocumentPage />} />
       <Route path="/company-document/:id" element={<CompanyDocumentDetailPage />} />
+
+      <Route path="/notes" element={<NotesPage />} />
+      <Route path="/notes/create" element={<NoteEditPage />} />
+      <Route path="/notes/:id/edit" element={<NoteEditPage />} />
 
       <Route path="/all-chats" element={<AllChatsPage />} />
       <Route path="/all-chats/wa" element={<WaChatsPage />} />

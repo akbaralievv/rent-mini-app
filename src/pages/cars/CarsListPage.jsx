@@ -15,13 +15,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Tag,
+  LayoutList,
 } from 'lucide-react'
 import { STATUS_MAPPING, tgTheme } from '../../common/commonStyle'
 import BackdropModal from '../../components/BackdropModal/BackdropModal'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import { useGetCarsQuery } from '../../redux/services/carAction'
 
-const PAGE_SIZE = 5
+const pageSizeS = [5, 10, 20]
 
 const cars_class = [
   { id: 0, name: 'Все', key: 'all' },
@@ -41,6 +42,7 @@ export default function CarsListPage() {
   const [currentStatus, setCurrentStatus] = useState(null);
   const [key, setKey] = useState('all')
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(pageSizeS[0]);
   const queryParams = useMemo(() => {
     if (!currentStatus) return {};
 
@@ -57,7 +59,7 @@ export default function CarsListPage() {
     return cars.cars.filter((c) => c.car_class === key)
   }, [cars.cars, key])
 
-  const totalPages = Math.max(1, Math.ceil(filteredCars.length / PAGE_SIZE))
+  const totalPages = Math.max(1, Math.ceil(filteredCars.length / pageSize))
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -70,9 +72,9 @@ export default function CarsListPage() {
   }, [page, totalPages])
 
   const pageData = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE
-    return filteredCars.slice(start, start + PAGE_SIZE)
-  }, [filteredCars, page])
+    const start = (page - 1) * pageSize
+    return filteredCars.slice(start, start + pageSize)
+  }, [filteredCars, page, pageSize])
 
   const canPrev = page > 1
   const canNext = page < totalPages
@@ -164,6 +166,19 @@ export default function CarsListPage() {
                 </div>
               </>
             )}
+
+            <div className={styles.pageSizeGroup}>
+              <LayoutList size={14} color={tgTheme.textSecondary} />
+              {pageSizeS.map((size) => (
+                <button
+                  key={size}
+                  className={`${styles.pageSizeBtn} ${pageSize === size ? styles.pageSizeBtnActive : ''}`}
+                  onClick={() => { setPageSize(size); setPage(1); }}
+                >
+                  <span className="font12w500">{size}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -245,7 +260,7 @@ export default function CarsListPage() {
           </div>
         ))}
 
-        {filteredCars.length > PAGE_SIZE && (
+        {filteredCars.length > pageSize && (
           <div className={styles.pagination}>
             <button
               className={styles.pageBtn}

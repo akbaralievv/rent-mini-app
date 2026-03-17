@@ -115,7 +115,30 @@
   align-items: center;
   gap: 10px;
   position: relative;
-  justify-content: flex-start;
+  justify-content: space-between;
+}
+
+.pageSizeGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+}
+
+.pageSizeBtn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.pageSizeBtn:hover {
+  background-color: var(--tg-card-2);
+}
+
+.pageSizeBtnActive {
+  background-color: var(--tg-card-2);
 }
 
 .filterBlock {
