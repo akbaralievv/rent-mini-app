@@ -229,7 +229,9 @@ export default function CarsListPage() {
             </div>
 
             <div className={styles.bottom}>
-              <div />
+              <div>
+                <p className="font12w500">1 день: {car.car_price_3} AED</p>
+              </div>
               <div className={styles.tagNeutralDot}>
                 <span className="font12w500">
                   {({ ...STATUS_MAPPING, Free: 'Готов к аренде' })[

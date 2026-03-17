@@ -19,6 +19,8 @@ export const CHARACTERISTICS = [
   { key: 'car_class', label: 'Класс авто', type: 'select' },
   { key: 'reg_date', label: 'Дата постановки на учет', type: 'date' },
   { key: 'license_date', label: 'Дата продления лицензии', type: 'date' },
+  { key: 'purchase_date', label: 'Дата покупки авто', type: 'date' },
+  { key: 'purchase_price', label: 'Цена покупки авто', type: 'input' },
 ]
 
 export const selectCharactericticsItem = [
