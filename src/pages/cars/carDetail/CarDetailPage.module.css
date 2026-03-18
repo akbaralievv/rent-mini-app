@@ -176,9 +176,61 @@
   justify-content: space-between;
 }
 
+/* Dashboard */
+.dashGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.dashTile {
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.dashTile:active {
+  opacity: 0.7;
+}
+
+.dashTileHeadMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashTileHead {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dashFinRow {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+
 /* Empty */
 .ordersEmpty {
   margin-top: 18px;
   text-align: center;
   opacity: 0.7;
+}
+
+.orderInfoRow {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.orderInfoRowItem {
+  display: flex;
+  gap: 4px;
+  justify-content: space-between;
 }
