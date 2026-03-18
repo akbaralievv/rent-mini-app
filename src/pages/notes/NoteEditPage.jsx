@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AppLayout from '../../layouts/AppLayout';
 import { getErrorMessage, getImageUrl } from '../../utils';
-import { Upload, X } from 'lucide-react';
+import { Images, X } from 'lucide-react';
 import {
   useGetNoteByIdQuery,
   useCreateNoteMutation,
@@ -12,7 +12,7 @@ import {
   useDeleteAttachmentMutation,
 } from '../../redux/services/notesApi';
 import ImageModal from '../financialReport/operationPage/OperationEditPage/ImageModal/ImageModal';
-import './NotesPage.css';
+import styles from './NoteEditPage.module.css';
 
 function NoteEditPage() {
   const { id } = useParams();
@@ -29,6 +29,7 @@ function NoteEditPage() {
   const [deleteAttachment] = useDeleteAttachmentMutation();
 
   const [title, setTitle] = useState('');
+  const [nameError, setNameError] = useState('');
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState('');
   const [existingAttachment, setExistingAttachment] = useState(null);
@@ -81,7 +82,7 @@ function NoteEditPage() {
 
   const handleSave = async () => {
     if (!title.trim()) {
-      alert('Введите название заметки');
+      setNameError('Введите название');
       return;
     }
 
@@ -128,61 +129,88 @@ function NoteEditPage() {
 
   return (
     <AppLayout title={isEdit ? 'Редактировать заметку' : 'Новая заметка'} onBack={() => navigate(-1)}>
-      <div className="note-edit-page">
-        <div>
-          <label>Название</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Введите название"
-          />
-        </div>
+      <div className={styles.pageWrapper}>
+        <div className={styles.modalLike}>
+          <div className={styles.modalBody}>
 
-        {
-          isEdit && <div className="note-image-section">
-            <label>Фото (необязательно)</label>
+            {/* NAME */}
+            <div className={styles.field}>
+              <span className="font16w500">Название</span>
+              <input
+                className={`${styles.input} ${nameError ? styles.inputError : ''}`}
+                type="text"
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  if (nameError) setNameError('');
+                }}
+                placeholder="Введите название"
+              />
+              {nameError && (
+                <span className={styles.errorText}>{nameError}</span>
+              )}
+            </div>
 
-            {preview ? (
-              <div className="note-image-preview">
-                <img src={preview} alt="preview" onClick={() => setPreviewModal(preview)} />
-                <button className="note-image-remove" onClick={handleRemoveImage}>
-                  <X size={14} />
+            {/* IMAGE */}
+            {isEdit && (
+              <div className={styles.field}>
+                <span className="font16w500">Фото (необязательно)</span>
+
+                {preview ? (
+                  <div className={styles.imagesGrid}>
+                    <div className={styles.imageThumb}>
+                      <img
+                        src={preview}
+                        alt="preview"
+                        onClick={() => setPreviewModal(preview)}
+                      />
+                      <button
+                        className={styles.imageRemove}
+                        onClick={handleRemoveImage}
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/jpg,image/webp"
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  className={styles.addBtn}
+                  onClick={() => fileRef.current?.click()}
+                >
+                  <Images size={16} color="var(--tg-text-secondary)" />
+                  <span className="font12w400">
+                    {preview ? 'Заменить фото' : 'Загрузить фото'}
+                  </span>
                 </button>
               </div>
-            ) : null}
+            )}
+          </div>
 
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/jpeg,image/png,image/jpg,image/webp"
-              onChange={handleFileChange}
-              style={{ display: 'none' }}
-            />
+          <div className={styles.modalFooter}>
             <button
-              className="note-upload-btn"
-              onClick={() => fileRef.current?.click()}
+              className={styles.secondaryBtn}
+              onClick={() => navigate('/notes')}
             >
-              <Upload size={16} />
-              {preview ? 'Заменить фото' : 'Загрузить фото'}
+              <span className="font14w600">Отмена</span>
+            </button>
+            <button
+              className={styles.primaryBtn}
+              onClick={handleSave}
+              disabled={saving}
+            >
+              <span className="font14w600">
+                {saving ? 'Сохранение…' : 'Сохранить'}
+              </span>
             </button>
           </div>
-        }
-
-        <div className="note-edit-actions">
-          <button
-            className="note-save-btn"
-            onClick={handleSave}
-            disabled={saving}
-          >
-            {saving ? 'Сохранение…' : 'Сохранить'}
-          </button>
-          <button
-            className="note-cancel-btn"
-            onClick={() => navigate('/notes')}
-          >
-            Отмена
-          </button>
         </div>
       </div>
 

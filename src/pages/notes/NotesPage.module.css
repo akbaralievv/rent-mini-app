@@ -1,0 +1,107 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.cardImage {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--tg-item-button-bg-hover);
+  cursor: pointer;
+}
+
+.cardImagePlaceholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: var(--tg-item-button-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--tg-item-button-bg-hover);
+}
+
+.cardBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cardTitle {
+  color: var(--tg-text);
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardDate {
+  color: var(--tg-text-secondary);
+  font-size: 13px;
+}
+
+.cardActions {
+  display: flex;
+  align-self: flex-end;
+  gap: 4px;
+}
+
+.editBtn,
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  padding: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.editBtn:hover {
+  background: rgba(70, 137, 211, 0.12);
+}
+
+.deleteBtn:hover {
+  background: rgba(212, 112, 98, 0.12);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.empty {
+  text-align: center;
+  color: var(--tg-text-secondary);
+  font-size: 15px;
+  margin-top: 40px;
+}
