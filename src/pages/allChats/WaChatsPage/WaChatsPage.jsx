@@ -23,11 +23,15 @@ export default function WaChatsPage() {
 
   useEffect(() => {
     if (chats.length > 0) {
-      setAllChats(prev =>
-        [...prev, ...chats].sort(
+      setAllChats(prev => {
+        const map = new Map(prev.map(c => [c.id, c]))
+        chats.forEach(c => {
+          if (!map.has(c.id)) map.set(c.id, c)
+        })
+        return [...map.values()].sort(
           (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
         )
-      )
+      })
     }
   }, [chats])
 

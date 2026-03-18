@@ -1,0 +1,140 @@
+.wrapper {
+  position: relative;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0 12px;
+  gap: 8px;
+  transition: border-color 0.15s;
+}
+
+.inputRow.focused {
+  border-color: var(--tg-accent);
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  color: var(--tg-text-secondary);
+  transition: color 0.15s;
+}
+
+.searchIcon.active {
+  color: var(--tg-accent);
+}
+
+.input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.92);
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  min-width: 0;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.clearBtn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: var(--tg-text-secondary);
+  transition: transform 0.2s;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ===== Dropdown ===== */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background-color: var(--tg-filter-bg);
+  border-radius: 8px;
+  z-index: 10;
+  border: 1px solid var(--tg-border);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    0 12px 28px rgba(0, 0, 0, 0.22);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  border: 2px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+  background-clip: padding-box;
+}
+
+.option {
+  padding: 10px 12px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.option:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.option:active {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.optionText {
+  flex: 1;
+  min-width: 0;
+}
+
+.optionSub {
+  margin-top: 2px;
+}
+
+.empty {
+  padding: 16px 12px;
+  text-align: center;
+  color: var(--tg-text-secondary);
+}

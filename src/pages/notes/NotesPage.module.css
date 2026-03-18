@@ -10,51 +10,6 @@
   align-items: center;
 }
 
-.statusFilter {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-  justify-content: space-between;
-}
-
-.filterBtn {
-  background-color: var(--tg-card-2);
-  padding: 6px 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.filterBlock {
-  position: absolute;
-  top: 35px;
-  background-color: var(--tg-filter-bg);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 180px;
-  z-index: 15;
-}
-
-.filterBlock button {
-  padding: 8px 16px;
-  padding-right: 12px;
-  width: 100%;
-  text-align: left;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.filterBlock button:not(:last-child) {
-  border-bottom: 1px solid var(--tg-bg);
-}
-
 .list {
   display: flex;
   flex-direction: column;
@@ -77,6 +32,7 @@
   object-fit: cover;
   flex-shrink: 0;
   border: 1px solid var(--tg-item-button-bg-hover);
+  cursor: pointer;
 }
 
 .cardImagePlaceholder {
@@ -108,29 +64,9 @@
   text-overflow: ellipsis;
 }
 
-.cardMeta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.metaItem {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.cardDate {
   color: var(--tg-text-secondary);
-  font-size: 12px;
-}
-
-.tagNeutralDot {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--tg-filter-bg);
-  border: 1px solid hsl(212, 20%, 33%);
-  width: fit-content;
+  font-size: 13px;
 }
 
 .cardActions {
