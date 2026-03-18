@@ -11,6 +11,7 @@ import {
   useCreateAttachmentMutation,
   useDeleteAttachmentMutation,
 } from '../../redux/services/notesApi';
+import ImageModal from '../financialReport/operationPage/OperationEditPage/ImageModal/ImageModal';
 import './NotesPage.css';
 
 function NoteEditPage() {
@@ -31,6 +32,7 @@ function NoteEditPage() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState('');
   const [existingAttachment, setExistingAttachment] = useState(null);
+  const [previewModal, setPreviewModal] = useState(null);
 
   const note = noteData?.data || noteData;
   const attachments = attachmentsData?.data || attachmentsData || [];
@@ -99,7 +101,6 @@ function NoteEditPage() {
         }
 
         const formData = new FormData();
-        formData.append('file_id', 'test');
         formData.append('file', file);
 
         await createAttachment({ noteId, formData }).unwrap();
@@ -126,7 +127,7 @@ function NoteEditPage() {
   }
 
   return (
-    <AppLayout title={isEdit ? 'Редактировать заметку' : 'Новая заметка'}>
+    <AppLayout title={isEdit ? 'Редактировать заметку' : 'Новая заметка'} onBack={() => navigate(-1)}>
       <div className="note-edit-page">
         <div>
           <label>Название</label>
@@ -144,7 +145,7 @@ function NoteEditPage() {
 
             {preview ? (
               <div className="note-image-preview">
-                <img src={preview} alt="preview" />
+                <img src={preview} alt="preview" onClick={() => setPreviewModal(preview)} />
                 <button className="note-image-remove" onClick={handleRemoveImage}>
                   <X size={14} />
                 </button>
@@ -184,6 +185,12 @@ function NoteEditPage() {
           </button>
         </div>
       </div>
+
+      <ImageModal
+        visible={Boolean(previewModal)}
+        image={previewModal}
+        onClose={() => setPreviewModal(null)}
+      />
     </AppLayout>
   );
 }

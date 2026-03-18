@@ -12,6 +12,7 @@ import {
   useCreateMutation,
   useUpdateMutation,
 } from '../../../../redux/services/maintenanceItemApi';
+import ImageModal from '../../../financialReport/operationPage/OperationEditPage/ImageModal/ImageModal';
 import styles from './MaintenanceEditPage.module.css';
 
 const STATUS_OPTIONS = [
@@ -46,6 +47,7 @@ export default function MaintenanceEditPage() {
   const [newImages, setNewImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [initialized, setInitialized] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
   if (!initialized && item && isEdit) {
     setForm({
@@ -245,7 +247,11 @@ export default function MaintenanceEditPage() {
               <div className={styles.imagesGrid}>
                 {existingImages.map((img, i) => (
                   <div key={`ex-${img.id || i}`} className={styles.imageThumb}>
-                    <img src={getImageUrl(img.path || img.image_url)} alt="" />
+                    <img
+                      src={getImageUrl(img.path || img.image_url)}
+                      alt=""
+                      onClick={() => setPreviewImage(getImageUrl(img.path || img.image_url))}
+                    />
                     <button
                       className={styles.imageRemove}
                       onClick={() => removeExistingImage(i)}
@@ -257,7 +263,11 @@ export default function MaintenanceEditPage() {
 
                 {newImages.map((file, i) => (
                   <div key={`new-${i}`} className={styles.imageThumb}>
-                    <img src={URL.createObjectURL(file)} alt="" />
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt=""
+                      onClick={() => setPreviewImage(URL.createObjectURL(file))}
+                    />
                     <button
                       className={styles.imageRemove}
                       onClick={() => removeNewImage(i)}
@@ -305,6 +315,12 @@ export default function MaintenanceEditPage() {
           </div>
         </div>
       </div>
+
+      <ImageModal
+        visible={Boolean(previewImage)}
+        image={previewImage}
+        onClose={() => setPreviewImage(null)}
+      />
     </AppLayout>
   );
 }

@@ -11,6 +11,7 @@ import {
   useGetByCarQuery,
   useDeleteMutation,
 } from '../../../redux/services/maintenanceItemApi';
+import ImageModal from '../../financialReport/operationPage/OperationEditPage/ImageModal/ImageModal';
 import styles from './CarServicePage.module.css';
 
 const STATUS_MAP = {
@@ -32,6 +33,7 @@ export default function CarServicePage() {
   const [deleteModalId, setDeleteModalId] = useState(null);
   const [statusFilter, setStatusFilter] = useState(null);
   const [statusFilterVisible, setStatusFilterVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const { data: itemsData, isLoading, error } = useGetByCarQuery(carId);
   const [deleteItem] = useDeleteMutation();
@@ -136,6 +138,7 @@ export default function CarServicePage() {
                       src={getImageUrl(image.path || image.image_url)}
                       alt={item.name}
                       className={styles.cardImage}
+                      onClick={() => setPreviewImage(getImageUrl(image.path || image.image_url))}
                     />
                   ) : (
                     <div className={styles.cardImagePlaceholder}>
@@ -208,6 +211,12 @@ export default function CarServicePage() {
           Вы уверены, что хотите удалить эту запись ТО?
         </span>
       </ModalComponent>
+
+      <ImageModal
+        visible={Boolean(previewImage)}
+        image={previewImage}
+        onClose={() => setPreviewImage(null)}
+      />
     </AppLayout>
   );
 }

@@ -9,11 +9,13 @@ import {
   useGetNotesQuery,
   useDeleteNoteMutation,
 } from '../../redux/services/notesApi';
+import ImageModal from '../financialReport/operationPage/OperationEditPage/ImageModal/ImageModal';
 import './NotesPage.css';
 
 function NotesPage() {
   const navigate = useNavigate();
   const [deletingId, setDeletingId] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const { data: notesData, isLoading, error } = useGetNotesQuery(100);
   const [deleteNote] = useDeleteNoteMutation();
@@ -60,6 +62,7 @@ function NotesPage() {
           <div className="notes-list">
             {notes.map((note) => {
               const attachment = note.attachments?.[0];
+              console.log(note)
               return (
                 <div
                   className="note-card"
@@ -68,9 +71,13 @@ function NotesPage() {
                 >
                   {attachment ? (
                     <img
-                      src={getImageUrl(attachment.file_path || attachment.url)}
+                      src={getImageUrl(attachment.url)}
                       alt={note.title}
                       className="note-image"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreviewImage(getImageUrl(attachment.file_path || attachment.url));
+                      }}
                     />
                   ) : (
                     <div className="note-image-placeholder">
@@ -98,6 +105,12 @@ function NotesPage() {
           </div>
         )}
       </div>
+
+      <ImageModal
+        visible={Boolean(previewImage)}
+        image={previewImage}
+        onClose={() => setPreviewImage(null)}
+      />
     </AppLayout>
   );
 }
