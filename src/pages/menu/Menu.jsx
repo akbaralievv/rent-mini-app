@@ -4,7 +4,7 @@ import "./Menu.css";
 import ButtonSection from "../../components/ButtonSection/ButtonSection";
 import Dashboard from "../../components/Dashboard/Dashboard";
 import { useNavigate } from "react-router-dom";
-import { BarChart3, Car, FileSignature, FileText, FileUser, MessageSquareMore, Newspaper, Palette } from "lucide-react";
+import { BarChart3, Car, FileSignature, FileText, FileUser, MessageSquareMore, Newspaper, Palette, StickyNote } from "lucide-react";
 import { useGetTagsQuery } from "../../redux/services/tagsAction";
 import { useGetCompanyDocumentSectionsQuery } from "../../redux/services/getCompanySectionsAction";
 
@@ -50,6 +50,11 @@ export default function Menu() {
               icon: <Palette strokeWidth={1.5} />,
               text: 'Шаблоны договоров',
               onClick: () => navigate('/contracts/templates')
+            },
+            {
+              icon: <StickyNote strokeWidth={1.5} />,
+              text: 'Заметки',
+              onClick: () => navigate('/notes')
             },
           ]}
         />
