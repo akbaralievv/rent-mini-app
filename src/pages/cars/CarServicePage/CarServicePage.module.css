@@ -10,6 +10,51 @@
   align-items: center;
 }
 
+.statusFilter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  justify-content: space-between;
+}
+
+.filterBtn {
+  background-color: var(--tg-card-2);
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.filterBlock {
+  position: absolute;
+  top: 35px;
+  background-color: var(--tg-filter-bg);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 180px;
+  z-index: 15;
+}
+
+.filterBlock button {
+  padding: 8px 16px;
+  padding-right: 12px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filterBlock button:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
+}
+
 .list {
   display: flex;
   flex-direction: column;
@@ -23,12 +68,6 @@
   background: var(--tg-card-2);
   border-radius: 8px;
   padding: 14px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.card:hover {
-  background: var(--tg-card-2);
 }
 
 .cardImage {
@@ -83,23 +122,45 @@
   font-size: 12px;
 }
 
-.status {
-  font-size: 12px;
-  font-weight: 600;
+.tagNeutralDot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--tg-filter-bg);
+  border: 1px solid hsl(212, 20%, 33%);
+  width: fit-content;
 }
 
+.cardActions {
+  display: flex;
+  align-self: flex-end;
+  gap: 4px;
+}
+
+.editBtn,
 .deleteBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   background: none;
-  border: none;
-  padding: 8px;
+  padding: 4px;
   cursor: pointer;
-  border-radius: 8px;
-  flex-shrink: 0;
   transition: background 0.15s;
 }
 
+.editBtn:hover {
+  background: rgba(70, 137, 211, 0.12);
+}
+
 .deleteBtn:hover {
-  background: rgba(212, 112, 98, 0.15);
+  background: rgba(212, 112, 98, 0.12);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .empty {

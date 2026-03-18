@@ -3,8 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AppLayout from '../../../../layouts/AppLayout';
 import { tgTheme } from '../../../../common/commonStyle';
 import { getErrorMessage, getImageUrl } from '../../../../utils';
-import { Check, ChevronDown, Images, Plus, Trash2, X } from 'lucide-react';
+import { Check, ChevronDown, Images, Plus, Trash2, X, Calendar } from 'lucide-react';
 import BackdropModal from '../../../../components/BackdropModal/BackdropModal';
+import CalendarCustom from '../../../../components/CalendarCustom/CalendarCustom';
+import { uiToIsoDate, formatDate } from '../../../../common/utils/helpers';
 import {
   useGetOneQuery,
   useCreateMutation,
@@ -39,6 +41,8 @@ export default function MaintenanceEditPage() {
     date_end: '',
   });
   const [statusOpen, setStatusOpen] = useState(false);
+  const [nameError, setNameError] = useState('');
+  const [calendarVisible, setCalendarVisible] = useState(false);
   const [newImages, setNewImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [initialized, setInitialized] = useState(false);
@@ -89,7 +93,7 @@ export default function MaintenanceEditPage() {
 
   const handleSave = async () => {
     if (!form.name.trim()) {
-      alert('Введите название');
+      setNameError('Введите название');
       return;
     }
 
@@ -139,12 +143,18 @@ export default function MaintenanceEditPage() {
             <div className={styles.field}>
               <span className="font16w500">Название</span>
               <input
-                className={styles.input}
+                className={`${styles.input} ${nameError ? styles.inputError : ''}`}
                 type="text"
                 value={form.name}
-                onChange={(e) => onChange('name', e.target.value)}
+                onChange={(e) => {
+                  onChange('name', e.target.value);
+                  if (nameError) setNameError('');
+                }}
                 placeholder="Название работы"
               />
+              {nameError && (
+                <span className={styles.errorText}>{nameError}</span>
+              )}
             </div>
 
             {/* LOCATION */}
@@ -197,26 +207,35 @@ export default function MaintenanceEditPage() {
               </div>
             </div>
 
-            {/* DATE START */}
+            {/* DATES */}
             <div className={styles.field}>
-              <span className="font16w500">Дата начала</span>
-              <input
-                className={styles.input}
-                type="date"
-                value={form.date_start}
-                onChange={(e) => onChange('date_start', e.target.value)}
-              />
-            </div>
+              <span className="font16w500">Период</span>
+              <div className={styles.selectWrapper}>
+                <button
+                  className={styles.selectLike}
+                  onClick={() => setCalendarVisible(true)}
+                >
+                  <Calendar size={16} color={tgTheme.textSecondary} />
+                  <span className="font14w600">
+                    {form.date_start
+                      ? `${formatDate(form.date_start)} — ${formatDate(form.date_end || form.date_start)}`
+                      : 'Выберите период'}
+                  </span>
+                </button>
 
-            {/* DATE END */}
-            <div className={styles.field}>
-              <span className="font16w500">Дата окончания</span>
-              <input
-                className={styles.input}
-                type="date"
-                value={form.date_end}
-                onChange={(e) => onChange('date_end', e.target.value)}
-              />
+                <CalendarCustom
+                  visible={calendarVisible}
+                  setVisible={setCalendarVisible}
+                  date={form.date_start || ''}
+                  setDate={(value) => {
+                    const [startRaw, endRaw] = value.split('/');
+                    onChange('date_start', uiToIsoDate(startRaw));
+                    onChange('date_end', uiToIsoDate(endRaw || startRaw));
+                  }}
+                  mode="range"
+                  listBlockPosition="left"
+                />
+              </div>
             </div>
 
             {/* IMAGES */}

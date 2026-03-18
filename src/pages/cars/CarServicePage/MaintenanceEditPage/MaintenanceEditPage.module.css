@@ -37,6 +37,15 @@
   font-size: 14px;
 }
 
+.inputError {
+  border-color: var(--tg-danger, #d47062);
+}
+
+.errorText {
+  color: var(--tg-danger, #d47062);
+  font-size: 12px;
+}
+
 .input::placeholder {
   color: rgba(255, 255, 255, 0.35);
 }
