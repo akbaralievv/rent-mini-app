@@ -4,6 +4,7 @@ import AppLayout from '../../../layouts/AppLayout'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDeleteCarMutation, useGetCarByNumberQuery } from '../../../redux/services/carAction'
 import { useGetByCarQuery } from '../../../redux/services/maintenanceItemApi'
+import { useGetTransactionsByCarQuery } from '../../../redux/services/financeApi'
 import {
   Car,
   Calendar,
@@ -41,6 +42,19 @@ function formatMoney(num) {
   return Number(num || 0).toLocaleString("ru-RU")
 }
 
+const INCREASE_TYPES = ['income', 'deposit_add'];
+const TX_TYPE_LABELS = {
+  expense: 'Расходы',
+  income: 'Доходы',
+  deposit_add: 'Депозит +',
+  deposit_return: 'Депозит -',
+};
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
+}
+
 export default function CarDetailPage() {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -57,15 +71,17 @@ export default function CarDetailPage() {
   const data = car?.car || {}
 
   const { data: maintenanceData } = useGetByCarQuery(id);
+  const { data: transactionsData } = useGetTransactionsByCarQuery(id);
 
   const maintenanceItems = maintenanceData?.data || maintenanceData || [];
   const orders = data.orders || [];
+  const txList = transactionsData?.data || transactionsData || [];
   const dashStats = {
     ordersCountPaid: orders.filter(o => o.is_paid).length,
     ordersCount: orders.length,
-    income: orders.reduce((s, o) => s + Number(o.price || 0), 0),
-    expense: Number(data.total_expense || 0),
-    mileage: Number(data.car_probeg || data.car_probeg || 0),
+    income: txList.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount || 0), 0),
+    expense: txList.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount || 0), 0),
+    mileage: Number(data.car_probeg || 0),
     serviceCount: maintenanceItems.length,
   };
 
@@ -302,6 +318,59 @@ export default function CarDetailPage() {
                   </span>
                 </div>
               )}
+
+              {/* Транзакции */}
+              <div className={styles.txSection}>
+                <div className={styles.transactionsTitle}>
+                  <DollarSign size={22} color={tgTheme.white} />
+                  <span className="font16w600">Транзакции</span>
+                </div>
+
+                {(() => {
+                  const txList = transactionsData?.data || transactionsData || [];
+                  if (!txList.length) {
+                    return (
+                      <div className={styles.txEmpty}>
+                        <span className="font14w500" style={{ color: tgTheme.textSecondary }}>
+                          Нет транзакций
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  const grouped = txList.reduce((acc, item) => {
+                    const date = new Date(item.created_at).toISOString().slice(0, 10);
+                    if (!acc[date]) acc[date] = [];
+                    acc[date].push(item);
+                    return acc;
+                  }, {});
+
+                  return (
+                    <div className={styles.txContent}>
+                      {Object.entries(grouped).map(([date, items]) => (
+                        <div key={date} className={styles.txGroup}>
+                          <div className={styles.txDate}>{formatDate(date)}</div>
+                          <div className={styles.txCard}>
+                            {items.map((el) => (
+                              <div key={el.id} className={styles.txRow} onClick={() => navigate(`/operations/${el.id}/edit`)}>
+                                <div className={styles.txLeft}>
+                                  <span className="font14w600">{el.finance_tag?.name || 'Транзакция'}</span>
+                                  <span className="font12w400" style={{ color: tgTheme.textSecondary }}>
+                                    {TX_TYPE_LABELS[el.type] || el.type}
+                                  </span>
+                                </div>
+                                <span className={`font12w600 ${INCREASE_TYPES.includes(el.type) ? styles.txIncome : styles.txExpense}`}>
+                                  {formatMoney(el.amount)} {el.currency}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+              </div>
             </div>
           </>
         )}

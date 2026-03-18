@@ -18,7 +18,8 @@
 .tgCard {
   background: var(--tg-card-2);
   border-radius: 8px;
-  padding: 16px;
+  /* padding: 16px; */
+  padding-top: 16px;
 }
 
 .tgTitle {
@@ -34,6 +35,7 @@
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 16px;
+  padding: 0 16px;
 }
 
 /* Info */
@@ -43,6 +45,7 @@
   gap: 12px;
   margin-bottom: 16px;
   justify-content: space-between;
+  padding: 0 16px;
 }
 
 .infoBlockItem {
@@ -103,6 +106,10 @@
 }
 
 /* Price rows */
+.priceCard {
+  padding: 0 16px;
+}
+
 .priceContent {
   display: flex;
   flex-direction: column;
@@ -139,6 +146,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 0 16px;
 }
 
 .ordersTitle {
@@ -147,6 +155,15 @@
   align-items: center;
   gap: 4px;
   min-width: 0;
+}
+
+.transactionsTitle {
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 16px;
 }
 
 .clientName {
@@ -233,4 +250,78 @@
   display: flex;
   gap: 4px;
   justify-content: space-between;
+}
+
+/* Transactions */
+.txSection {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.txContent {
+  background-color: var(--tg-card);
+  border-radius: 6px;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 300px;
+  scrollbar-width: none;
+}
+
+.txContent::-webkit-scrollbar {
+  display: none;
+}
+
+.txGroup {
+  margin-bottom: 16px;
+}
+
+.txGroup:last-child {
+  margin-bottom: 0;
+}
+
+.txDate {
+  font-size: 13px;
+  color: var(--tg-text-secondary);
+  margin-bottom: 6px;
+}
+
+.txCard {
+  background: var(--tg-item-button-bg);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.txRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--tg-border);
+  cursor: pointer;
+}
+
+.txRow:last-child {
+  border-bottom: none;
+}
+
+.txLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.txIncome {
+  color: var(--tg-success);
+}
+
+.txExpense {
+  color: var(--tg-danger);
+}
+
+.txEmpty {
+  text-align: center;
+  padding: 16px 0;
+  opacity: 0.7;
 }

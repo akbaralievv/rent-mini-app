@@ -26,6 +26,12 @@ export const financeApi = createApi({
 
   endpoints: (builder) => ({
 
+    // транзакции по машине
+    getTransactionsByCar: builder.query({
+      query: (carNumber) => `finance/cars/${carNumber}/transactions`,
+      providesTags: ['Transactions'],
+    }),
+
     // список транзакций
     getTransactions: builder.query({
       query: (params) => ({
@@ -130,6 +136,7 @@ export const financeApi = createApi({
 })
 
 export const {
+  useGetTransactionsByCarQuery,
   useGetTransactionsQuery,
   useGetTransactionByIdQuery,
   useCreateTransactionMutation,
