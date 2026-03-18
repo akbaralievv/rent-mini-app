@@ -36,6 +36,7 @@ import WAChatPage from './pages/allChats/WaChatsPage/WaChatPage/WAChatPage';
 import ExportFiltersPage from './pages/financialReport/exportFiltersPage/ExportFiltersPage';
 import NotesPage from './pages/notes/NotesPage';
 import NoteEditPage from './pages/notes/NoteEditPage';
+import MaintenanceEditPage from './pages/cars/CarServicePage/MaintenanceEditPage/MaintenanceEditPage';
 
 function Router() {
   const { status } = useAuth();
@@ -76,6 +77,8 @@ function Router() {
       <Route path="/car/create" element={<CarCreatePage />} />
       <Route path="/cars/:id" element={<CarDetailPage />} />
       <Route path="/cars/:id/services" element={<CarServicePage />} />
+      <Route path="/cars/:id/services/create" element={<MaintenanceEditPage />} />
+      <Route path="/cars/:id/services/:itemId/edit" element={<MaintenanceEditPage />} />
       <Route path="/cars/:id/images" element={<CarImagesPage />} />
       <Route path="/cars/:id/characteristics" element={<AllCharacteristicsPage />} />
       <Route path="/cars/:id/orders" element={<CarOrdersPage />} />

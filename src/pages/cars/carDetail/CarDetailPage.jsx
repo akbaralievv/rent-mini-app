@@ -232,11 +232,11 @@ export default function CarDetailPage() {
               text: 'Заказы',
               onClick: () => navigate(`/cars/${car.car.car_number}/orders`),
             },
-            // {
-            //   icon: <Wrench size={20} color={tgTheme.white} />,
-            //   text: 'ТО авто',
-            //   onClick: () => navigate(`/cars/${car.car.car_number}/services`),
-            // },
+            {
+              icon: <Wrench size={20} color={tgTheme.white} />,
+              text: 'ТО авто',
+              onClick: () => navigate(`/cars/${car.car.car_number}/services`),
+            },
             {
               icon: <List size={20} color={tgTheme.white} />,
               text: 'Все характеристики',

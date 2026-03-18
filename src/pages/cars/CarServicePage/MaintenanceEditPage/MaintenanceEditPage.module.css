@@ -1,0 +1,172 @@
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalLike {
+  width: 100%;
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 12px;
+  padding-top: 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.modalBody {
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  resize: none;
+  font-size: 14px;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.input[type="date"] {
+  color-scheme: dark;
+}
+
+.selectWrapper {
+  position: relative;
+}
+
+.selectLike {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--tg-item-button-bg-hover);
+  padding: 10px 12px;
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.selectLike span {
+  flex: 1;
+  text-align: left;
+}
+
+.dropdown {
+  position: absolute;
+  top: 38px;
+  background-color: var(--tg-filter-bg);
+  border-radius: 8px;
+  width: 100%;
+  z-index: 10;
+  border: 1px solid var(--tg-border);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    0 12px 28px rgba(0, 0, 0, 0.22);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown button {
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown button:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.imagesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.imageThumb {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+
+.imageThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--tg-border);
+}
+
+.imageRemove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.addBtn {
+  padding: 6px 10px;
+  background-color: var(--tg-item-button-bg-hover);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 10px;
+  width: fit-content;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.addBtn:hover {
+  background-color: var(--tg-item-button-bg);
+}
+
+.modalFooter {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.secondaryBtn {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.primaryBtn {
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--tg-accent);
+  cursor: pointer;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
