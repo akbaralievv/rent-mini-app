@@ -211,42 +211,37 @@ export default function CarsListPage() {
               </div>
 
               <div className={styles.info}>
-                <div>
-                  <span className="font16w500">
-                    {car.car_name} · {car.car_year}
-                  </span>
+                <span className="font16w500">
+                  {car.car_name} · {car.car_year}
+                </span>
+                <span className="font14w500" style={{ color: tgTheme.white }}>
+                  номер: {car.car_number?.toUpperCase()}
+                </span>
+                <span className="font12w500" style={{ color: tgTheme.textSecondary }}>
+                  {car.car_class} / {car.car_color_s}
+                </span>
+              </div>
+            </div>
 
-                  <div className={styles.meta}>
-                    <span
-                      className="font12w500"
-                      style={{ color: tgTheme.textSecondary }}
-                    >
-                      {car.car_class} / {car.car_color_s}
-                    </span>
-                  </div>
-                </div>
-
-                <div className={styles.features}>
-                  <div className={styles.feature}>
-                    <Users size={14} color={tgTheme.textSecondary} />
-                    <span className='font12w400' style={{ color: tgTheme.textSecondary }}>{car.car_people}</span>
-                  </div>
-                  <div className={styles.feature}>
-                    <Settings size={14} color={tgTheme.textSecondary} />
-                    <span className='font12w400' style={{ color: tgTheme.textSecondary }}>{car.car_transmission}</span>
-                  </div>
-                  <div className={styles.feature}>
-                    <Fuel size={14} color={tgTheme.textSecondary} />
-                    <span className='font12w400' style={{ color: tgTheme.textSecondary }}>{car.car_power}</span>
-                  </div>
-                </div>
+            <div className={styles.features}>
+              <div className={styles.feature}>
+                <Users size={14} color={tgTheme.textSecondary} />
+                <span className='font12w400' style={{ color: tgTheme.textSecondary }}>{car.car_people}</span>
+              </div>
+              <div className={styles.feature}>
+                <Settings size={14} color={tgTheme.textSecondary} />
+                <span className='font12w400' style={{ color: tgTheme.textSecondary }}>{car.car_transmission}</span>
+              </div>
+              <div className={styles.feature}>
+                <Fuel size={14} color={tgTheme.textSecondary} />
+                <span className='font12w400' style={{ color: tgTheme.textSecondary }}>{car.car_power}</span>
               </div>
             </div>
 
             <div className={styles.bottom}>
-              <div>
-                <p className="font12w500">1 день: {car.car_price_3} AED</p>
-              </div>
+              <span className="font14w500">
+                {car.car_price_3} AED / день
+              </span>
               <div className={styles.tagNeutralDot}>
                 <span className="font12w500">
                   {({ ...STATUS_MAPPING, Free: 'Готов к аренде' })[
