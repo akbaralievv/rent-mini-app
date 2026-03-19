@@ -53,7 +53,8 @@
 .info {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 2px;
 }
 
 .meta {
@@ -65,6 +66,8 @@
 .features {
   display: flex;
   gap: 14px;
+  padding-top: 8px;
+  border-top: 1px solid var(--tg-item-button-bg-hover);
 }
 
 .feature {
@@ -78,6 +81,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--tg-item-button-bg-hover);
 }
 
 .tagNeutralDot {
