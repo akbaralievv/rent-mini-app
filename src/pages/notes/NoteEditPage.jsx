@@ -152,46 +152,44 @@ function NoteEditPage() {
             </div>
 
             {/* IMAGE */}
-            {isEdit && (
-              <div className={styles.field}>
-                <span className="font16w500">Фото (необязательно)</span>
+            <div className={styles.field}>
+              <span className="font16w500">Фото (необязательно)</span>
 
-                {preview ? (
-                  <div className={styles.imagesGrid}>
-                    <div className={styles.imageThumb}>
-                      <img
-                        src={preview}
-                        alt="preview"
-                        onClick={() => setPreviewModal(preview)}
-                      />
-                      <button
-                        className={styles.imageRemove}
-                        onClick={handleRemoveImage}
-                      >
-                        <X size={12} />
-                      </button>
-                    </div>
+              {preview ? (
+                <div className={styles.imagesGrid}>
+                  <div className={styles.imageThumb}>
+                    <img
+                      src={preview}
+                      alt="preview"
+                      onClick={() => setPreviewModal(preview)}
+                    />
+                    <button
+                      className={styles.imageRemove}
+                      onClick={handleRemoveImage}
+                    >
+                      <X size={12} />
+                    </button>
                   </div>
-                ) : null}
+                </div>
+              ) : null}
 
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/jpg,image/webp"
-                  onChange={handleFileChange}
-                  style={{ display: 'none' }}
-                />
-                <button
-                  className={styles.addBtn}
-                  onClick={() => fileRef.current?.click()}
-                >
-                  <Images size={16} color="var(--tg-text-secondary)" />
-                  <span className="font12w400">
-                    {preview ? 'Заменить фото' : 'Загрузить фото'}
-                  </span>
-                </button>
-              </div>
-            )}
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/jpg,image/webp"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+              <button
+                className={styles.addBtn}
+                onClick={() => fileRef.current?.click()}
+              >
+                <Images size={16} color="var(--tg-text-secondary)" />
+                <span className="font12w400">
+                  {preview ? 'Заменить фото' : 'Загрузить фото'}
+                </span>
+              </button>
+            </div>
           </div>
 
           <div className={styles.modalFooter}>
