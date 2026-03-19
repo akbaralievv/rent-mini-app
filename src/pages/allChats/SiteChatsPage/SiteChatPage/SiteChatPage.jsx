@@ -67,7 +67,7 @@ export default function SiteChatPage() {
   }
 
   return (
-    <AppLayout title={`Чат #${id}`} onBack={() => navigate('/all-chats/site')}>
+    <AppLayout title={`Чат №${id}`} onBack={() => navigate('/all-chats/site')}>
       <div className={styles.actions}>
         <button
           className={`${styles.actionBtn} ${styles.deleteBtn} font12w500`}
