@@ -13,10 +13,13 @@
 .modal {
   width: 100%;
   max-width: 520px;
+  max-height: calc(100dvh - 24px);
   background: var(--tg-card-2);
   border-radius: 14px;
   padding: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
 }
 
 .modalHeader {
@@ -25,6 +28,7 @@
   justify-content: space-between;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
 }
 
 .modalClose {
@@ -46,6 +50,10 @@
   padding-top: 12px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  min-height: 0;
 }
 
 .field {
@@ -72,6 +80,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .secondaryBtn {
