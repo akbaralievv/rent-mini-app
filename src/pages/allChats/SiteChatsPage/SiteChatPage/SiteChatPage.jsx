@@ -15,7 +15,7 @@ export default function SiteChatPage() {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const { data: chat, isLoading, refetch } = useGetSiteChatQuery(id, { skip: !id })
+  const { data: chat, isLoading, refetch } = useGetSiteChatQuery(id, { skip: !id, pollingInterval: 10000 })
   const [sendMessage, { isLoading: isSending }] = useSendAdminMessageMutation()
   const [deleteChat] = useDeleteSiteChatMutation()
 

@@ -11,7 +11,7 @@ export default function SiteChatsPage() {
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
 
-  const { data, isLoading, isFetching } = useGetSiteChatsQuery(page)
+  const { data, isLoading, isFetching } = useGetSiteChatsQuery(page, { pollingInterval: 15000 })
 
   const chats = data?.data || []
   const currentPage = data?.current_page || 1
