@@ -60,11 +60,9 @@
 /* 🔥 Открываем ВВЕРХ */
 .dropdown {
   position: absolute;
-  bottom: 110%;
-  /* вместо top */
   left: 0;
   width: 100%;
-  max-height: 220px;
+  max-height: 140px;
   overflow-y: auto;
   background: var(--tg-card-2);
   border-radius: 10px;

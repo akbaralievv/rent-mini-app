@@ -123,7 +123,10 @@ export default function AllCharacteristicsPage() {
         <div className={styles.main}>
           <div className={styles.contentBlock}>
             {CHARACTERISTICS.map(({ key, label }) => (
-              <div key={key} className={styles.item}>
+              <div key={key} className={styles.item} onClick={()=>{
+                setVisibleEditModal(true)
+                setSelectedKey(key)
+              }}>
                 <span className="font14w500">{label}</span>
                 <span className="font14w500" style={{ color: tgTheme.textSecondary }}>
                   {formatValue(key, key == 'car_class' ? cars_class.find((el) => el.key === carData[key])?.name : carData[key])}
