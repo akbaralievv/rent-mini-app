@@ -148,7 +148,7 @@ export default function CarDetailPage() {
                 </div>
               </div>
 
-              <div className={styles.dashTile} onClick={() => navigate(`/cars/${data.car_number}/characteristics`)}>
+              <div className={styles.dashTile} onClick={() => navigate(`/cars/${data.car_number}/characteristics`, { state: { openKey: 'car_probeg' } })}>
                 <div className={styles.dashTileHeadMain}>
                   <div className={styles.dashTileHead}>
                     <Route size={18} color={tgTheme.textSecondary} />
