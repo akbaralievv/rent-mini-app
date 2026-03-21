@@ -99,10 +99,6 @@
   transition: background 0.12s;
 }
 
-.addBtn:hover {
-  background-color: var(--tg-item-button-bg);
-}
-
 .modalFooter {
   margin-top: 16px;
   display: flex;
@@ -126,4 +122,26 @@
 .primaryBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.photosList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.displayPhoto {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.imageBtnsBlock {
+  display: flex;
+  gap: 10px;
+}
+
+.img {
+  border: 1px solid var(--tg-border);
+  background-color: var(--tg-item-button-bg-hover);
 }

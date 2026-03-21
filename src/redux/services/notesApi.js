@@ -78,11 +78,17 @@ export const notesApi = createApi({
     }),
 
     createAttachment: builder.mutation({
-      query: ({ noteId, formData }) => ({
-        url: `/notes/${noteId}/attachments`,
-        method: 'POST',
-        body: formData,
-      }),
+      query: ({ noteId, files }) => {
+        const formData = new FormData();
+        for (const file of files) {
+          formData.append('files[]', file);
+        }
+        return {
+          url: `/notes/${noteId}/attachments`,
+          method: 'POST',
+          body: formData,
+        };
+      },
       invalidatesTags: (result, error, { noteId }) => [
         { type: 'Attachments', id: `LIST-${noteId}` },
       ],
