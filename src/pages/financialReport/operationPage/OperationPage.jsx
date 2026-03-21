@@ -266,7 +266,7 @@ export default function OperationPage() {
               <p className={'font13w400'}>Итого:</p>
               <p className={'font14w500'}>{formatMoney(totalAmount)} AED</p>
             </div>
-            {transactionsData?.data?.map((item) => (
+            {list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((item) => (
               <div key={`${key}-${item.id}`} className={styles.row} >
                 <div className={styles.topLine}>
                   <div className={styles.left}>
