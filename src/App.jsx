@@ -31,6 +31,7 @@ import CarCreatePage from './pages/cars/CarCreatePage/CarCreatePage';
 import AllChatsPage from './pages/allChats/AllChatsPage';
 import WaChatsPage from './pages/allChats/WaChatsPage/WaChatsPage';
 import SiteChatsPage from './pages/allChats/SiteChatsPage/SiteChatsPage';
+import SiteChatPage from './pages/allChats/SiteChatsPage/SiteChatPage/SiteChatPage';
 import TemplatesWAPage from './pages/allChats/TemplatesWAPage/TemplatesWAPage';
 import WAChatPage from './pages/allChats/WaChatsPage/WaChatPage/WAChatPage';
 import ExportFiltersPage from './pages/financialReport/exportFiltersPage/ExportFiltersPage';
@@ -97,6 +98,7 @@ function Router() {
       <Route path="/all-chats/wa" element={<WaChatsPage />} />
       <Route path="/all-chats/wa/:id" element={<WAChatPage />} />
       <Route path="/all-chats/site" element={<SiteChatsPage />} />
+      <Route path="/all-chats/site/:id" element={<SiteChatPage />} />
       <Route path="/all-chats/templates-wa" element={<TemplatesWAPage />} />
     </Routes>
   );

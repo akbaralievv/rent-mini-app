@@ -17,6 +17,7 @@ import { waTemplatesApi } from './services/waTemplatesApi';
 import { financeApi } from './services/financeApi';
 import { notesApi } from './services/notesApi';
 import { maintenanceItemApi } from './services/maintenanceItemApi';
+import { siteChatsApi } from './services/siteChatsApi';
 
 export const store = configureStore({
   reducer: {
@@ -37,6 +38,7 @@ export const store = configureStore({
     [financeApi.reducerPath]: financeApi.reducer,
     [notesApi.reducerPath]: notesApi.reducer,
     [maintenanceItemApi.reducerPath]: maintenanceItemApi.reducer,
+    [siteChatsApi.reducerPath]: siteChatsApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -58,6 +60,7 @@ export const store = configureStore({
       financeApi.middleware,
       notesApi.middleware,
       maintenanceItemApi.middleware,
+      siteChatsApi.middleware,
     ),
 });
 
