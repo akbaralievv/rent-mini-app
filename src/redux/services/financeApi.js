@@ -76,14 +76,14 @@ export const financeApi = createApi({
       invalidatesTags: ['Transactions', 'Summary'],
     }),
 
-    // загрузка attachment
-    uploadTransactionAttachment: builder.mutation({
-      query: ({ id, file }) => {
+    // загрузка attachments (несколько файлов)
+    uploadTransactionAttachments: builder.mutation({
+      query: ({ id, files }) => {
         const formData = new FormData()
-        formData.append('file', file)
+        files.forEach((file) => formData.append('files[]', file))
 
         return {
-          url: `finance/transactions/${id}/attachment`,
+          url: `finance/transactions/${id}/attachments`,
           method: 'POST',
           body: formData,
         }
@@ -91,10 +91,10 @@ export const financeApi = createApi({
       invalidatesTags: ['Transaction'],
     }),
 
-    // удаление attachment
+    // удаление одного attachment
     deleteTransactionAttachment: builder.mutation({
-      query: (id) => ({
-        url: `finance/transactions/${id}/attachment`,
+      query: ({ transactionId, attachmentId }) => ({
+        url: `finance/transactions/${transactionId}/attachments/${attachmentId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Transaction'],
@@ -142,7 +142,7 @@ export const {
   useCreateTransactionMutation,
   useUpdateTransactionMutation,
   useDeleteTransactionMutation,
-  useUploadTransactionAttachmentMutation,
+  useUploadTransactionAttachmentsMutation,
   useDeleteTransactionAttachmentMutation,
   useGetFinanceSummaryQuery,
   useExportTransactionsMutation,
