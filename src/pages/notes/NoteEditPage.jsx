@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AppLayout from '../../layouts/AppLayout';
 import { getErrorMessage, getImageUrl } from '../../utils';
-import { Images, X } from 'lucide-react';
+import { tgTheme } from '../../common/commonStyle';
+import { Maximize2, Plus, Trash2 } from 'lucide-react';
 import {
   useGetNoteByIdQuery,
   useCreateNoteMutation,
@@ -31,10 +32,12 @@ function NoteEditPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [nameError, setNameError] = useState('');
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState('');
-  const [existingAttachment, setExistingAttachment] = useState(null);
-  const [previewModal, setPreviewModal] = useState(null);
+
+  const [existingPhotos, setExistingPhotos] = useState([]);
+  const [newFiles, setNewFiles] = useState([]);
+
+  const [imgFullModal, setImgFullModal] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState('');
 
   const note = noteData?.data || noteData;
   const attachments = attachmentsData?.data || attachmentsData || [];
@@ -51,35 +54,45 @@ function NoteEditPage() {
   useEffect(() => {
     if (attachments.length > 0) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setExistingAttachment(attachments[0]);
-      setPreview(getImageUrl(attachments[0].file_path || attachments[0].url));
+      setExistingPhotos(attachments.map((att) => ({
+        id: att.id,
+        url: getImageUrl(att.file_path || att.url),
+      })));
     }
   }, [attachments]);
 
-  const handleFileChange = (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
+  const handlePhotoSelect = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-    if (!allowedTypes.includes(f.type)) {
-      alert('Допустимые форматы: JPG, PNG, WEBP');
-      return;
-    }
-    if (f.size > 5 * 1024 * 1024) {
-      alert('Максимальный размер файла: 5 МБ');
-      return;
-    }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const valid = files.filter((f) => {
+      if (!allowedTypes.includes(f.type)) {
+        alert(`Файл "${f.name}" — недопустимый формат`);
+        return false;
+      }
+      if (f.size > 10 * 1024 * 1024) {
+        alert(`Файл "${f.name}" — максимум 10 МБ`);
+        return false;
+      }
+      return true;
+    });
 
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
-    setExistingAttachment(null);
+    setNewFiles((prev) => [...prev, ...valid]);
+    e.target.value = '';
   };
 
-  const handleRemoveImage = () => {
-    setFile(null);
-    setPreview('');
-    setExistingAttachment(null);
-    if (fileRef.current) fileRef.current.value = '';
+  const removeNewFile = (index) => {
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeExistingPhoto = async (attachmentId) => {
+    try {
+      await deleteAttachment(attachmentId).unwrap();
+      setExistingPhotos((prev) => prev.filter((p) => p.id !== attachmentId));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleSave = async () => {
@@ -98,19 +111,9 @@ function NoteEditPage() {
         noteId = result?.data?.id || result?.id;
       }
 
-      if (file && noteId) {
-        if (existingAttachment) {
-          await deleteAttachment(existingAttachment.id).unwrap();
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        await createAttachment({ noteId, formData }).unwrap();
-      }
-
-      if (!file && !existingAttachment && isEdit && attachments.length > 0) {
-        await deleteAttachment(attachments[0].id).unwrap();
+      if (newFiles.length > 0 && noteId) {
+        await createAttachment({ noteId, files: newFiles }).unwrap();
+        setNewFiles([]);
       }
 
       navigate('/notes');
@@ -165,44 +168,68 @@ function NoteEditPage() {
               />
             </div>
 
-            {/* IMAGE */}
+            {/* ФОТО */}
             <div className={styles.field}>
-              <span className="font16w500">Фото (необязательно)</span>
-
-              {preview ? (
-                <div className={styles.imagesGrid}>
-                  <div className={styles.imageThumb}>
-                    <img
-                      src={preview}
-                      alt="preview"
-                      onClick={() => setPreviewModal(preview)}
-                    />
-                    <button
-                      className={styles.imageRemove}
-                      onClick={handleRemoveImage}
-                    >
-                      <X size={12} />
-                    </button>
-                  </div>
-                </div>
-              ) : null}
+              <span className="font16w500">Фото</span>
 
               <input
                 ref={fileRef}
                 type="file"
-                accept="image/jpeg,image/png,image/jpg,image/webp"
-                onChange={handleFileChange}
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                multiple
                 style={{ display: 'none' }}
+                onChange={handlePhotoSelect}
               />
-              <button
-                className={styles.addBtn}
-                onClick={() => fileRef.current?.click()}
-              >
-                <Images size={16} color="var(--tg-text-secondary)" />
-                <span className="font12w400">
-                  {preview ? 'Заменить фото' : 'Загрузить фото'}
-                </span>
-              </button>
+
+              <div className={styles.photosList}>
+                {existingPhotos.map((photo) => (
+                  <div key={photo.id} className={styles.displayPhoto}>
+                    <img
+                      src={photo.url}
+                      alt="photo"
+                      className={styles.img}
+                      style={{ width: 200, height: 100, objectFit: 'contain', borderRadius: 8 }}
+                    />
+                    <div className={styles.imageBtnsBlock}>
+                      <button type="button" onClick={() => {
+                        setPhotoPreview(photo.url);
+                        setImgFullModal(true);
+                      }}><Maximize2 color={tgTheme.white} size={20} /></button>
+                      <button type="button" onClick={() => removeExistingPhoto(photo.id)}>
+                        <Trash2 color={tgTheme.white} size={20} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {newFiles.map((file, index) => (
+                  <div key={index} className={styles.displayPhoto}>
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt="new photo"
+                      className={styles.img}
+                      style={{ width: 200, height: 100, objectFit: 'contain', borderRadius: 8 }}
+                    />
+                    <div className={styles.imageBtnsBlock}>
+                      <button type="button" onClick={() => {
+                        setPhotoPreview(URL.createObjectURL(file));
+                        setImgFullModal(true);
+                      }}><Maximize2 color={tgTheme.white} size={20} /></button>
+                      <button type="button" onClick={() => removeNewFile(index)}>
+                        <Trash2 color={tgTheme.white} size={20} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  className={styles.addBtn}
+                  onClick={() => fileRef.current?.click()}
+                >
+                  <span className="font12w400">добавить фото</span>
+                  <Plus size={16} color={tgTheme.textSecondary} />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -227,9 +254,9 @@ function NoteEditPage() {
       </div>
 
       <ImageModal
-        visible={Boolean(previewModal)}
-        image={previewModal}
-        onClose={() => setPreviewModal(null)}
+        visible={imgFullModal}
+        image={photoPreview}
+        onClose={() => setImgFullModal(false)}
       />
     </AppLayout>
   );
