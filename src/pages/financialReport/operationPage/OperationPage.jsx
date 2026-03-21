@@ -56,12 +56,11 @@ export default function OperationPage() {
   const [selectedTagId, setSelectedTagId] = useState(null);
 
   const dateParams = useMemo(() => parseUiDateRange(dateFilter), [dateFilter]);
-  const financeTagType = increasetArr.includes(key);
   const { data: tags = [] } = useGetTagsQuery();
 
   const filteredTags = useMemo(() => {
-    return tags
-  }, [financeTagType, tags]);
+    return tags.filter(el => el.type === key)
+  }, [key, tags]);
 
   const selectedTag = useMemo(() => {
     return filteredTags.find((tag) => String(tag.id) === String(selectedTagId)) || null;
