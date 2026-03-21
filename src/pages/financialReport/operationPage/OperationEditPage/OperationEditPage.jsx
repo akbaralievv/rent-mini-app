@@ -387,25 +387,23 @@ export default function OperationEditPage() {
               />
             </div>
 
-            {
-              id && <div className={styles.field}>
-                <span className="font16w500">Авто</span>
-                <SearchSelect
-                  options={carOptions}
-                  value={form.car_number || null}
-                  onChange={(carNumber) => {
-                    const car = (cars.cars || []).find(c => c.car_number === carNumber);
-                    setForm(prev => ({
-                      ...prev,
-                      car_number: carNumber || '',
-                      car_name: car?.car_name || '',
-                    }));
-                  }}
-                  placeholder="Поиск авто..."
-                  emptyLabel="Без авто"
-                />
-              </div>
-            }
+            <div className={styles.field}>
+              <span className="font16w500">Авто</span>
+              <SearchSelect
+                options={carOptions}
+                value={form.car_number || null}
+                onChange={(carNumber) => {
+                  const car = (cars.cars || []).find(c => c.car_number === carNumber);
+                  setForm(prev => ({
+                    ...prev,
+                    car_number: carNumber || '',
+                    car_name: car?.car_name || '',
+                  }));
+                }}
+                placeholder="Поиск авто..."
+                emptyLabel="Без авто"
+              />
+            </div>
 
             {/* СУММА */}
             <div className={styles.field}>
