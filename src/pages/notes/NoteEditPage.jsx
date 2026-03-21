@@ -29,6 +29,7 @@ function NoteEditPage() {
   const [deleteAttachment] = useDeleteAttachmentMutation();
 
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [nameError, setNameError] = useState('');
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState('');
@@ -43,6 +44,7 @@ function NoteEditPage() {
     if (note) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setTitle(note.text || '');
+      setDescription(note.description || '');
     }
   }, [note]);
 
@@ -90,9 +92,9 @@ function NoteEditPage() {
       let noteId = id;
 
       if (isEdit) {
-        await updateNote({ id, text: title.trim() }).unwrap();
+        await updateNote({ id, text: title.trim(), description: description.trim() }).unwrap();
       } else {
-        const result = await createNote({ text: title.trim() }).unwrap();
+        const result = await createNote({ text: title.trim(), description: description.trim() }).unwrap();
         noteId = result?.data?.id || result?.id;
       }
 
@@ -149,6 +151,18 @@ function NoteEditPage() {
               {nameError && (
                 <span className={styles.errorText}>{nameError}</span>
               )}
+            </div>
+
+            {/* DESCRIPTION */}
+            <div className={styles.field}>
+              <span className="font16w500">Описание</span>
+              <textarea
+                className={styles.input}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Введите описание"
+                rows={3}
+              />
             </div>
 
             {/* IMAGE */}
