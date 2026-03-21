@@ -52,8 +52,8 @@ export default function OperationPage() {
   const [page, setPage] = useState(1);
   const [filterVisible, setFilterVisible] = useState(false);
   const [tagFilterVisible, setTagFilterVisible] = useState(false);
-  const [dateFilter, setDateFilter] = useState(undefined);
-  const [selectedTagId, setSelectedTagId] = useState(null);
+  const [dateFilter, setDateFilter] = useState(location.state?.dateFilter ?? undefined);
+  const [selectedTagId, setSelectedTagId] = useState(location.state?.selectedTagId ?? null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -209,7 +209,7 @@ export default function OperationPage() {
           }
         </div>
         <div className={styles.headerFilter + ' miniBlock'}>
-          <button className={styles.filterBtn} onClick={() => navigate("/operations/create")}>
+          <button className={styles.filterBtn} onClick={() => navigate("/operations/create", { state: { key, dateFilter, selectedTagId } })}>
             <Plus color={tgTheme.textSecondary} size={16} />
             <span className={'font13w500'}>Добавить</span>
           </button>
@@ -317,7 +317,6 @@ export default function OperationPage() {
                     {increasetArr.includes(item.type) ? '+' : '-'}{formatMoney(item.amount)} <span className={styles.currency}>AED</span>
                   </div>
                 </div>
-                {console.log(item)}
 
                 <Tag tagId={item?.finance_tag?.id} />
 
@@ -329,7 +328,7 @@ export default function OperationPage() {
                   <div className={styles.right}>
                     <button
                       className={styles.btn}
-                      onClick={() => navigate(`/operations/${item.id}/edit`)}
+                      onClick={() => navigate(`/operations/${item.id}/edit`, { state: { key, dateFilter, selectedTagId } })}
                     >
                       <ClipboardEditIcon size={16} color={tgTheme.text} strokeWidth={1.5} />
                     </button>

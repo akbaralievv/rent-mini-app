@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import AppLayout from "../../../../layouts/AppLayout";
 import styles from "./OperationEditPage.module.css";
 import { Check, ChevronDown, ChevronLeft, ChevronRight, Maximize2, Plus, Trash, Trash2 } from "lucide-react";
@@ -55,7 +55,9 @@ function formatMoney(num) {
 
 export default function OperationEditPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams() || {};
+  const goBack = () => navigate('/financial-main/operation', { state: location.state });
 
   const { data = {} } = useGetTransactionByIdQuery(id, {
     skip: !id,
@@ -190,7 +192,7 @@ export default function OperationEditPage() {
         setNewFiles([]);
       }
 
-      navigate(-1);
+      goBack();
     } catch (error) {
       console.error(error);
     }
@@ -199,7 +201,7 @@ export default function OperationEditPage() {
   return (
     <AppLayout
       title={isEdit ? "Редактирование операции" : "Новая операция"}
-      onBack={() => navigate(-1)}
+      onBack={() => goBack()}
     >
       <div className={styles.pageWrapper}>
 
@@ -511,7 +513,7 @@ export default function OperationEditPage() {
           <div className={styles.modalFooter}>
             <button
               className={styles.secondaryBtn}
-              onClick={() => navigate(-1)}
+              onClick={() => goBack()}
             >
               <span className="font14w600">Отмена</span>
             </button>
