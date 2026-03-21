@@ -57,7 +57,9 @@ export default function OperationEditPage() {
   const navigate = useNavigate();
   const { id } = useParams() || {};
 
-  const { data = {} } = useGetTransactionByIdQuery(id);
+  const { data = {} } = useGetTransactionByIdQuery(id, {
+    skip: !id,
+  });
 
   const isEdit = Boolean(id);
   const { data: tags = [] } = useGetTagsQuery();
