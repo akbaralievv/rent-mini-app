@@ -114,7 +114,7 @@ export const carApi = createApi({
 
     getCarStats: builder.query({
       query: (params) => ({
-        url: '/cars/stats',
+        url: '/car/stats',
         params,
       }),
       providesTags: ['Stats'],

@@ -1,115 +1,186 @@
-.section {
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.selectWrapper {
+  position: relative;
+}
+
+.selectLike {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--tg-item-button-bg-hover);
+  padding: 10px 12px;
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.selectLike span {
+  flex: 1;
+  text-align: left;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown {
+  position: absolute;
+  top: 38px;
+  background-color: var(--tg-filter-bg);
+  border-radius: 8px;
+  width: 100%;
+  z-index: 10;
+  border: 1px solid var(--tg-border);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    0 12px 28px rgba(0, 0, 0, 0.22);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown button {
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown button:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  border: 2px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+  background-clip: padding-box;
+}
+
+.dropdown::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.28);
+  background-clip: padding-box;
+}
+
+.tabsBlock {
+  display: flex;
+  gap: 0;
+  margin-bottom: 12px;
   background: var(--tg-item-button-bg);
   border-radius: 14px;
   overflow: hidden;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
-.itemBack {
-  width: 100%;
-  background: transparent;
+.tabBtn {
+  flex: 1;
   border: none;
-  padding: 14px 16px;
-  color: #fff;
-  text-align: left;
-  font-size: 14px;
   cursor: pointer;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
-.itemBack {
+.tabBtn:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.tabActive {
+  color: #fff;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border-bottom: 2px solid var(--tg-accent, #4da3ff);
+}
+
+.financeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.financeRow span:last-child,
+.financeRow b {
+  margin-left: auto;
+}
+
+.financeIcon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 8px 0;
+}
+
+.periodLabel {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 12px;
+}
+
+.loader {
   text-align: center;
-  font-weight: 500;
+  padding: 24px 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 24px 0;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
 }
 
 .verticalIndent {
   margin-bottom: 16px;
 }
 
-.selectBlock {
-  margin-top: 12px;
-  background: var(--tg-item-button-bg);
-  border-radius: 14px;
-  overflow: hidden;
-  height: 300px;
-  overflow-y: scroll;
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+  background: rgba(0, 0, 0, 0.3);
 }
 
-.selectBlock::-webkit-scrollbar {
-  width: 8px;
-}
-
-.selectBlock::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 14px;
-}
-
-.selectBlock::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 14px;
-  border: 2px solid rgba(0, 0, 0, 0);
-  /* чтобы был эффект тонкого thumb */
-  background-clip: padding-box;
-}
-
-.selectBlock::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
-  background-clip: padding-box;
-}
-
-.selectBlock::-webkit-scrollbar-thumb:active {
-  background: rgba(255, 255, 255, 0.28);
-  background-clip: padding-box;
-}
-
-.selectTitle {
-  padding: 12px 14px;
-  font-weight: 700;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
-  border-bottom: 1px solid var(--tg-bg);
-}
-
-.selectItem {
-  width: 100%;
-  background: transparent;
-  border: none;
-  padding: 14px 14px;
-  cursor: pointer;
-  text-align: left;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--tg-bg);
-}
-
-.selectItem:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.selectActive {
-  background: rgba(77, 163, 255, 0.12);
-}
-
-.check {
-  font-size: 14px;
-}
-
-.selectedCarText {
-  margin-top: 10px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.selectedCarText {
-  margin-top: 10px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* Карточка статистики как в телеге */
 .statCard {
+  margin-top: 12px;
   background: var(--tg-card-2);
   border-radius: 8px;
   padding: 14px;
@@ -118,7 +189,7 @@
 
 .statTitle {
   font-weight: 800;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 
 .statLine {
@@ -150,7 +221,6 @@
   margin-bottom: 10px;
 }
 
-/* Заказы */
 .orderItem {
   padding: 10px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -199,7 +269,6 @@
   white-space: nowrap;
 }
 
-/* Пагинация */
 .pagination {
   margin-top: 12px;
   display: flex;
@@ -217,7 +286,11 @@
   font-weight: 700;
   color: rgba(255, 255, 255, 0.9);
   background: rgba(255, 255, 255, 0.06);
-  min-width: 110px;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .pageBtn:disabled {
