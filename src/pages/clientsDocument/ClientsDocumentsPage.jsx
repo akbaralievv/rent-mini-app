@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import styles from './ClientsDocumentsPage.module.css'
 import { ArrowDown, Calendar, Check, ChevronDown, Eye, Plus, Trash2, X, Upload } from 'lucide-react'
 import { tgTheme } from '../../common/commonStyle'
-import FileItem from '../../components/FileItem/FileItem'
+import FileThumbnail from '../../components/FileThumbnail/FileThumbnail'
 import { getErrorMessage, getImageUrl } from '../../utils'
 import {
   useCreateClientDocumentMutation,
@@ -227,14 +227,23 @@ export default function ClientsDocumentsPage() {
                       {isSelected && <Check size={12} color="#fff" />}
                     </div>
                   )}
-                  <div className={styles.icon}>
-                    <FileItem name={el.name} />
-                  </div>
+                  <FileThumbnail name={el.name} url={docUrl} size={48} />
 
                   <div className={styles.info}>
-                    <div className={`${styles.name} font12w500`}>
+                    <a
+                      href={docUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.name} ${styles.nameLink} font12w500`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        openFilePreview(docUrl)
+                      }}
+                      onMouseDown={(e) => e.stopPropagation()}
+                    >
                       {el.name}
-                    </div>
+                    </a>
                     <div className={styles.meta}>
                       <span>{formatDate(el.created_at || el.date)}</span>
                       <span className={styles.dot}>•</span>

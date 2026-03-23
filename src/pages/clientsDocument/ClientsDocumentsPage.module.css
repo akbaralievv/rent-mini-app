@@ -30,11 +30,6 @@
   background: var(--tg-item-button-bg-hover);
 }
 
-.item:hover {
-  transform: translateY(-1px);
-  background: var(--tg-item-button-bg-hover);
-}
-
 .left {
   display: flex;
   align-items: center;
@@ -82,6 +77,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.nameLink {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: text-decoration-color 0.15s ease;
 }
 
 .meta {
