@@ -9,7 +9,7 @@ import { MessageCircleMore, MessageSquare, Zap } from 'lucide-react';
 export default function AllChatsPage() {
   const navigate = useNavigate();
   return (
-    <AppLayout title={'Все чаты'} onBack={() => navigate(-1)}>
+    <AppLayout title={'Все чаты'} onBack={() => navigate('/')}>
       <ButtonSection
         title='Выберите нужные чаты'
         buttons={[

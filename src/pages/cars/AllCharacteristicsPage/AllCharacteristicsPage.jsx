@@ -133,7 +133,7 @@ export default function AllCharacteristicsPage() {
         <div className={styles.main}>
           <div className={styles.contentBlock}>
             {CHARACTERISTICS.map(({ key, label }) => (
-              <div key={key} className={styles.item} onClick={()=>{
+              <div key={key} className={styles.item} onClick={() => {
                 setVisibleEditModal(true)
                 setSelectedKey(key)
               }}>
@@ -266,7 +266,7 @@ export default function AllCharacteristicsPage() {
                 }
               </div>
               {itemOptionsVisible && (
-                <div className={styles.dropdown}>
+                <div className={styles.dropdown} style={{ bottom: 0 }}>
                   {selectCharactericticsItem?.find((el) => el.key == selectedKey)?.options?.map((item, index) => (
                     <div
                       key={item.key}
@@ -292,20 +292,22 @@ export default function AllCharacteristicsPage() {
 
           {/* обработка календарных значений */}
           {
-            CHARACTERISTICS.find((c) => c.key === selectedKey).type == 'date' && <div className={styles.dateBlock}>
-
-              <div className={styles.answer}
-                onClick={() => setDatePickerVisible(true)}>
-                <span className='font14w500'>
-                  {dateValue}
-                </span>
-                <Calendar size={20} color={tgTheme.white} />
+            CHARACTERISTICS.find((c) => c.key === selectedKey).type == 'date' && <>
+              {datePickerVisible && <div className={styles.datePickerBLock} />}
+              <div className={styles.dateBlock}>
+                <div className={styles.answer}
+                  onClick={() => setDatePickerVisible(true)}>
+                  <span className='font14w500'>
+                    {dateValue}
+                  </span>
+                  <Calendar size={20} color={tgTheme.white} />
+                </div>
+                <CalendarCustom date={toISO(dateValue)} setDate={setDateValue}
+                  visible={datePickerVisible} setVisible={setDatePickerVisible}
+                  isUnder listBlockPosition='left'
+                />
               </div>
-              <CalendarCustom date={toISO(dateValue)} setDate={setDateValue}
-                visible={datePickerVisible} setVisible={setDatePickerVisible}
-                isUnder listBlockPosition='left'
-              />
-            </div>
+            </>
           }
 
           {/* обработка булеан значений */}
