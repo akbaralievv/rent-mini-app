@@ -4,12 +4,12 @@ import styles from './CompanyDocumentDetailPage.module.css'
 import { ArrowDown, Calendar, Check, ChevronDown, Eye, Plus, Trash2, X, Upload } from 'lucide-react'
 import AppLayout from '../../../layouts/AppLayout'
 import { tgTheme } from '../../../common/commonStyle'
-import FileItem from '../../../components/FileItem/FileItem'
+import FileThumbnail from '../../../components/FileThumbnail/FileThumbnail'
 import {
   useDeleteCompanyDocumentSectionMutation,
   useGetCompanyDocumentSectionsQuery,
 } from '../../../redux/services/getCompanySectionsAction'
-import { getErrorMessage, getImageUrl } from '../../../utils'
+import { getErrorMessage, getFileUrl, getImageUrl, truncateFileName } from '../../../utils'
 import {
   useCreateCompanySectionDocumentMutation,
   useDeleteCompanySectionDocumentMutation,
@@ -18,6 +18,13 @@ import {
 import DateFilter from '../../../components/DateFilter/DateFilter'
 import { parseUiDateRange } from '../../../common/utils/helpers'
 import FileViewerModal from '../../../components/FileViewerModal/FileViewerModal'
+
+const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']
+function isImageFile(name) {
+  if (!name) return false
+  const ext = name.split('.').pop().toLowerCase()
+  return IMAGE_EXTENSIONS.includes(ext)
+}
 
 export default function CompanyDocumentDetailPage() {
   const navigate = useNavigate();
@@ -176,7 +183,7 @@ export default function CompanyDocumentDetailPage() {
       await Promise.all(ids.map((id) => {
         const doc = documents.find(d => d.id === id)
         if (doc) {
-          const docUrl = getImageUrl(doc.url)
+          const docUrl = isImageFile(doc.name) ? getImageUrl(doc.url) : getFileUrl(doc.url)
           download(docUrl)
         }
       }))
@@ -225,7 +232,7 @@ export default function CompanyDocumentDetailPage() {
         {isError && <div className={styles.statusWrapper + ' font13w500'}>{getErrorMessage(error, 'Ошибка загрузки')}</div>}
         <div className={styles.list}>
           {documents.map((el) => {
-            const docUrl = getImageUrl(el.url)
+            const docUrl = isImageFile(el.name) ? getImageUrl(el.url) : getFileUrl(el.url)
             const isSelected = selectedIds.has(el.id)
             return (
               <div
@@ -252,14 +259,24 @@ export default function CompanyDocumentDetailPage() {
                       {isSelected && <Check size={12} color="#fff" />}
                     </div>
                   )}
-                  <div className={styles.icon}>
-                    <FileItem name={el.name} />
-                  </div>
+                  <FileThumbnail name={el.name} url={docUrl} size={48} />
 
                   <div className={styles.info}>
-                    <div className={`${styles.name} font12w500`}>
-                      {el.name}
-                    </div>
+                    <a
+                      href={docUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.name} ${styles.nameLink} font12w500`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        openFilePreview(docUrl)
+                      }}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      title={el.name}
+                    >
+                      {truncateFileName(el.name)}
+                    </a>
                     <div className={styles.meta}>
                       <span>{formatDate(el.created_at || el.date)}</span>
                       <span className={styles.dot}>•</span>
