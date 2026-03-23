@@ -1,0 +1,93 @@
+.state {
+  text-align: center;
+  padding: 24px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.stateError {
+  text-align: center;
+  padding: 24px;
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--tg-card-2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.addButton:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.contractCard {
+  background: var(--tg-card-2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.contractMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.contractMain:hover {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.contractLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contractInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contractActions {
+  display: flex;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.actionBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.actionBtn:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.actionBtn:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}

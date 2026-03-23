@@ -2,40 +2,27 @@ import React, { useMemo, useState, useEffect } from 'react'
 import styles from './CarOrdersPage.module.css'
 import AppLayout from '../../../layouts/AppLayout'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useCreateOrderMutation, useDeleteOrderMutation, useGetCarByNumberQuery } from '../../../redux/services/carAction'
+import { useDeleteOrderMutation, useGetCarByNumberQuery } from '../../../redux/services/carAction'
 import { STATUS_MAPPING, tgTheme } from '../../../common/commonStyle'
-import { ClipboardEditIcon, Trash2, ChevronLeft, ChevronRight, Plus, UserRound, Calendar, Check } from 'lucide-react'
+import { ClipboardEditIcon, Trash2, ChevronLeft, ChevronRight, Plus, UserRound } from 'lucide-react'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ModalComponent from '../../../components/ModalComponent/ModalComponent'
-import CalendarCustom from '../../../components/CalendarCustom/CalendarCustom'
-import InfoModal from '../../../components/InfoModal/InfoModal'
 
 const PAGE_SIZE = 5
-function toISO(dateStr) {
+
+function formatDate(dateStr) {
   if (!dateStr) return ''
-
-  const convertOne = (d) => {
-    const parts = d.trim().split('.')
-    if (parts.length !== 3) return ''
-
-    const [day, month, year] = parts
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  if (/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) return dateStr
+  if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+    const [y, m, d] = dateStr.split('-')
+    return `${d}.${m}.${y}`
   }
-
-  // если период
-  if (dateStr.includes('/')) {
-    const [from, to] = dateStr.split('/')
-    const fromISO = convertOne(from)
-    const toISO = convertOne(to)
-
-    if (!fromISO) return ''
-    return toISO ? `${fromISO}/${toISO}` : fromISO
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+    const [d, m, y] = dateStr.split('/')
+    return `${d}.${m}.${y}`
   }
-
-  // если одна дата
-  return convertOne(dateStr)
+  return dateStr
 }
-
 
 export default function CarOrdersPage() {
   const navigate = useNavigate()
@@ -47,28 +34,13 @@ export default function CarOrdersPage() {
     isError,
   } = useGetCarByNumberQuery(id)
 
-  const [createOrder] = useCreateOrderMutation()
   const [deleteOrder] = useDeleteOrderMutation();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const orders = car?.car?.orders || []
 
   const [page, setPage] = useState(1)
   const [orderId, setOrderId] = useState(null);
-  const [createOrderModalVisible, setCreateOrderModalVisible] = useState(false);
   const [deleteOrderModalVisible, setDeleteOrderModalVisible] = useState(false);
-
-  const [form, setForm] = useState({
-    customer_name: '',
-    date: undefined,
-    contact_method: 'whatsapp',
-    customer_contact: '',
-    location: '',
-    selectedCurrency: 'AED',
-    price: ''
-  });
-  const [errors, setErrors] = useState({});
-  const [calendarVisible, setCalendarVisible] = useState(false);
-  const [infoVisible, setInfoVisible] = useState(false);
 
   const totalPages = Math.max(1, Math.ceil(orders.length / PAGE_SIZE))
 
@@ -85,63 +57,6 @@ export default function CarOrdersPage() {
 
   const canPrev = page > 1
   const canNext = page < totalPages
-
-  const handleSave = async () => {
-    const newErrors = {}
-
-    if (!form.customer_name.trim()) newErrors.customer_name = 'Введите имя клиента'
-    if (!form.date) newErrors.date = 'Выберите дату аренды'
-    if (!form.customer_contact.trim()) newErrors.customer_contact = 'Введите контакт клиента'
-    if (!form.selectedCurrency.trim()) newErrors.selectedCurrency = 'Введите валюту'
-    if (!form.location.trim()) newErrors.location = 'Введите локацию'
-    if (!String(form.price).trim()) newErrors.price = 'Введите цену'
-
-    setErrors(newErrors)
-    if (Object.keys(newErrors).length > 0) return
-
-    // 🔹 Разбиваем период
-    const [startRaw, endRaw] = form.date.split('/')
-
-    const convertToISO = (dateStr) => {
-      const [day, month, year] = dateStr.split('.')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-    }
-
-    const bodyData = {
-      customer_name: form.customer_name.trim(),
-      contact_method: form.contact_method.toLowerCase(), // whatsapp
-      customer_contact: form.customer_contact.trim(),
-      start_date: convertToISO(startRaw),
-      end_date: convertToISO(endRaw),
-      delivery_location: form.location.trim(),
-      selectedCurrency: form.selectedCurrency,
-      price: Number(form.price),
-      is_paid: false,
-    }
-
-    try {
-      await createOrder({
-        carNumber: id,
-        data: bodyData,
-      }).unwrap()
-
-      alert('Заказ успешно создан')
-    } catch (err) {
-      console.log(err)
-      alert('Ошибка при создании заказа')
-    } finally {
-      setCreateOrderModalVisible(false);
-      setForm({
-        customer_name: '',
-        date: undefined,
-        contact_method: 'whatsapp',
-        customer_contact: '',
-        location: '',
-        selectedCurrency: 'AED',
-        price: ''
-      })
-    }
-  }
 
   const handleDelete = async () => {
     try {
@@ -169,7 +84,7 @@ export default function CarOrdersPage() {
             <CustomButton
               icon={<Plus size={16} color={tgTheme.textSecondary} />}
               text='Создать заказ'
-              onClick={() => setCreateOrderModalVisible(true)}
+              onClick={() => navigate(`/cars/${id}/orders/create`)}
             />
           </div>
           <div className={styles.main}>
@@ -207,7 +122,7 @@ export default function CarOrdersPage() {
                       className="font12w500"
                       style={{ color: tgTheme.textSecondary }}
                     >
-                      {order.start_date} — {order.end_date}
+                      {formatDate(order.start_date)} — {formatDate(order.end_date)}
                     </span>
                   </div>
                 </div>
@@ -230,8 +145,7 @@ export default function CarOrdersPage() {
                     className={styles.btn}
                     onClick={(e) => {
                       e.stopPropagation()
-                      // navigate(`/cars/${id}/orders/${order.id}/edit`)
-                      setInfoVisible(true)
+                      navigate(`/cars/${id}/orders/${order.id}`)
                     }}
                   >
                     <ClipboardEditIcon
@@ -286,187 +200,6 @@ export default function CarOrdersPage() {
         </div>
 
       )}
-      <ModalComponent visible={createOrderModalVisible} setVisible={setCreateOrderModalVisible}
-        title='Создать новый заказ' children={<div className={styles.modalForm}>
-
-          {/* Имя клиента */}
-          <div className={styles.field}>
-            <span className="font13w500" style={{ color: tgTheme.textSecondary }}>
-              Имя клиента
-            </span>
-            <input
-              className={styles.input}
-              value={form.customer_name}
-              onChange={(e) => {
-                setErrors((p) => ({ ...p, customer_name: null }))
-                setForm((p) => ({ ...p, customer_name: e.target.value }))
-              }
-              }
-              placeholder="Введите имя"
-            />
-            {
-              errors.customer_name && <span className='font12w400' style={{ color: tgTheme.danger }}>
-                {errors.customer_name}</span>
-            }
-          </div>
-
-          {/* Дата */}
-          <div className={styles.field}>
-            <span className="font13w500" style={{ color: tgTheme.textSecondary }}>
-              Дата аренды
-            </span>
-
-            <div className={styles.answer}
-              onClick={() => setCalendarVisible(true)}>
-              <span className='font14w500'>
-                {form.date || 'Выберите дату'}
-              </span>
-              <Calendar size={16} color={tgTheme.white} />
-            </div>
-            <div className={styles.dateBlock}>
-              <CalendarCustom
-                visible={calendarVisible}
-                setVisible={setCalendarVisible}
-                date={toISO(form.data)}
-                setDate={(val) => {
-                  setErrors((p) => ({ ...p, date: null }))
-                  setForm((p) => ({ ...p, date: val }))
-                }}
-                mode='range'
-                listBlockPosition={'right'}
-              />
-            </div>
-            {
-              errors.date && <span className='font12w400' style={{ color: tgTheme.danger }}>
-                {errors.date}</span>
-            }
-          </div>
-
-          {/* Способ связи */}
-          <div className={styles.field}>
-            <span className="font13w500" style={{ color: tgTheme.textSecondary }}>
-              Способ связи
-            </span>
-
-            <div className={styles.statusSwitch}>
-              {['whatsapp', 'telegram', 'phone'].map((type) => (
-                <div
-                  key={type}
-                  className={styles.statusBtn}
-                  onClick={() =>
-                    setForm((p) => ({ ...p, contact_method: type }))
-                  }
-                >
-                  <span
-                    className="font14w500"
-                    style={{
-                      color:
-                        form.contact_method === type
-                          ? tgTheme.white
-                          : tgTheme.textSecondary,
-                    }}
-                  >
-                    {type}
-                  </span>
-
-                  {form.contact_method === type && (
-                    <Check size={16} color={tgTheme.accent} />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Контакт */}
-          <div className={styles.field}>
-            <span className="font13w500" style={{ color: tgTheme.textSecondary }}>
-              Контакт для {form.contact_method}
-            </span>
-            <input
-              className={styles.input}
-              value={form.customer_contact}
-              onChange={(e) => {
-                setErrors((p) => ({ ...p, customer_contact: null }))
-                setForm((p) => ({ ...p, customer_contact: e.target.value }))
-              }
-              }
-              placeholder={"Телефон"}
-            />
-            {
-              errors.customer_contact && <span className='font12w400' style={{ color: tgTheme.danger }}>
-                {errors.customer_contact}</span>
-            }
-          </div>
-
-          {/* Локация */}
-          <div className={styles.field}>
-            <span className="font13w500" style={{ color: tgTheme.textSecondary }}>
-              Локация доставки/возврата
-            </span>
-            <input
-              className={styles.input}
-              value={form.location}
-              onChange={(e) => {
-                setErrors((p) => ({ ...p, location: null }))
-                setForm((p) => ({ ...p, location: e.target.value }))
-              }
-              }
-              placeholder="Город / адрес"
-            />
-            {
-              errors.location && <span className='font12w400' style={{ color: tgTheme.danger }}>
-                {errors.location}</span>
-            }
-          </div>
-
-          {/* Валюта */}
-          <div className={styles.field}>
-            <span className="font13w500" style={{ color: tgTheme.textSecondary }}>
-              Введите валюту
-            </span>
-            <input
-              className={styles.input}
-              value={form.selectedCurrency}
-              onChange={(e) => {
-                setErrors((p) => ({ ...p, selectedCurrency: null }))
-                setForm((p) => ({ ...p, selectedCurrency: e.target.value }))
-              }
-              }
-              placeholder="Введите валюту"
-            />
-            {
-              errors.selectedCurrency && <span className='font12w400' style={{ color: tgTheme.danger }}>
-                {errors.selectedCurrency}</span>
-            }
-          </div>
-
-          {/* Цена */}
-          <div className={styles.field}>
-            <span className="font13w500" style={{ color: tgTheme.textSecondary }}>
-              Цена
-            </span>
-            <input
-              type="text"
-              inputMode="numeric"
-              className={styles.input}
-              value={form.price}
-              onChange={(e) => {
-                const onlyNumbers = e.target.value.replace(/\D/g, '')
-                setErrors((p) => ({ ...p, price: null }))
-                setForm((p) => ({ ...p, price: onlyNumbers }))
-              }}
-              placeholder="Введите цену"
-            />
-
-            {
-              errors.price && <span className='font12w400' style={{ color: tgTheme.danger }}>
-                {errors.price}</span>
-            }
-          </div>
-
-        </div>} textButton='Создать' onSave={handleSave}>
-
-      </ModalComponent>
       <ModalComponent title={'Вы точно хотите удалить заказ?'}
         visible={deleteOrderModalVisible} setVisible={setDeleteOrderModalVisible}
         textButton='Удалить' onSave={handleDelete} children={<div>
@@ -475,10 +208,6 @@ export default function CarOrdersPage() {
         </div>}>
 
       </ModalComponent>
-      <InfoModal
-        visible={infoVisible}
-        setVisible={setInfoVisible}
-      />
     </AppLayout>
   )
 }

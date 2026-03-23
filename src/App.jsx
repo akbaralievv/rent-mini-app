@@ -38,6 +38,9 @@ import ExportFiltersPage from './pages/financialReport/exportFiltersPage/ExportF
 import NotesPage from './pages/notes/NotesPage';
 import NoteEditPage from './pages/notes/NoteEditPage';
 import MaintenanceEditPage from './pages/cars/CarServicePage/MaintenanceEditPage/MaintenanceEditPage';
+import OrderDetailPage from './pages/cars/CarOrdersPage/OrderDetailPage/OrderDetailPage';
+import OrderDocumentsPage from './pages/cars/CarOrdersPage/OrderDocumentsPage/OrderDocumentsPage';
+import OrderContractsPage from './pages/cars/CarOrdersPage/OrderContractsPage/OrderContractsPage';
 
 function Router() {
   const { status } = useAuth();
@@ -83,7 +86,10 @@ function Router() {
       <Route path="/cars/:id/images" element={<CarImagesPage />} />
       <Route path="/cars/:id/characteristics" element={<AllCharacteristicsPage />} />
       <Route path="/cars/:id/orders" element={<CarOrdersPage />} />
-      <Route path="/cars/:id/orders/:orderId" element={<CarOrdersPage />} />
+      <Route path="/cars/:id/orders/create" element={<OrderDetailPage />} />
+      <Route path="/cars/:id/orders/:orderId" element={<OrderDetailPage />} />
+      <Route path="/cars/:id/orders/:orderId/documents" element={<OrderDocumentsPage />} />
+      <Route path="/cars/:id/orders/:orderId/contracts" element={<OrderContractsPage />} />
       <Route path="/cars/:id/documents/" element={<CarDocuments />} />
 
       <Route path="/clients-document" element={<ClientsDocumentsPage />} />

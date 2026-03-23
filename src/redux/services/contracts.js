@@ -15,6 +15,11 @@ export const contractsApi = createApi({
       providesTags: (r, e, id) => [{ type: 'Contracts', id }],
     }),
 
+    getContractsByOrder: builder.query({
+      query: (orderId) => `/contracts/order/${orderId}`,
+      providesTags: (r, e, orderId) => [{ type: 'Contracts', id: `order-${orderId}` }],
+    }),
+
     createContract: builder.mutation({
       query: (data) => ({
         url: '/contracts',
@@ -53,6 +58,7 @@ export const contractsApi = createApi({
 export const {
   useGetContractsQuery,
   useGetContractQuery,
+  useGetContractsByOrderQuery,
   useCreateContractMutation,
   useUpdateContractMutation,
   useDeleteContractMutation,

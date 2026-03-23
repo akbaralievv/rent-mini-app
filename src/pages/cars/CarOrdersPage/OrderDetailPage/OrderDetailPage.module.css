@@ -1,0 +1,298 @@
+.state {
+  text-align: center;
+  padding: 24px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.carHeader {
+  padding: 0 4px;
+}
+
+.modalLike {
+  width: 100%;
+  background: var(--tg-card-2);
+  border-radius: 8px;
+  padding: 12px;
+  padding-top: 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.modalBody {
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.input {
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  resize: none;
+  font-size: 14px;
+}
+
+.inputError {
+  border-color: var(--tg-danger, #d47062);
+}
+
+.errorText {
+  color: var(--tg-danger, #d47062);
+  font-size: 12px;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.selectWrapper {
+  position: relative;
+}
+
+.selectLike {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--tg-item-button-bg-hover);
+  padding: 10px 12px;
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.selectLike span {
+  flex: 1;
+  text-align: left;
+}
+
+.dropdown {
+  position: absolute;
+  top: 44px;
+  background-color: var(--tg-filter-bg);
+  border-radius: 8px;
+  width: 100%;
+  z-index: 10;
+  border: 1px solid var(--tg-border);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    0 12px 28px rgba(0, 0, 0, 0.22);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown button {
+  padding: 10px 12px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown button:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+.contactSwitch {
+  display: flex;
+  gap: 6px;
+}
+
+.contactBtn {
+  background-color: var(--tg-item-button-bg-hover);
+  padding: 0 10px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.contactBtnActive {
+  background-color: var(--tg-item-button-bg);
+  border: 1px solid var(--tg-accent);
+}
+
+.paymentToggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.toggleTrack {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  position: relative;
+  transition: background 0.2s;
+}
+
+.toggleActive {
+  background: var(--tg-success);
+}
+
+.toggleThumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+
+.toggleActive .toggleThumb {
+  transform: translateX(20px);
+}
+
+.depositInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.depositDeleteBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.depositForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.actionBtn:hover {
+  background: var(--tg-item-button-bg);
+}
+
+.actionsSection {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.actionsDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 8px 0;
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.12s;
+}
+
+.actionRow:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.confirmContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modalFooter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.footerRight {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: rgba(212, 112, 98, 0.1);
+  transition: background 0.12s;
+}
+
+.deleteBtn:hover {
+  background: rgba(212, 112, 98, 0.2);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.secondaryBtn {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.primaryBtn {
+  border-radius: 8px;
+  padding: 8px 14px;
+  background: var(--tg-accent);
+  cursor: pointer;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -144,11 +144,19 @@ export const carApi = createApi({
 
     updateOrder: builder.mutation({
       query: ({ orderId, data }) => ({
-        url: `/order/${orderId}`,
-        method: 'PATCH',
+        url: `/car/order/${orderId}/update`,
+        method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Orders', 'Stats'],
+      invalidatesTags: (result, error, arg) =>
+        arg
+          ? [
+            { type: 'Car', id: arg.carNumber },
+            { type: 'Cars' },
+            'Orders',
+            'Stats',
+          ]
+          : ['Orders', 'Stats'],
     }),
 
     deleteOrder: builder.mutation({
