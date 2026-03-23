@@ -24,6 +24,10 @@
   position: relative;
 }
 
+.datePickerBLock {
+  height: 150px;
+}
+
 /* ////// */
 .customSelectWrapper {
   position: relative;
