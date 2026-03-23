@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/static-components */
 import React, { useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { getFileIcon, tgTheme } from '../../common/commonStyle'
