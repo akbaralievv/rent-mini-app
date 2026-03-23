@@ -228,4 +228,35 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--tg-border);
+  gap: 8px;
+}
+
+.totalRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.searchToggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.searchInput {
+  flex: 1;
+  background: var(--tg-item-button-bg-hover);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  padding: 6px 10px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 13px;
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.35);
 }

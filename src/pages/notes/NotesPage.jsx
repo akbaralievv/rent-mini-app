@@ -80,6 +80,9 @@ function NotesPage() {
 
                   <div className={styles.cardBody}>
                     <span className={styles.cardTitle}>{note.text}</span>
+                    {note.description && (
+                      <span className={styles.cardDesc}>{note.description}</span>
+                    )}
                     {note.created_at && (
                       <span className={styles.cardDate}>
                         {new Date(note.created_at).toLocaleDateString()}

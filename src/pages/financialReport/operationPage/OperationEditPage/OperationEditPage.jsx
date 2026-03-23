@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import AppLayout from "../../../../layouts/AppLayout";
 import styles from "./OperationEditPage.module.css";
-import { Check, ChevronDown, ChevronLeft, ChevronRight, Images, Maximize2, Plus, Trash, Trash2 } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronRight, Maximize2, Plus, Trash, Trash2 } from "lucide-react";
 import { tgTheme } from "../../../../common/commonStyle";
 import { useGetTagsQuery } from "../../../../redux/services/tagsAction";
-import { useCreateTransactionMutation, useDeleteTransactionAttachmentMutation, useGetTransactionByIdQuery, useUpdateTransactionMutation, useUploadTransactionAttachmentMutation } from "../../../../redux/services/financeApi";
+import { useCreateTransactionMutation, useDeleteTransactionAttachmentMutation, useGetTransactionByIdQuery, useUpdateTransactionMutation, useUploadTransactionAttachmentsMutation } from "../../../../redux/services/financeApi";
 import { useGetAllOrdersQuery } from "../../../../redux/services/orders";
 import InfoModal from "../../../../components/InfoModal/InfoModal";
 import { useGetCarsQuery } from "../../../../redux/services/carAction";
@@ -55,9 +55,13 @@ function formatMoney(num) {
 
 export default function OperationEditPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams() || {};
+  const goBack = () => navigate('/financial-main/operation', { state: location.state });
 
-  const { data = {} } = useGetTransactionByIdQuery(id);
+  const { data = {} } = useGetTransactionByIdQuery(id, {
+    skip: !id,
+  });
 
   const isEdit = Boolean(id);
   const { data: tags = [] } = useGetTagsQuery();
@@ -66,7 +70,7 @@ export default function OperationEditPage() {
 
   const [createTransaction] = useCreateTransactionMutation();
   const [updateTransaction] = useUpdateTransactionMutation();
-  const [uploadAttachment] = useUploadTransactionAttachmentMutation();
+  const [uploadAttachments] = useUploadTransactionAttachmentsMutation();
   const [deleteAttachment] = useDeleteTransactionAttachmentMutation();
 
   const [error, setError] = useState('');
@@ -87,7 +91,6 @@ export default function OperationEditPage() {
 
   const [typeOpen, setTypeOpen] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
-  const [imgFullModal, setImgFullModal] = useState(false);
 
   const orderOptions = useMemo(() =>
     orders.map(o => ({
@@ -107,8 +110,10 @@ export default function OperationEditPage() {
     [cars.cars]
   );
 
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState(data?.attachment?.url || null);
+  // существующие фото с сервера
+  const [existingPhotos, setExistingPhotos] = useState([]);
+  // новые файлы для загрузки
+  const [newFiles, setNewFiles] = useState([]);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -128,20 +133,36 @@ export default function OperationEditPage() {
       car_name: data.car_name ?? ""
     });
 
-    setPhotoPreview(data?.attachment?.url || null);
+    setExistingPhotos(data?.attachments ?? []);
 
-  }, [id, data?.id, data.type, data.amount, data.finance_tag_ids, data.description, data.currency, data.order_id, data.car_number, data.customer_name, data.car_name, data?.attachment]);
+  }, [id, data?.id, data.type, data.amount, data.finance_tag_ids, data.description, data.currency, data.order_id, data.car_number, data.customer_name, data.car_name, data?.attachments]);
 
   const handlePhotoSelect = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setSelectedPhoto(file);
-    setPhotoPreview(URL.createObjectURL(file));
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setNewFiles((prev) => [...prev, ...files]);
+    e.target.value = '';
+  };
+
+  const removeNewFile = (index) => {
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeExistingPhoto = async (attachmentId) => {
+    try {
+      await deleteAttachment({ transactionId: id, attachmentId }).unwrap();
+      setExistingPhotos((prev) => prev.filter((p) => p.id !== attachmentId));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const openFilePicker = () => {
     fileInputRef.current?.click();
   };
+
+  const [imgFullModal, setImgFullModal] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState('');
 
   const filteredTags = tags.filter(el => el.type == form.type);
 
@@ -157,26 +178,21 @@ export default function OperationEditPage() {
     }
 
     try {
-      if (selectedPhoto) {
-        await uploadAttachment({
-          id: data.id,
-          file: selectedPhoto,
-        }).unwrap();
+      let transactionId = id;
 
-        setSelectedPhoto(null);
-      }
-      if (data.attachment && !photoPreview) {
-        await deleteAttachment(data.id).unwrap();
-
-        setPhotoPreview(null);
-        setSelectedPhoto(null);
-      }
       if (id) {
-        await updateTransaction({ id: id, body: form }).unwrap();
+        await updateTransaction({ id, body: form }).unwrap();
       } else {
-        await createTransaction(form).unwrap();
+        const created = await createTransaction(form).unwrap();
+        transactionId = created.id;
       }
-      navigate(-1);
+
+      if (newFiles.length > 0) {
+        await uploadAttachments({ id: transactionId, files: newFiles }).unwrap();
+        setNewFiles([]);
+      }
+
+      goBack();
     } catch (error) {
       console.error(error);
     }
@@ -185,7 +201,7 @@ export default function OperationEditPage() {
   return (
     <AppLayout
       title={isEdit ? "Редактирование операции" : "Новая операция"}
-      onBack={() => navigate(-1)}
+      onBack={() => goBack()}
     >
       <div className={styles.pageWrapper}>
 
@@ -385,25 +401,23 @@ export default function OperationEditPage() {
               />
             </div>
 
-            {
-              id && <div className={styles.field}>
-                <span className="font16w500">Авто</span>
-                <SearchSelect
-                  options={carOptions}
-                  value={form.car_number || null}
-                  onChange={(carNumber) => {
-                    const car = (cars.cars || []).find(c => c.car_number === carNumber);
-                    setForm(prev => ({
-                      ...prev,
-                      car_number: carNumber || '',
-                      car_name: car?.car_name || '',
-                    }));
-                  }}
-                  placeholder="Поиск авто..."
-                  emptyLabel="Без авто"
-                />
-              </div>
-            }
+            <div className={styles.field}>
+              <span className="font16w500">Авто</span>
+              <SearchSelect
+                options={carOptions}
+                value={form.car_number || null}
+                onChange={(carNumber) => {
+                  const car = (cars.cars || []).find(c => c.car_number === carNumber);
+                  setForm(prev => ({
+                    ...prev,
+                    car_number: carNumber || '',
+                    car_name: car?.car_name || '',
+                  }));
+                }}
+                placeholder="Поиск авто..."
+                emptyLabel="Без авто"
+              />
+            </div>
 
             {/* СУММА */}
             <div className={styles.field}>
@@ -425,41 +439,61 @@ export default function OperationEditPage() {
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
+                multiple
                 style={{ display: "none" }}
                 onChange={handlePhotoSelect}
               />
 
-              <div>
-                {
-                  photoPreview ? <div className={styles.displayPhoto}>
+              <div className={styles.photosList}>
+                {existingPhotos.map((photo) => (
+                  <div key={photo.id} className={styles.displayPhoto}>
                     <img
-                      src={photoPreview}
+                      src={photo.url}
                       alt="photo"
                       className={styles.img}
                       style={{ width: 200, height: 100, objectFit: "contain", borderRadius: 8 }}
                     />
                     <div className={styles.imageBtnsBlock}>
                       <button className={styles.imageMaximizeBtn} type="button" onClick={() => {
+                        setPhotoPreview(photo.url)
                         setImgFullModal(true)
                       }}><Maximize2 color={tgTheme.white} size={20} /></button>
-                      <button className={styles.imageChangeBtn} onClick={() => openFilePicker((p) => !p)}><Images color={tgTheme.white} size={20} /></button>
-                      <button className={styles.imageTrashBtn} onClick={() => {
-                        setSelectedPhoto(null);
-                        setPhotoPreview(null);
-                      }}><Trash2 color={tgTheme.white} size={20} /></button>
+                      <button className={styles.imageTrashBtn} onClick={() => removeExistingPhoto(photo.id)}>
+                        <Trash2 color={tgTheme.white} size={20} />
+                      </button>
                     </div>
                   </div>
-                    :
-                    <button
-                      className={styles.addTagsBtn}
-                      onClick={() => openFilePicker((p) => !p)}
-                    >
-                      <span className="font12w400">
-                        добавить фото
-                      </span>
-                      <Plus size={16} color={tgTheme.textSecondary} />
-                    </button>
-                }
+                ))}
+
+                {newFiles.map((file, index) => (
+                  <div key={index} className={styles.displayPhoto}>
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt="new photo"
+                      className={styles.img}
+                      style={{ width: 200, height: 100, objectFit: "contain", borderRadius: 8 }}
+                    />
+                    <div className={styles.imageBtnsBlock}>
+                      <button className={styles.imageMaximizeBtn} type="button" onClick={() => {
+                        setPhotoPreview(URL.createObjectURL(file))
+                        setImgFullModal(true)
+                      }}><Maximize2 color={tgTheme.white} size={20} /></button>
+                      <button className={styles.imageTrashBtn} onClick={() => removeNewFile(index)}>
+                        <Trash2 color={tgTheme.white} size={20} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  className={styles.addPhotoBtn}
+                  onClick={openFilePicker}
+                >
+                  <span className="font12w400">
+                    добавить фото
+                  </span>
+                  <Plus size={16} color={tgTheme.textSecondary} />
+                </button>
               </div>
             </div>
 
@@ -479,7 +513,7 @@ export default function OperationEditPage() {
           <div className={styles.modalFooter}>
             <button
               className={styles.secondaryBtn}
-              onClick={() => navigate(-1)}
+              onClick={() => goBack()}
             >
               <span className="font14w600">Отмена</span>
             </button>

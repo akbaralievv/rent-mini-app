@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './AllCharacteristicsPage.module.css'
 import AppLayout from '../../../layouts/AppLayout'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useGetCarByNumberQuery, useUpdateCarTechFieldMutation } from '../../../redux/services/carAction'
 import { tgTheme } from '../../../common/commonStyle'
 import { Calendar, ChevronDown, ChevronUp, ClipboardEditIcon } from 'lucide-react'
@@ -26,6 +26,7 @@ function toISO(dateStr) {
 
 export default function AllCharacteristicsPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { id } = useParams();
 
   const {
@@ -47,6 +48,15 @@ export default function AllCharacteristicsPage() {
 
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [selectOpen, setSelectOpen] = useState(false)
+
+  useEffect(() => {
+    const openKey = location.state?.openKey;
+    if (openKey && CHARACTERISTICS.some((c) => c.key === openKey)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedKey(openKey);
+      setVisibleEditModal(true);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -123,7 +133,10 @@ export default function AllCharacteristicsPage() {
         <div className={styles.main}>
           <div className={styles.contentBlock}>
             {CHARACTERISTICS.map(({ key, label }) => (
-              <div key={key} className={styles.item}>
+              <div key={key} className={styles.item} onClick={()=>{
+                setVisibleEditModal(true)
+                setSelectedKey(key)
+              }}>
                 <span className="font14w500">{label}</span>
                 <span className="font14w500" style={{ color: tgTheme.textSecondary }}>
                   {formatValue(key, key == 'car_class' ? cars_class.find((el) => el.key === carData[key])?.name : carData[key])}

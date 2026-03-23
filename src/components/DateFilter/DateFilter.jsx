@@ -81,10 +81,14 @@ const getDateRangeByKey = (key) => {
 export default function DateFilter({
   date = '', setDate = () => { },
   listBlockPosition = 'right', // left, right
+  tagId: externalTagId, setTagId: externalSetTagId,
 }) {
   const [rangeFiltersBlockVisible, setRangeFiltersBlockVisible] = useState(false)
   const [calendarVisible, setCalendarVisible] = useState(false);
-  const [tagId, setTagId] = useState(undefined);
+  const [internalTagId, setInternalTagId] = useState(undefined);
+
+  const tagId = externalTagId !== undefined ? externalTagId : internalTagId;
+  const setTagId = externalSetTagId || setInternalTagId;
 
   useEffect(() => {
     document.body.style.overflow = rangeFiltersBlockVisible ? 'hidden' : ''

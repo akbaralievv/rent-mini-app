@@ -31,15 +31,32 @@ export default function CalendarCustom({
   listBlockPosition = 'right', // left, right
   isUnder = false,
 }) {
-  const initial = date ? new Date(date) : new Date()
+  const parseInitial = (raw) => {
+    if (!raw) return { initial: new Date(), fromISO: null, toISO: null }
+    // range: "dd.mm.yyyy/dd.mm.yyyy" or "dd.mm.yyyy-dd.mm.yyyy"
+    const sep = raw.includes('/') ? '/' : '-'
+    const parts = raw.split(sep)
+    const toISO = (s) => {
+      const [d, m, y] = s.split('.')
+      return `${y}-${m}-${d}`
+    }
+    if (parts.length === 2 && parts[0].includes('.')) {
+      return { initial: new Date(toISO(parts[0])), fromISO: toISO(parts[0]), toISO: toISO(parts[1]) }
+    }
+    // ISO single date
+    const d = new Date(raw)
+    return { initial: isNaN(d) ? new Date() : d, fromISO: null, toISO: null }
+  }
 
-  const [year, setYear] = useState(initial.getFullYear())
-  const [month, setMonth] = useState(initial.getMonth())
+  const parsed = parseInitial(date)
 
-  const [selected, setSelected] = useState(date)
+  const [year, setYear] = useState(parsed.initial.getFullYear())
+  const [month, setMonth] = useState(parsed.initial.getMonth())
 
-  const [from, setFrom] = useState(null)
-  const [to, setTo] = useState(null)
+  const [selected, setSelected] = useState(date && !date.includes('/') && !date.includes('-') ? date : (parsed.fromISO || ''))
+
+  const [from, setFrom] = useState(parsed.fromISO)
+  const [to, setTo] = useState(parsed.toISO)
 
   const handleConfirm = () => {
     if (mode === 'single') {

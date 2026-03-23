@@ -3,7 +3,7 @@ import AppLayout from "../../../layouts/AppLayout";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./OperationPage.module.css";
 
-import { ArrowDown, Calendar, CalendarCheck, Check, ChevronDown, ChevronLeft, ChevronRight, ClipboardEditIcon, Edit, Edit2, Eye, ListFilter, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, Calendar, CalendarCheck, Check, ChevronDown, ChevronLeft, ChevronRight, ClipboardEditIcon, Edit, Edit2, Eye, ListFilter, Plus, Search, X, Trash2 } from "lucide-react";
 import { tgTheme } from "../../../common/commonStyle";
 import Tag from "../../../components/Tag/Tag";
 import DateFilter from "../../../components/DateFilter/DateFilter";
@@ -52,16 +52,17 @@ export default function OperationPage() {
   const [page, setPage] = useState(1);
   const [filterVisible, setFilterVisible] = useState(false);
   const [tagFilterVisible, setTagFilterVisible] = useState(false);
-  const [dateFilter, setDateFilter] = useState(undefined);
-  const [selectedTagId, setSelectedTagId] = useState(null);
+  const [dateFilter, setDateFilter] = useState(location.state?.dateFilter ?? undefined);
+  const [selectedTagId, setSelectedTagId] = useState(location.state?.selectedTagId ?? null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const dateParams = useMemo(() => parseUiDateRange(dateFilter), [dateFilter]);
-  const financeTagType = increasetArr.includes(key);
   const { data: tags = [] } = useGetTagsQuery();
 
   const filteredTags = useMemo(() => {
-    return tags
-  }, [financeTagType, tags]);
+    return tags.filter(el => el.type === key)
+  }, [key, tags]);
 
   const selectedTag = useMemo(() => {
     return filteredTags.find((tag) => String(tag.id) === String(selectedTagId)) || null;
@@ -100,8 +101,11 @@ export default function OperationPage() {
   const [title, setTitle] = useState(type.find((el) => el.key === key)?.value || "Операции");
 
   const list = useMemo(() => {
-    return [...transactionsData.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  }, [transactionsData]);
+    const sorted = [...transactionsData.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    if (!searchQuery.trim()) return sorted;
+    const q = searchQuery.trim().toLowerCase();
+    return sorted.filter((item) => (item.description || '').toLowerCase().includes(q));
+  }, [transactionsData, searchQuery]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -109,6 +113,8 @@ export default function OperationPage() {
     setPage(1);
     setSelectedTagId(null);
     setTagFilterVisible(false);
+    setSearchQuery('');
+    setSearchOpen(false);
   }, [key]);
 
   const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
@@ -203,7 +209,7 @@ export default function OperationPage() {
           }
         </div>
         <div className={styles.headerFilter + ' miniBlock'}>
-          <button className={styles.filterBtn} onClick={() => navigate("/operations/create")}>
+          <button className={styles.filterBtn} onClick={() => navigate("/operations/create", { state: { key, dateFilter, selectedTagId } })}>
             <Plus color={tgTheme.textSecondary} size={16} />
             <span className={'font13w500'}>Добавить</span>
           </button>
@@ -264,10 +270,42 @@ export default function OperationPage() {
         </div>
           : <div className={styles.section}>
             <div className={styles.totalAmountBLock}>
-              <p className={'font13w400'}>Итого:</p>
-              <p className={'font14w500'}>{formatMoney(totalAmount)} AED</p>
+              {searchOpen ? (
+                <>
+                  <input
+                    className={styles.searchInput}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Поиск по комментариям..."
+                    autoFocus
+                  />
+                  <button className={styles.searchToggle} onClick={() => {
+                    setSearchOpen(false);
+                    setSearchQuery('');
+                  }}>
+                    <X size={18} color={tgTheme.textSecondary} />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className={'font13w400'}>Итого:</p>
+                  <div className={styles.totalRight}>
+                    <p className={'font14w500'}>{formatMoney(totalAmount)} AED</p>
+                    <button className={styles.searchToggle} onClick={() => setSearchOpen(true)}>
+                      <Search size={16} color={tgTheme.textSecondary} />
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
-            {transactionsData?.data?.map((item) => (
+            {searchOpen && list.length === 0 && (
+              <div style={{ textAlign: "center", padding: '20px 16px' }}>
+                <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
+                  Ничего не найдено
+                </span>
+              </div>
+            )}
+            {list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((item) => (
               <div key={`${key}-${item.id}`} className={styles.row} >
                 <div className={styles.topLine}>
                   <div className={styles.left}>
@@ -279,7 +317,6 @@ export default function OperationPage() {
                     {increasetArr.includes(item.type) ? '+' : '-'}{formatMoney(item.amount)} <span className={styles.currency}>AED</span>
                   </div>
                 </div>
-                {console.log(item)}
 
                 <Tag tagId={item?.finance_tag?.id} />
 
@@ -291,7 +328,7 @@ export default function OperationPage() {
                   <div className={styles.right}>
                     <button
                       className={styles.btn}
-                      onClick={() => navigate(`/operations/${item.id}/edit`)}
+                      onClick={() => navigate(`/operations/${item.id}/edit`, { state: { key, dateFilter, selectedTagId } })}
                     >
                       <ClipboardEditIcon size={16} color={tgTheme.text} strokeWidth={1.5} />
                     </button>
