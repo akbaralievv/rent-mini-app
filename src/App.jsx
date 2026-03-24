@@ -41,6 +41,7 @@ import MaintenanceEditPage from './pages/cars/CarServicePage/MaintenanceEditPage
 import OrderDetailPage from './pages/cars/CarOrdersPage/OrderDetailPage/OrderDetailPage';
 import OrderDocumentsPage from './pages/cars/CarOrdersPage/OrderDocumentsPage/OrderDocumentsPage';
 import OrderContractsPage from './pages/cars/CarOrdersPage/OrderContractsPage/OrderContractsPage';
+import ManagerProfilePage from './pages/managerProfile/ManagerProfilePage';
 
 function Router() {
   const { status } = useAuth();
@@ -57,6 +58,7 @@ function Router() {
   return (
     <Routes>
       <Route path="/" element={<Menu />} />
+      <Route path="/profile" element={<ManagerProfilePage />} />
       <Route path="/news" element={<NewsPage />} />
       <Route path="/news/:id" element={<NewsDetail />} />
       <Route path="/contracts" element={<ContractsPage />} />

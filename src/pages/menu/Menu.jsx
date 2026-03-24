@@ -4,18 +4,31 @@ import "./Menu.css";
 import ButtonSection from "../../components/ButtonSection/ButtonSection";
 import Dashboard from "../../components/Dashboard/Dashboard";
 import { useNavigate } from "react-router-dom";
-import { BarChart3, Car, FileSignature, FileText, FileUser, MessageSquareMore, Newspaper, Palette, StickyNote } from "lucide-react";
+import { BarChart3, Car, FileSignature, FileText, FileUser, MessageSquareMore, Newspaper, Palette, StickyNote, UserCircle } from "lucide-react";
+import { tgTheme } from "../../common/commonStyle";
 import { useGetTagsQuery } from "../../redux/services/tagsAction";
 import { useGetCompanyDocumentSectionsQuery } from "../../redux/services/getCompanySectionsAction";
+import { useGetManagersQuery } from "../../redux/services/managersApi";
+import { useAuth } from "../../auth/useAuth";
 
 export default function Menu() {
   const navigate = useNavigate();
+  const { userId } = useAuth();
 
   useGetTagsQuery();
   useGetCompanyDocumentSectionsQuery();
 
+  const { data: managersData } = useGetManagersQuery({ per_page: 50, page: 1 });
+  const manager = managersData?.data?.find((m) => String(m.user_id) === String(userId)) || null;
+
   return (
     <AppLayout title="Меню">
+      <div className="menu-profile-bar">
+        <span className="font14w500" style={{ color: tgTheme.textSecondary }}>{manager?.email || ('(' + manager?.user_id + ')') || 'Пользователь'}</span>
+        <button className="menu-profile-btn" onClick={() => navigate('/profile')}>
+          <UserCircle size={28} color={tgTheme.text} strokeWidth={1.5} />
+        </button>
+      </div>
       <div className="menu-list">
         <Dashboard />
         <ButtonSection
