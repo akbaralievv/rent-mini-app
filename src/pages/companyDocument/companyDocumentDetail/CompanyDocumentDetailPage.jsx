@@ -18,6 +18,7 @@ import {
 import DateFilter from '../../../components/DateFilter/DateFilter'
 import { parseUiDateRange } from '../../../common/utils/helpers'
 import FileViewerModal from '../../../components/FileViewerModal/FileViewerModal'
+import ImageModal from '../../financialReport/operationPage/OperationEditPage/ImageModal/ImageModal'
 
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']
 function isImageFile(name) {
@@ -194,6 +195,8 @@ export default function CompanyDocumentDetailPage() {
 
   const [viewerOpen, setViewerOpen] = useState(false);
   const [urlForView, setUrlForView] = useState('');
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [imageModalUrl, setImageModalUrl] = useState('');
 
   const openFilePreview = (url) => {
     setUrlForView(url)
@@ -259,7 +262,18 @@ export default function CompanyDocumentDetailPage() {
                       {isSelected && <Check size={12} color="#fff" />}
                     </div>
                   )}
-                  <FileThumbnail name={el.name} url={docUrl} size={48} />
+                  <div
+                    style={isImageFile(el.name) ? { cursor: 'pointer' } : undefined}
+                    onClick={(e) => {
+                      if (!isImageFile(el.name)) return
+                      e.stopPropagation()
+                      setImageModalUrl(docUrl)
+                      setImageModalOpen(true)
+                    }}
+                    onMouseDown={(e) => { if (isImageFile(el.name)) e.stopPropagation() }}
+                  >
+                    <FileThumbnail name={el.name} url={docUrl} size={48} />
+                  </div>
 
                   <div className={styles.info}>
                     <a
@@ -397,6 +411,11 @@ export default function CompanyDocumentDetailPage() {
         url={urlForView}
         visible={viewerOpen}
         onClose={() => setViewerOpen(false)}
+      />
+      <ImageModal
+        visible={imageModalOpen}
+        image={imageModalUrl}
+        onClose={() => setImageModalOpen(false)}
       />
     </AppLayout>
   )
