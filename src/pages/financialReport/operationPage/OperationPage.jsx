@@ -9,6 +9,7 @@ import Tag from "../../../components/Tag/Tag";
 import DateFilter from "../../../components/DateFilter/DateFilter";
 import BackdropModal from "../../../components/BackdropModal/BackdropModal";
 import { useDeleteTransactionMutation, useGetTransactionsQuery } from "../../../redux/services/financeApi";
+import LoaderCustom from "../../../components/LoaderCustom/LoaderCustom";
 import ModalComponent from "../../../components/ModalComponent/ModalComponent";
 import { useGetTagsQuery } from "../../../redux/services/tagsAction";
 import { parseUiDateRange } from "../../../common/utils/helpers";
@@ -55,6 +56,7 @@ export default function OperationPage() {
   const [dateFilter, setDateFilter] = useState(location.state?.dateFilter ?? undefined);
   const [selectedTagId, setSelectedTagId] = useState(location.state?.selectedTagId ?? null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
 
   const dateParams = useMemo(() => parseUiDateRange(dateFilter), [dateFilter]);
@@ -71,8 +73,8 @@ export default function OperationPage() {
   const transactionParams = useMemo(() => {
     const params = {
       type: key,
-      page: 1,
-      per_page: 50,
+      page,
+      per_page: PAGE_SIZE,
     };
 
     if (dateParams.from) {
@@ -86,26 +88,23 @@ export default function OperationPage() {
       params.finance_tag_id = selectedTagId;
     }
 
-    return params;
-  }, [dateParams.from, dateParams.to, key, selectedTagId]);
+    if (debouncedSearch) {
+      params.search = debouncedSearch;
+    }
 
-  const { data: transactionsData = { data: [] } } = useGetTransactionsQuery(transactionParams);
-  const totalAmount = useMemo(() => {
-    return transactionsData.data.reduce((sum, item) => {
-      return sum + Number(item.amount || 0);
-    }, 0);
-  }, [transactionsData.data]);
+    return params;
+  }, [dateParams.from, dateParams.to, key, selectedTagId, page, debouncedSearch]);
+
+  const { data: transactionsData = { data: [], last_page: 1, total_summ: 0 }, isFetching } = useGetTransactionsQuery(transactionParams);
+  const totalAmount = transactionsData.total_summ ?? 0;
 
   const [deleteTransactionAction] = useDeleteTransactionMutation();
 
   const [title, setTitle] = useState(type.find((el) => el.key === key)?.value || "Операции");
 
   const list = useMemo(() => {
-    const sorted = [...transactionsData.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    if (!searchQuery.trim()) return sorted;
-    const q = searchQuery.trim().toLowerCase();
-    return sorted.filter((item) => (item.description || '').toLowerCase().includes(q));
-  }, [transactionsData, searchQuery]);
+    return [...transactionsData.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }, [transactionsData.data]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -114,15 +113,24 @@ export default function OperationPage() {
     setSelectedTagId(null);
     setTagFilterVisible(false);
     setSearchQuery('');
+    setDebouncedSearch('');
     setSearchOpen(false);
   }, [key]);
 
-  const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
-
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (page > totalPages) setPage(totalPages);
-  }, [page, totalPages]);
+    setPage(1);
+  }, [dateFilter, selectedTagId]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery.trim());
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const totalPages = transactionsData.last_page || 1;
 
   const canPrev = page > 1;
   const canNext = page < totalPages;
@@ -139,6 +147,23 @@ export default function OperationPage() {
     setFilterVisible(false);
     setKey(key);
   }
+
+  const highlightMatch = (text) => {
+    if (!debouncedSearch || !text) return text;
+    const q = debouncedSearch.toLowerCase();
+    const idx = text.toLowerCase().indexOf(q);
+    if (idx === -1) return text;
+    const before = text.slice(0, idx);
+    const match = text.slice(idx, idx + debouncedSearch.length);
+    const after = text.slice(idx + debouncedSearch.length);
+    return (
+      <>
+        {before}
+        <span style={{ color: tgTheme.accent, fontWeight: 600 }}>{match}</span>
+        {after}
+      </>
+    );
+  };
 
   const deleteOperationById = () => {
     try {
@@ -264,7 +289,7 @@ export default function OperationPage() {
       </div>
 
       {
-        transactionsData?.data?.length == 0 ? <div className={'miniBlock'} style={{ textAlign: "center", paddingTop: 20 }}>
+        !isFetching && transactionsData?.data?.length == 0 && !debouncedSearch ? <div className={'miniBlock'} style={{ textAlign: "center", paddingTop: 20 }}>
           <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
             Транзакции отсутствуют</span>
         </div>
@@ -282,6 +307,7 @@ export default function OperationPage() {
                   <button className={styles.searchToggle} onClick={() => {
                     setSearchOpen(false);
                     setSearchQuery('');
+                    setDebouncedSearch('');
                   }}>
                     <X size={18} color={tgTheme.textSecondary} />
                   </button>
@@ -298,14 +324,19 @@ export default function OperationPage() {
                 </>
               )}
             </div>
-            {searchOpen && list.length === 0 && (
+            {isFetching && (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}>
+                <LoaderCustom />
+              </div>
+            )}
+            {!isFetching && debouncedSearch && list.length === 0 && (
               <div style={{ textAlign: "center", padding: '20px 16px' }}>
                 <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>
                   Ничего не найдено
                 </span>
               </div>
             )}
-            {list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((item) => (
+            {!isFetching && list.map((item) => (
               <div key={`${key}-${item.id}`} className={styles.row} >
                 <div className={styles.topLine}>
                   <div className={styles.left}>
@@ -323,7 +354,7 @@ export default function OperationPage() {
                 <div className={styles.cardFooter}>
                   <div className={styles.bottomLine}>
                     <div className={'font14w500'}>{item.car_name || "—"}</div>
-                    <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{item.description || ""}</span>
+                    <span className="font13w400" style={{ color: "var(--tg-text-secondary)" }}>{debouncedSearch ? highlightMatch(item.description || "") : (item.description || "")}</span>
                   </div>
                   <div className={styles.right}>
                     <button
