@@ -265,6 +265,34 @@
   display: none;
 }
 
+.filePreview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--tg-item-button-bg-hover);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.filePreviewInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.filePreviewInfo span:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filePreviewSize {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 .removeFileBtn {
   background: transparent;
   color: rgba(255, 255, 255, 0.7);

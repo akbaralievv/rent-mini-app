@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import AppLayout from '../../layouts/AppLayout'
 import { useNavigate } from 'react-router-dom'
 import styles from './ClientsDocumentsPage.module.css'
@@ -63,6 +63,17 @@ export default function ClientsDocumentsPage() {
       type: form.file.type || 'file',
     }
   }, [form.file])
+
+  const previewUrl = useMemo(() => {
+    if (!form.file) return null
+    return URL.createObjectURL(form.file)
+  }, [form.file])
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
 
   const closeModal = () => {
     setIsOpen(false)
@@ -349,18 +360,37 @@ export default function ClientsDocumentsPage() {
 
                   <div className={styles.filePickRight}>
                     <span className={styles.fileHint}>
-                      {fileMeta ? `${fileMeta.name} • ${fileMeta.size}` : 'pdf, jpg, docx...'}
+                      {fileMeta ? `${truncateFileName(fileMeta.name, 20)} • ${fileMeta.size}` : 'pdf, jpg, docx...'}
                     </span>
                   </div>
                 </label>
 
                 {form.file && (
-                  <button
-                    className={styles.removeFileBtn}
-                    onClick={() => setForm((p) => ({ ...p, file: null }))}
-                  >
-                    Убрать файл
-                  </button>
+                  <>
+                    <div className={styles.filePreview}>
+                      <div
+                        style={isImageFile(form.file.name) ? { cursor: 'pointer' } : undefined}
+                        onClick={() => {
+                          if (isImageFile(form.file.name) && previewUrl) {
+                            setImageModalUrl(previewUrl)
+                            setImageModalOpen(true)
+                          }
+                        }}
+                      >
+                        <FileThumbnail name={form.file.name} url={previewUrl} size={48} />
+                      </div>
+                      <div className={styles.filePreviewInfo}>
+                        <span className="font13w500">{truncateFileName(form.file.name, 35)}</span>
+                        <span className={styles.filePreviewSize}>{fileMeta?.size}</span>
+                      </div>
+                    </div>
+                    <button
+                      className={styles.removeFileBtn}
+                      onClick={() => setForm((p) => ({ ...p, file: null }))}
+                    >
+                      Убрать файл
+                    </button>
+                  </>
                 )}
               </div>
             </div>
