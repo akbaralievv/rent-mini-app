@@ -42,6 +42,8 @@ import OrderDetailPage from './pages/cars/CarOrdersPage/OrderDetailPage/OrderDet
 import OrderDocumentsPage from './pages/cars/CarOrdersPage/OrderDocumentsPage/OrderDocumentsPage';
 import OrderContractsPage from './pages/cars/CarOrdersPage/OrderContractsPage/OrderContractsPage';
 import ManagerProfilePage from './pages/managerProfile/ManagerProfilePage';
+import ManagersListPage from './pages/managerActivity/ManagersListPage';
+import ManagerActivityPage from './pages/managerActivity/ManagerActivityPage';
 
 function Router() {
   const { status } = useAuth();
@@ -108,6 +110,9 @@ function Router() {
       <Route path="/all-chats/site" element={<SiteChatsPage />} />
       <Route path="/all-chats/site/:id" element={<SiteChatPage />} />
       <Route path="/all-chats/templates-wa" element={<TemplatesWAPage />} />
+
+      <Route path="/manager-list" element={<ManagersListPage />} />
+      <Route path="/managers/:userId/activity" element={<ManagerActivityPage />} />
     </Routes>
   );
 }

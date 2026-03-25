@@ -16,15 +16,11 @@ export default function ManagerProfilePage() {
 
   const manager = data?.data?.find((m) => String(m.user_id) === String(userId)) || null
 
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
   const [name, setName] = useState('')
 
   useEffect(() => {
     if (manager) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setEmail(manager.email || '')
-      setPhone(manager.phone || '')
       setName(manager.name || '')
     }
   }, [manager])
@@ -32,19 +28,15 @@ export default function ManagerProfilePage() {
   const hasChanges = useMemo(() => {
     if (!manager) return false
     return (
-      name !== (manager.name || '') ||
-      email !== (manager.email || '') ||
-      phone !== (manager.phone || '')
+      name !== (manager.name || '')
     )
-  }, [manager, name, email, phone])
+  }, [manager, name])
 
   const handleSave = async () => {
     if (!manager || !hasChanges) return
 
     const body = {}
     if (name !== (manager.name || '')) body.name = name
-    if (email !== (manager.email || '')) body.email = email
-    if (phone !== (manager.phone || '')) body.phone = phone
 
     try {
       await updateManager({ userId: manager.user_id, body }).unwrap()
@@ -92,37 +84,13 @@ export default function ManagerProfilePage() {
 
         <div className={styles.field}>
           <span className="font14w500" style={{ color: tgTheme.textSecondary }}>
-            Имя
+            никнейм
           </span>
           <input
             className={styles.input}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Введите имя"
-          />
-        </div>
-
-        <div className={styles.field}>
-          <span className="font14w500" style={{ color: tgTheme.textSecondary }}>
-            Почта
-          </span>
-          <input
-            className={styles.input}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Введите почту"
-          />
-        </div>
-
-        <div className={styles.field}>
-          <span className="font14w500" style={{ color: tgTheme.textSecondary }}>
-            Телефон
-          </span>
-          <input
-            className={styles.input}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Введите телефон"
           />
         </div>
 

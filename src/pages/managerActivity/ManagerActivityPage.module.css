@@ -1,0 +1,152 @@
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.selectWrap {
+  position: relative;
+  flex: 1;
+}
+
+.select {
+  width: 100%;
+  appearance: none;
+  background: var(--tg-card-2);
+  color: var(--tg-text);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 28px 8px 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+.selectIcon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.resetBtn {
+  background: none;
+  color: var(--tg-text-secondary);
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 8px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: opacity 0.15s ease;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  background: var(--tg-card-2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.card:active {
+  background: var(--tg-item-button-bg-hover);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.actionBadge {
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cardBody {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.changes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.changeRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.changeKey {
+  color: var(--tg-text-secondary);
+}
+
+.changeValues {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.oldVal {
+  color: var(--tg-danger);
+  text-decoration: line-through;
+  word-break: break-all;
+}
+
+.newVal {
+  color: var(--tg-success);
+  word-break: break-all;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.pageBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--tg-card-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pageBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.empty {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}

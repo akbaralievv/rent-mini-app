@@ -15,6 +15,13 @@ export const managersApi = createApi({
       providesTags: ['Manager'],
     }),
 
+    getManagerActivities: builder.query({
+      query: ({ userId, ...params }) => ({
+        url: `telegram/managers/${userId}/activities`,
+        params,
+      }),
+    }),
+
     updateManager: builder.mutation({
       query: ({ userId, body }) => ({
         url: `telegram/managers/${userId}`,
@@ -28,5 +35,6 @@ export const managersApi = createApi({
 
 export const {
   useGetManagersQuery,
+  useGetManagerActivitiesQuery,
   useUpdateManagerMutation,
 } = managersApi

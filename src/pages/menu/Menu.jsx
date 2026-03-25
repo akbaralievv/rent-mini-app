@@ -4,7 +4,7 @@ import "./Menu.css";
 import ButtonSection from "../../components/ButtonSection/ButtonSection";
 import Dashboard from "../../components/Dashboard/Dashboard";
 import { useNavigate } from "react-router-dom";
-import { BarChart3, Car, FileSignature, FileText, FileUser, MessageSquareMore, Newspaper, Palette, StickyNote, UserCircle } from "lucide-react";
+import { Activity, BarChart3, Car, ClipboardList, FileSignature, FileText, FileUser, History, MessageSquareMore, Newspaper, Palette, StickyNote, UserCircle } from "lucide-react";
 import { tgTheme } from "../../common/commonStyle";
 import { useGetTagsQuery } from "../../redux/services/tagsAction";
 import { useGetCompanyDocumentSectionsQuery } from "../../redux/services/getCompanySectionsAction";
@@ -24,7 +24,11 @@ export default function Menu() {
   return (
     <AppLayout title="Меню">
       <div className="menu-profile-bar">
-        <span className="font14w500" style={{ color: tgTheme.textSecondary }}>{manager?.email || ('(' + manager?.user_id + ')') || 'Пользователь'}</span>
+        <span className="font14w500" style={{ color: tgTheme.textSecondary }}>
+          {manager?.name
+            ? `${manager.name} (${manager.user_id})`
+            : manager?.user_id || 'Пользователь'}
+        </span>
         <button className="menu-profile-btn" onClick={() => navigate('/profile')}>
           <UserCircle size={28} color={tgTheme.text} strokeWidth={1.5} />
         </button>
@@ -68,6 +72,11 @@ export default function Menu() {
               icon: <StickyNote strokeWidth={1.5} />,
               text: 'Заметки',
               onClick: () => navigate('/notes')
+            },
+            {
+              icon: <History strokeWidth={1.5} />,
+              text: 'Активность менеджеров',
+              onClick: () => navigate('/manager-list')
             },
           ]}
         />
