@@ -102,7 +102,7 @@ export default function ManagerActivityPage() {
             className={styles.filterBtn}
           >
             <ListFilter color={tgTheme.textSecondary} size={16} />
-            <span className="font13w500">{modelType ? MODEL_TYPE_MAP[modelType] : 'Все типы'}</span>
+            <span className="font14w500">{modelType ? MODEL_TYPE_MAP[modelType] : 'Все типы'}</span>
             <ChevronDown color={tgTheme.textSecondary} size={16} />
           </button>
           {typeFilterVisible && <>
@@ -127,7 +127,7 @@ export default function ManagerActivityPage() {
             onClick={() => { setTypeFilterVisible(false); setActionFilterVisible((p) => !p) }}
             className={styles.filterBtn}
           >
-            <span className="font13w500">{action ? ACTION_MAP[action] : 'Все действия'}</span>
+            <span className="font14w500">{action ? ACTION_MAP[action] : 'Все действия'}</span>
             <ChevronDown color={tgTheme.textSecondary} size={16} />
           </button>
           {actionFilterVisible && <>
@@ -203,13 +203,12 @@ export default function ManagerActivityPage() {
 
 function ActivityCard({ item }) {
   const [expanded, setExpanded] = useState(false)
-  const actionColor = ACTION_COLORS[item.action] || tgTheme.text
   const actionLabel = ACTION_MAP[item.action] || item.action
   const modelLabel = MODEL_TYPE_MAP[item.model_type] || item.model_type
 
   const values = item.action === 'deleted' ? item.old_values
     : item.action === 'created' ? item.new_values
-    : null
+      : null
 
   const hasChanges = item.action === 'updated' && item.old_values && item.new_values
 
@@ -217,16 +216,8 @@ function ActivityCard({ item }) {
     <div className={styles.row} onClick={() => setExpanded((p) => !p)}>
       <div className={styles.topLine}>
         <div className={styles.left}>
-          <span
-            className={`${styles.actionBadge} font11w600`}
-            style={{ background: actionColor + '22', color: actionColor }}
-          >
-            {actionLabel}
-          </span>
-          <span className="font13w600">{modelLabel}</span>
-          <span className="font11w400" style={{ color: tgTheme.textSecondary }}>
-            #{item.model_id}
-          </span>
+          <span className="font16w500">#{item.model_id}</span>
+          <span className="font16w500">{formatDateTime(item.created_at)}</span>
         </div>
         <ChevronDown
           size={14}
@@ -235,9 +226,15 @@ function ActivityCard({ item }) {
         />
       </div>
 
-      <span className="font11w400" style={{ color: tgTheme.textSecondary }}>
-        {formatDateTime(item.created_at)}
-      </span>
+      <div className={styles.actionTag}>
+        <span className="font12w500">{actionLabel}</span>
+      </div>
+
+      <div className={styles.cardFooter}>
+        <div className={styles.bottomLine}>
+          <span className="font14w500">{modelLabel}</span>
+        </div>
+      </div>
 
       {expanded && (
         <div className={styles.cardBody}>
@@ -245,13 +242,13 @@ function ActivityCard({ item }) {
             <div className={styles.changes}>
               {Object.keys(item.new_values).map((key) => (
                 <div key={key} className={styles.changeRow}>
-                  <span className={`${styles.changeKey} font12w500`}>{key}</span>
+                  <span className={`${styles.changeKey} font14w500`}>{key}</span>
                   <div className={styles.changeValues}>
-                    <span className={`${styles.oldVal} font12w400`}>
+                    <span className={`${styles.oldVal} font14w400`}>
                       {formatValue(item.old_values?.[key])}
                     </span>
-                    <span className="font12w400" style={{ color: tgTheme.textSecondary }}>&rarr;</span>
-                    <span className={`${styles.newVal} font12w400`}>
+                    <span className="font14w400" style={{ color: tgTheme.textSecondary }}>&rarr;</span>
+                    <span className={`${styles.newVal} font14w400`}>
                       {formatValue(item.new_values[key])}
                     </span>
                   </div>
@@ -262,15 +259,15 @@ function ActivityCard({ item }) {
             <div className={styles.changes}>
               {Object.entries(values).map(([key, val]) => (
                 <div key={key} className={styles.changeRow}>
-                  <span className={`${styles.changeKey} font12w500`}>{key}</span>
-                  <span className="font12w400" style={{ color: tgTheme.text }}>
+                  <span className={`${styles.changeKey} font14w500`}>{key}</span>
+                  <span className="font14w400" style={{ color: tgTheme.text }}>
                     {formatValue(val)}
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <span className="font12w400" style={{ color: tgTheme.textSecondary }}>
+            <span className="font14w400" style={{ color: tgTheme.textSecondary }}>
               Нет данных
             </span>
           )}
