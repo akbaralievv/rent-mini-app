@@ -1,73 +1,92 @@
-.filters {
+.header {
   display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.selectWrap {
+.headerFilter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
   position: relative;
-  flex: 1;
 }
 
-.select {
-  width: 100%;
-  appearance: none;
-  background: var(--tg-card-2);
-  color: var(--tg-text);
-  border: none;
-  border-radius: 8px;
-  padding: 8px 28px 8px 10px;
-  outline: none;
-  cursor: pointer;
-}
-
-.selectIcon {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.resetBtn {
-  background: none;
-  color: var(--tg-text-secondary);
-  cursor: pointer;
-  padding: 4px 0;
-  margin-bottom: 8px;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.list {
+.filterBtn {
+  background-color: var(--tg-card-2);
+  padding: 6px 8px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: opacity 0.15s ease;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 6px;
-  padding: 12px;
-  background: var(--tg-card-2);
-  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.15s ease;
+  border-radius: 6px;
 }
 
-.card:active {
-  background: var(--tg-item-button-bg-hover);
+.filterBlock {
+  position: absolute;
+  top: 35px;
+  background-color: var(--tg-filter-bg);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 200px;
+  z-index: 15;
+  max-height: 320px;
+  overflow-y: auto;
 }
 
-.cardHeader {
+.filterBlock button {
+  padding: 8px 16px;
+  padding-right: 12px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filterBlock button:not(:last-child) {
+  border-bottom: 1px solid var(--tg-bg);
+}
+
+/* Section wrapper like OperationPage */
+.section {
+  background: var(--tg-item-button-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+/* Each activity row */
+.row {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px solid var(--tg-bg);
+  transition: background 0.12s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.topLine {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
-.cardHeaderLeft {
+.left {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -81,6 +100,7 @@
   flex-shrink: 0;
 }
 
+/* Expanded card body */
 .cardBody {
   margin-top: 6px;
   padding-top: 8px;
@@ -121,28 +141,36 @@
   word-break: break-all;
 }
 
+/* Pagination like OperationPage */
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 16px 0;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 14px;
 }
 
 .pageBtn {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--tg-card-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: none;
   cursor: pointer;
+  border-radius: 12px;
+  background-color: transparent;
+}
+
+.pageBtn:active {
+  transform: scale(0.98);
 }
 
 .pageBtn:disabled {
-  opacity: 0.3;
+  opacity: 0.35;
   cursor: default;
+}
+
+.pageInfo {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .empty {

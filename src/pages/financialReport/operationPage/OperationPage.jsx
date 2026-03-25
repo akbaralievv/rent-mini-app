@@ -178,7 +178,7 @@ export default function OperationPage() {
 
   return (
     <AppLayout
-      onBack={() => navigate(-1)}
+      onBack={() => navigate('/financial-main')}
       title={`${title} (стр. ${page})`}
     >
       {/* список */}

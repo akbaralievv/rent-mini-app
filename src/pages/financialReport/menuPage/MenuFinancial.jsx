@@ -61,7 +61,7 @@ export default function MenuFinancial() {
   }, [financeSummary]);
 
   return (
-    <AppLayout onBack={() => navigate(-1)}
+    <AppLayout onBack={() => navigate('/')}
       title={'Финансовый отчет'}
     >
       <div className={styles.main}>

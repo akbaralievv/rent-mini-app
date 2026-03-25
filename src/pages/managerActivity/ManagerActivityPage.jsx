@@ -3,8 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import AppLayout from '../../layouts/AppLayout'
 import { useGetManagerActivitiesQuery, useGetManagersQuery } from '../../redux/services/managersApi'
 import { tgTheme } from '../../common/commonStyle'
-import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Check, ChevronDown, ChevronLeft, ChevronRight, ListFilter } from 'lucide-react'
 import LoaderCustom from '../../components/LoaderCustom/LoaderCustom'
+import BackdropModal from '../../components/BackdropModal/BackdropModal'
+import DateFilter from '../../components/DateFilter/DateFilter'
+import { parseUiDateRange } from '../../common/utils/helpers'
 import styles from './ManagerActivityPage.module.css'
 
 const MODEL_TYPE_MAP = {
@@ -46,27 +49,43 @@ export default function ManagerActivityPage() {
   const [page, setPage] = useState(1)
   const [modelType, setModelType] = useState('')
   const [action, setAction] = useState('')
+  const [typeFilterVisible, setTypeFilterVisible] = useState(false)
+  const [actionFilterVisible, setActionFilterVisible] = useState(false)
+  const [dateFilter, setDateFilter] = useState(undefined)
+
+  const handleDateChange = (newDate) => {
+    setDateFilter(newDate)
+    setPage(1)
+  }
 
   const { data: managersData } = useGetManagersQuery({ per_page: 50, page: 1 })
   const manager = managersData?.data?.find((m) => String(m.user_id) === String(userId))
 
-  const queryParams = { userId, per_page: 20, page }
+  const dateParams = parseUiDateRange(dateFilter)
+  const queryParams = { userId, per_page: 10, page }
   if (modelType) queryParams.model_type = modelType
   if (action) queryParams.action = action
+  if (dateParams.from) queryParams.date_from = dateParams.from
+  if (dateParams.to) queryParams.date_to = dateParams.to
 
   const { data, isLoading, isError, isFetching } = useGetManagerActivitiesQuery(queryParams)
 
   const activities = data?.data || []
   const meta = data?.meta || {}
+  const totalPages = meta.last_page || 1
 
-  const handlePageChange = (newPage) => {
-    if (newPage < 1 || newPage > (meta.last_page || 1)) return
-    setPage(newPage)
+  const canPrev = page > 1
+  const canNext = page < totalPages
+
+  const chooseType = (key) => {
+    setModelType(key)
+    setTypeFilterVisible(false)
+    setPage(1)
   }
 
-  const resetFilters = () => {
-    setModelType('')
-    setAction('')
+  const chooseAction = (key) => {
+    setAction(key)
+    setActionFilterVisible(false)
     setPage(1)
   }
 
@@ -75,41 +94,64 @@ export default function ManagerActivityPage() {
       title={manager?.name || `Менеджер ${userId}`}
       onBack={() => navigate(-1)}
     >
-      <div className={styles.filters}>
-        <div className={styles.selectWrap}>
-          <select
-            className={`${styles.select} font13w500`}
-            value={modelType}
-            onChange={(e) => { setModelType(e.target.value); setPage(1) }}
+      <div className={styles.header}>
+        <div className={styles.headerFilter + ' miniBlock'}>
+          <span className="font16w600">Тип</span>
+          <button
+            onClick={() => { setActionFilterVisible(false); setTypeFilterVisible(true) }}
+            className={styles.filterBtn}
           >
-            <option value="">Все типы</option>
-            {Object.entries(MODEL_TYPE_MAP).map(([key, label]) => (
-              <option key={key} value={key}>{label}</option>
-            ))}
-          </select>
-          <ChevronDown size={14} color={tgTheme.textSecondary} className={styles.selectIcon} />
+            <ListFilter color={tgTheme.textSecondary} size={16} />
+            <span className="font13w500">{modelType ? MODEL_TYPE_MAP[modelType] : 'Все типы'}</span>
+            <ChevronDown color={tgTheme.textSecondary} size={16} />
+          </button>
+          {typeFilterVisible && <>
+            <BackdropModal onClick={() => setTypeFilterVisible(false)} />
+            <div className={styles.filterBlock}>
+              <button onClick={() => chooseType('')}>
+                <span className="font14w600">Все типы</span>
+                {modelType === '' && <Check color={tgTheme.accent} size={20} />}
+              </button>
+              {Object.entries(MODEL_TYPE_MAP).map(([key, label]) => (
+                <button key={key} onClick={() => chooseType(key)}>
+                  <span className="font14w600">{label}</span>
+                  {modelType === key && <Check color={tgTheme.accent} size={20} />}
+                </button>
+              ))}
+            </div>
+          </>}
         </div>
 
-        <div className={styles.selectWrap}>
-          <select
-            className={`${styles.select} font13w500`}
-            value={action}
-            onChange={(e) => { setAction(e.target.value); setPage(1) }}
+        <div className={styles.headerFilter + ' miniBlock'}>
+          <button
+            onClick={() => { setTypeFilterVisible(false); setActionFilterVisible((p) => !p) }}
+            className={styles.filterBtn}
           >
-            <option value="">Все действия</option>
-            {Object.entries(ACTION_MAP).map(([key, label]) => (
-              <option key={key} value={key}>{label}</option>
-            ))}
-          </select>
-          <ChevronDown size={14} color={tgTheme.textSecondary} className={styles.selectIcon} />
+            <span className="font13w500">{action ? ACTION_MAP[action] : 'Все действия'}</span>
+            <ChevronDown color={tgTheme.textSecondary} size={16} />
+          </button>
+          {actionFilterVisible && <>
+            <BackdropModal onClick={() => setActionFilterVisible(false)} />
+            <div className={styles.filterBlock} style={{ right: 0 }}>
+              <button onClick={() => chooseAction('')}>
+                <span className="font14w600">Все действия</span>
+                {action === '' && <Check color={tgTheme.accent} size={20} />}
+              </button>
+              {Object.entries(ACTION_MAP).map(([key, label]) => (
+                <button key={key} onClick={() => chooseAction(key)}>
+                  <span className="font14w600">{label}</span>
+                  {action === key && <Check color={tgTheme.accent} size={20} />}
+                </button>
+              ))}
+            </div>
+          </>}
         </div>
       </div>
-
-      {(modelType || action) && (
-        <button className={`${styles.resetBtn} font12w400`} onClick={resetFilters}>
-          Сбросить фильтры
-        </button>
-      )}
+      <div className={styles.header}>
+        <div className={styles.headerFilter + ' miniBlock'}>
+          <DateFilter date={dateFilter} setDate={handleDateChange} />
+        </div>
+      </div>
 
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
@@ -124,35 +166,36 @@ export default function ManagerActivityPage() {
           <span className="font14w500" style={{ color: tgTheme.textSecondary }}>Действий не найдено</span>
         </div>
       ) : (
-        <>
-          <div className={styles.list} style={isFetching ? { opacity: 0.5 } : undefined}>
-            {activities.map((item) => (
-              <ActivityCard key={item.id} item={item} />
-            ))}
-          </div>
-
-          {meta.last_page > 1 && (
-            <div className={styles.pagination}>
-              <button
-                className={styles.pageBtn}
-                onClick={() => handlePageChange(page - 1)}
-                disabled={page <= 1}
-              >
-                <ChevronLeft size={16} color={tgTheme.text} />
-              </button>
-              <span className="font13w500">
-                {page} / {meta.last_page}
-              </span>
-              <button
-                className={styles.pageBtn}
-                onClick={() => handlePageChange(page + 1)}
-                disabled={page >= meta.last_page}
-              >
-                <ChevronRight size={16} color={tgTheme.text} />
-              </button>
+        <div className={styles.section}>
+          {isFetching && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}>
+              <LoaderCustom />
             </div>
           )}
-        </>
+          {!isFetching && activities.map((item) => (
+            <ActivityCard key={item.id} item={item} />
+          ))}
+
+          <div className={styles.pagination}>
+            <button
+              className={styles.pageBtn}
+              onClick={() => canPrev && setPage((p) => p - 1)}
+              disabled={!canPrev}
+            >
+              <ChevronLeft color={tgTheme.btnActive} />
+            </button>
+            <div className={styles.pageInfo}>
+              {page} / {totalPages}
+            </div>
+            <button
+              className={styles.pageBtn}
+              onClick={() => canNext && setPage((p) => p + 1)}
+              disabled={!canNext}
+            >
+              <ChevronRight color={tgTheme.btnActive} />
+            </button>
+          </div>
+        </div>
       )}
     </AppLayout>
   )
@@ -171,9 +214,9 @@ function ActivityCard({ item }) {
   const hasChanges = item.action === 'updated' && item.old_values && item.new_values
 
   return (
-    <div className={styles.card} onClick={() => setExpanded((p) => !p)}>
-      <div className={styles.cardHeader}>
-        <div className={styles.cardHeaderLeft}>
+    <div className={styles.row} onClick={() => setExpanded((p) => !p)}>
+      <div className={styles.topLine}>
+        <div className={styles.left}>
           <span
             className={`${styles.actionBadge} font11w600`}
             style={{ background: actionColor + '22', color: actionColor }}
