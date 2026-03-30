@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import AppLayout from "../../../layouts/AppLayout";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./OperationPage.module.css";
@@ -47,17 +47,21 @@ export default function OperationPage() {
   const location = useLocation();
 
   const [key, setKey] = useState(location.state?.key);
+  const prevKeyRef = useRef(key);
+  const prevDateFilterRef = useRef(location.state?.dateFilter ?? undefined);
+  const prevSelectedTagIdRef = useRef(location.state?.selectedTagId ?? null);
+  const prevSearchQueryRef = useRef(location.state?.searchQuery ?? '');
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteTransactionId, setDeleteTransactionId] = useState(0);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(location.state?.page ?? 1);
   const [filterVisible, setFilterVisible] = useState(false);
   const [tagFilterVisible, setTagFilterVisible] = useState(false);
   const [dateFilter, setDateFilter] = useState(location.state?.dateFilter ?? undefined);
   const [selectedTagId, setSelectedTagId] = useState(location.state?.selectedTagId ?? null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(location.state?.searchQuery ?? '');
+  const [debouncedSearch, setDebouncedSearch] = useState(location.state?.searchQuery ?? '');
+  const [searchOpen, setSearchOpen] = useState(Boolean(location.state?.searchQuery));
 
   const dateParams = useMemo(() => parseUiDateRange(dateFilter), [dateFilter]);
   const { data: tags = [] } = useGetTagsQuery();
@@ -98,13 +102,15 @@ export default function OperationPage() {
 
   const [deleteTransactionAction] = useDeleteTransactionMutation();
 
-  const [title, setTitle] = useState(type.find((el) => el.key === key)?.value || "Операции");
+  const [title, setTitle] = useState(type.find((el) => el.key === key)?.label || "Операции");
 
   const list = useMemo(() => {
     return [...transactionsData.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   }, [transactionsData.data]);
 
   useEffect(() => {
+    if (prevKeyRef.current === key) return;
+    prevKeyRef.current = key;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTitle(type.find((el) => el.key === key)?.label || "Операции")
     setPage(1);
@@ -116,11 +122,16 @@ export default function OperationPage() {
   }, [key]);
 
   useEffect(() => {
+    if (prevDateFilterRef.current === dateFilter && prevSelectedTagIdRef.current === selectedTagId) return;
+    prevDateFilterRef.current = dateFilter;
+    prevSelectedTagIdRef.current = selectedTagId;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
   }, [dateFilter, selectedTagId]);
 
   useEffect(() => {
+    if (prevSearchQueryRef.current === searchQuery) return;
+    prevSearchQueryRef.current = searchQuery;
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery.trim());
       setPage(1);
@@ -232,7 +243,7 @@ export default function OperationPage() {
           }
         </div>
         <div className={styles.headerFilter + ' miniBlock'}>
-          <button className={styles.filterBtn} onClick={() => navigate("/operations/create", { state: { key, dateFilter, selectedTagId } })}>
+          <button className={styles.filterBtn} onClick={() => navigate("/operations/create", { state: { key, dateFilter, selectedTagId, page, searchQuery } })}>
             <Plus color={tgTheme.textSecondary} size={16} />
             <span className={'font13w500'}>Добавить</span>
           </button>
@@ -357,7 +368,7 @@ export default function OperationPage() {
                   <div className={styles.right}>
                     <button
                       className={styles.btn}
-                      onClick={() => navigate(`/operations/${item.id}/edit`, { state: { key, dateFilter, selectedTagId } })}
+                      onClick={() => navigate(`/operations/${item.id}/edit`, { state: { key, dateFilter, selectedTagId, page, searchQuery } })}
                     >
                       <ClipboardEditIcon size={16} color={tgTheme.text} strokeWidth={1.5} />
                     </button>
