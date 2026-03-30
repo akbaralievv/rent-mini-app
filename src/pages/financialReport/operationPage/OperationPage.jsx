@@ -80,8 +80,6 @@ export default function OperationPage() {
     if (dateParams.from) {
       params.start_date = dateParams.from;
       params.end_date = dateParams.to;
-    } else {
-      params.period = 'last_3_months';
     }
 
     if (selectedTagId != null) {
